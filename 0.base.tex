@@ -1,0 +1,116 @@
+\documentclass[a4paper,11pt]{book}
+
+%----------------------------
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+%----------------------------
+\usepackage{graphicx}
+\usepackage{pdfsync}
+\usepackage{epsfig}
+\usepackage{placeins}
+\usepackage{subfig}
+\usepackage{float}
+%\usepackage{here}
+\usepackage{listings}
+\usepackage[usenames]{color}
+\usepackage{courier}
+\usepackage{caption}
+\usepackage[ citecolor=black, urlcolor=black, linkcolor=black, colorlinks=true, bookmarksopen=true]{hyperref}
+\usepackage{multirow}
+\usepackage{pdfpages}
+% \usepackage[toc]{glossaries} %xindy
+% \makeglossaries
+%----------------------------
+\usepackage{color}
+\definecolor{javared}{rgb}{0.6,0,0}            % strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35}    % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35}      % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+%----------------------------
+\renewcommand*{\lstlistingname}{Código}
+
+\usepackage{listings}
+\usepackage{courier}
+\lstset{
+language=[AspectJ]Java,
+basicstyle=\small\ttfamily, % Standardschrift
+keywordstyle=\color{javapurple}\bfseries,
+stringstyle=\color{javagreen},
+commentstyle=\color{javadocblue},
+morecomment=[s][\color{javadocblue}]{/**}{*/},
+numbers=left,
+numberstyle=\tiny\color{black},
+stepnumber=1,
+numbersep=3pt,
+tabsize=8,                  % Groesse von Tabs
+extendedchars=true,         %
+breaklines=true,            % Zeilen werden Umgebrochen
+% keywordstyle=\color{red},
+frame=b,         
+%        keywordstyle=[1]\textbf,    % Stil der Keywords
+%        keywordstyle=[2]\textbf,    %
+%        keywordstyle=[3]\textbf,    %
+%        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+% stringstyle=\color{white}\ttfamily, % Farbe der String
+showspaces=false,           % Leerzeichen anzeigen ?
+showtabs=false,             % Tabs anzeigen ?
+xleftmargin=10pt,
+framexleftmargin=17pt,
+framexrightmargin=5pt,
+framexbottommargin=4pt,
+% backgroundcolor=\color{lightgray},
+showstringspaces=false      % Leerzeichen in Strings anzeigen ?        
+}
+
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.10}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+
+%----------------------------
+\usepackage{anysize}
+\marginsize{4cm}{3cm}{2cm}{2cm}
+%----------------------------
+\newcommand{\toref}[1]{\textbf{[REFERENCE: #1]}}
+\newcommand{\tocomplete}[1]{\textbf{[Complete: #1 ]}}
+\newcommand{\todelete}[1]{\textbf{[Delete this: \textcolor{cyan}{#1}]}}
+\newcommand{\tocheck}[1]{\textbf{[Check this!: #1 ]}}
+\newcommand{\todo}[1]{\textbf{[To Do:{#1}]}}
+\newcommand{\edited}[1]{\textcolor{red}{#1}}
+\newcommand{\comment}[1]{\textcolor{blue}{#1}}
+\newcommand{\newstuff}[1]{\textcolor{green}{#1}}
+\newcommand{\mrk}[0]{}
+
+%----------------------------
+% espacio entre parrafos
+\setlength{\parskip}{5mm}
+% sangria
+\setlength{\parindent}{5mm}
+
+\linespread{1.1}%
+\selectfont	
+% correct bad hyphenation here
+\hyphenation{ in-te-rac-ción conexio-nes }
+
+%-----------------------------
+\newcommand{\sm}[0]{{\em SM}}
+\newcommand{\ie}[0]{{\em i.e.,}}
+\newcommand{\eg}[0]{{\em e.g.}}
+\newcommand{\etal}[0]{{\em et al.}}
+\newcommand{\etc}[0]{{\em etc.}}
+
+\newcommand{\cn}[0]{{\textit{concern}}}
+\newcommand{\cns}[0]{{\textit{concerns}}}
+\newcommand{\ccc}[0]{{\textit{crosscutting concerns}}}
+
+
+\newcommand{\game}[0]{{\emph{Game}}}
+\newcommand{\meters}[0]{{\emph{Meters}}}
+\newcommand{\recall}[0]{{\emph{Game Recall}}}
+\newcommand{\error}[0]{{\emph{Error Condition}}}
+\newcommand{\errors}[0]{{\emph{Errors Conditions}}}
+\newcommand{\comm}[0]{{\emph{Communication Protocol}}}
+\newcommand{\comms}[0]{{\emph{Communication Protocols}}}
+\newcommand{\demo}[0]{{\emph{Demo}}}
+\newcommand{\resump}[0]{{\emph{Program Resumption}}}

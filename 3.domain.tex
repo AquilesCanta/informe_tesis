@@ -1,0 +1,422 @@
+\ifx\all\undefined
+\include{0.base}
+\begin{document}
+\fi
+
+\chapter{Concerns en el Dominio de las Slots Machines }
+
+En el presente capítulo, introducimos ciertos conceptos generales referidos al dominio de las máquinas tragamonedas. \newline
+En este sentido, resulta prioritario detallar requerimientos y funcionalidades que al final del capítulo serán identificados como \cns~ del dominio.
+Entre estos \cns~ se identificarán instancias de las interacciones que son el objeto de estudio del presente trabajo.
+
+\section{Dominio de las Slots Machines}
+Una \textit{máquina tragamonedas}\footnote{\textit{Slot Machine}, la abreviatura \sm~ será utilizada de aquí en más.}
+es un dispositivo que puede ser encontrado generalmente en casinos y permite interactuar con un juego de apuestas. 
+
+
+\begin{figure}[htb]
+\includegraphics[width=13cm]{img/3/old.jpg}
+\caption{Ejemplos de \sm s electromecánicas.}
+\label{fig:slots}
+\end{figure}
+
+% \clearpage
+Estas máquinas, que eran completamente electromecánicas, han ido evolucionando para convertirse en la actualidad, en computadoras
+que ejecutan un \textit{software} de alta complejidad.
+
+\begin{figure}[htb]
+\includegraphics[width=13cm]{img/3/new.jpg}
+\caption{\sm s modernas donde la interacción se realiza mediante una pantalla táctil.}
+\label{fig:slots2}
+\end{figure}
+
+En cuanto al \textit{software} de una \sm, es necesario y escencial explicar que se compone de un juego y un conjunto de subsistemas cuya funcionalidad varía desde la interacción con el \textit{hardware} hasta la comunicación con servidores remotos. \newline
+A continuación se describen ciertas características del juego y de estos subsistemas, algunos de los cuales derivarán en \cns~ del dominio.
+
+\subsection{El juego}
+Los juegos se componen de 3 o 5 rodillos (\textit{reels}), los cuales giran cuando el jugador presiona el botón de girar (\textit{spin}). 
+Para poder jugar se debe contar con créditos, que pueden ser ingresados de distintas formas de acuerdo al \textit{hardware} con el que cuente la \sm.\newline
+En las máquinas con juegos multilíneas es necesario seleccionar la cantidad de líneas sobre las que se quiere apostar (\textit{selected paylines}) y por cada línea se apuesta una cantidad de créditos (\textit{bet per line}). Estas acciones determinan el costo de la jugada: \textit{bet per line} x \textit{selected paylines}.
+
+Al presionar el botón de \textit{spin}, se descuenta el costo de la jugada de los créditos actuales y un sorteo determina de forma aleatoria la nueva posición de los \textit{reels}. \newline
+Luego, se evalúa si hubo líneas ganadoras de acuerdo a la configuración de la tabla de pagos (\textit{paytable}). Ésta indica cual es el multiplicador que se aplica a la apuesta por línea para cada combinación de símbolos que otorgue premio.\newline
+De haber créditos ganados, se suman a los actuales, los cuales pueden ser retirados (\textit{cashout}) cuando el jugador lo determine.
+
+\subsection{Meters}
+
+El registro de toda la actividad que ocurre en una \sm~ se almacena en un conjunto de contadores que son denominados \meters. 
+Este conjunto deriva de diferentes documentos que incluyen regulaciones 
+y recomendaciones de laboratorios de certificación~\cite{gli}. 
+
+Los valores de los \meters~ deben ser consistentes en todo momento y dado que almacenan información sensible,
+existe un procedimiento legal muy estricto para reiniciarlos.\newline
+El acceso a los mismos se realiza mediante una vista de la interfaz gráfica de la \sm, a la cual se tiene acceso mediante el uso de llaves de seguridad.
+
+La mayoría de los \meters~ son utilizados para actividades de contaduría y auditoría, 
+ya sean realizadas por el propio casino o por entes reguladores externos.
+Todos los valores se almacenan digitalmente, pero aún en las máquinas más modernas, 
+se cuenta con una serie de contadores electromecánicos que son exigidos por las regulaciones.
+
+En una \sm~ pueden encontrarse cientos de \meters~ que almacenan todo tipo de información, desde la cantidad de créditos apostados hasta el número de veces que se trabó una moneda.
+%Los \meters~ se agrupan por categorías, como por ejemplo: propósito general, ingreso y egreso de monedas, de pagos realizados
+
+Para dar cuenta de lo explicitado anteriormente, a continuación se detallan algunos \meters~ que se pueden encontrar en una \sm:
+% 
+% Dentro de los contadores de proposito general se pueden encontrar:
+\begin{itemize}
+ \item \textbf{Current Credits:} cantidad de créditos disponibles para jugar.
+ \item \textbf{Total Drop:} total de créditos insertados.
+ \item \textbf{Total Out:} total de créditos cobrados.
+ \item \textbf{Game played:} cantidad de jugadas realizadas.% desde el último textit{reset} de meters
+ \item \textbf{Game Won:} cantidad de juegos donde se ganó al menos un crédito.
+ \item \textbf{Game Lost:} cantidad de juegos donde no hubo premios.   
+\end{itemize}
+% Existen \meters~ que contabilizan la actividad de los pagos realizados en una \sm, por ejemplo:
+% \begin{itemize}
+%  \item Total Jackpot: total credits paid by the attendant (hand-pays).
+%  \item Jackpot: total credits paid by the attendant (hand-pays).
+%  \item Canceled Credits:  Total amount of credits cashed out from the SM. 
+%  \item Cumulative Progressive:  The sum of all progressive prized paid. 
+% \end{itemize}
+% también los hay sobre el ingreso y egreso de billetes y monedas:
+% \begin{itemize}
+%  \item Coin Drop: Coins diverted to the drop.
+%  \item Invalid Coins: Invalid coins entered into the SM (this event tilts the SMs).
+%  \item Coin in/out: Physical coins accepted or paid.
+%  \item Bill In: total amount (currency) of bill accepted by the validator.
+%  \item Items accepted: Number of bills accepted by the validator
+%  \item Bills Per Value: Individual meters counting the number of bills by denomination. 
+% \end{itemize}
+
+\subsection{Hardware}
+\label{domain:hardware}
+
+En la actualidad una \sm~ es una computadora con prestaciones industriales la cual cuenta con diferentes dispositivos de \textit{hardware}. \newline
+En la figura \ref{cabinet} se indican los dispositivos físicos que se pueden encontrar en el gabinete de una \sm. Luego, se describen las funcionalidades más relevantes del \textit{hardware}.
+
+\begin{figure}[htb]
+\includegraphics[height=14cm]{img/3/gabinete.jpg}
+%\centering \epsfig{file=img/3/gabinete.eps, height=14cm}
+\caption{Gabinete de una \textit{Slot Machine}.}
+\label{cabinet}
+\end{figure}
+\FloatBarrier
+
+En un principio, para poder utilizar el juego se debe contar con créditos, que pueden ser ingresados de distintas formas. Cuando el jugador decide retirarse de la \sm, debe retirar sus créditos. Los dispositivos que permiten estas operaciones son:
+\begin{itemize}
+\item \textbf{Coin Acceptor:} permite el ingreso de monedas o fichas, las cuales son convertidas a créditos según la denominación de la \sm. Este dispositivo sólo acepta valores de monedas pre-configurados.
+
+\item \textbf{Bill Acceptor:} es un dispositivo utilizado para ingresar billetes, al igual que el \textit{coin acceptor} sólo acepta valores pre-configurados.
+
+\item \textbf{Thermal Ticket Printer:} imprime un \textit{ticket} cuando el usuario realiza la acción de \textit{cashout}. Este \textit{ticket} contiene un código de barras con información que es utiliza por servidores de los cuales se dará más detalle en la subsección \ref{domain:comm}.
+
+\item \textbf{Ticket Reader:} es otro medio para el ingreso de créditos a la \sm. El sistema de \textit{ticketing} posibilita el intercambio de créditos entre \sm s.
+Es común encontrar el \textit{bill acceptor}  y el \textit{ticket reader} en un mismo dispositivo físico.
+
+\item \textbf{Coin hopper: } permite cobrar los créditos en monedas o fichas.
+\end{itemize}
+
+% \clearpage
+En cuanto a los medios de pago, una \sm~ puede tener configurados tanto el \textit{coin hopper} como el sistema de \textit{ticketing}.
+En el caso de tener ambos, el juego pagará con \textit{tickets} cuando ya no cuente con monedas o fichas. 
+
+% 
+% los créditos se cobran con monedas mientras las haya y luego se comienzan a imprimir \textit{tickets}. Esto puede darse durante un pago, recibiendo el jugador una parte en monedas y el resto en un \textit{ticket}.
+
+Por otro lado, dentro de los dispositivos relacionados con la seguridad y exigidos por las regulaciones se pueden encontrar \textbf{sensores} que permiten detectar la intrusión en la \sm~ a diferentes niveles. Un ejemplo es el sensor de \textit{main door}, que permite saber cuando es abierta la puerta del gabinete.\newline
+Toda la información de los sensores también es contabilizada en los \meters.
+
+Con respecto al \textit{hardware} utilizado por el personal del casino, es decir, los asistentes de juego, se pueden encontrar los siguientes dispositivos:
+ \begin{itemize}
+\item \textbf{Tower Lamp:} dispositivo luminoso utilizado para llamar al asistente del casino. \newline
+Esta lámpara puede encenderse por un evento generado por la \sm~, por ejemplo, cuando el jugador gana el \textit{jackpot} o cuando hay un error que no permite continuar el juego.
+\item \textbf{Alarm Bell: }alarma sonora también utilizada para llamar a un asistente de juego en situaciones similares a las descriptas previamente.
+\item \textbf{Attendant Key switch: }este \textit{switch}, que se activa mediante una llave especial, es utilizado en ocasiones donde la intervención humana es requerida.
+\end{itemize}
+
+Otra de las características de las \sm s es que también se pueden encontrar \textbf{contadores electromecánicos}, estos son exigidos por las regulaciones para cierto subconjunto de \meters.\newline
+Para finalizar, podemos decir que una \sm~ también cuenta con \textbf{DIP switches} los cuales están ubicados en un lugar seguro del gabinte y son utilizados por ejemplo, para cambiar el juego a modo \demo. Este modo es detallado en la sección \ref{domain:demo}. 
+
+\textbf{Hardware Abstraction Layer}\newline
+Se puede decir que la interacción entre estos dispositivos y el \textit{core} de la \sm~ se realiza mediante el intercambio de eventos.
+El cuadro \ref{slots:tab:events} lista eventos de los dispositivos detallados previamente.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=13.5cm]{img/3/events.eps}
+\caption{Eventos generados agrupados por dispositivo.}
+\label{slots:tab:events}
+\end{figure}
+\FloatBarrier
+
+% \begin{table}[h]
+% \centering
+% \caption{Eventos generados agrupados por disposivo}
+% \begin{tabular}{| p{2cm} | p{4cm} | p{4cm} | } 
+% \hline
+% \textbf{Dispositivo}& \textbf{Eventos frecuentes}& \textbf{Eventos no frecuentes} \\
+% \hline
+% Bill Acceptor & Bill accepted, Bill Stacked, Bill Returned, Bill Rejected & Bill jam, Bill Stacker Full, Stacker Open, Bill jam \\ \hline
+% Ticket Printer & Ticket printed  & Printer out of paper \\ \hline
+%  Attendant Key switch & Attendant arrived/leaved & \\ \hline
+% Sensors & Cabinet open, Cabinet Closed & CPU enclosure open/closed \\ \hline
+% dip switches &   &  Reset meters, Demo mode \\ \hline
+% Coin Hopper & Coin Paid &  Coin cheated,  Hopper Empty  \\ \hline
+% Coin Acceptor & Invalid Coin &    \\ \hline
+% \end{tabular}
+% \label{slots:tab:events}
+% \end{table}
+
+Estos eventos pueden ser condiciones de error que deben ser reportadas a otros sistemas y que además, en algunos casos, pueden generar cambios en la forma en que la \sm~ se comporta.
+
+La interacción con el hardware agrega un nivel más de complejidad que el \textit{software} de una \sm~ debe soportar.\newline
+En nuestra experiencia, es habitual que exista un componente de \textit{software} denominado \textit{HAL} (\textit{Hardware Abstraction Layer}), el cual brinda un  nivel de abstracción hacia los dispositivos físicos. Los eventos anteriormentente descriptos viajan desde y hacia la \textit{HAL} para el control del \textit{hardware}.	
+
+\subsection{Program resumption}
+
+Una \sm~ es un dispositivo electrónico, y como tal puede sufrir cortes de energía.
+La información sensible que se almacena dentro una \sm~ requiere de un mecanismo que garantice la posibilidad de restauración de los datos y asegure 
+la consistencia de la información.\newline
+Esta funcionalidad recibe el nombre de \resump.
+
+La información de una \sm~ que debe guardarse incluye entre otros datos: la posición de los \textit{reels} y los valores de los \textit{meters}. \newline
+%La implementación de esta funcionalidad debe aseguarar que el estado del juego pueda ser restaurado luego de un corte de energía.
+Este mecanismo es exigido por la mayoría de las regulaciones y agrega una alta complejidad al \textit{software} 
+debido a que cada cambio en ciertas variables del sistema debe guardarse antes de continuar con la ejecución del programa. 
+
+% Un caso para ejemplificar sería cuando un jugador realiza la acción de \textit{play}, por lo que es necesario que las siguientes acciones se realicen de manera atómica:
+% 
+% \begin{itemize}
+%  \item Descuento del costo de la jugada de los créditos actuales.
+%  \item Sorteo aleatorio de la nueva posición de los \textit{reels}.
+%  \item Cálculo de créditos ganados.
+%  \item Actualización de los \textit{meters}.
+%  \item Guardado de los datos.
+% \end{itemize}
+
+\subsection{Game recall}
+
+Otro punto importante, es que las regulaciones también requieren una funcionalidad que recibe el nombre de \recall, cuyo objetivo es proveer
+el detalle de al menos los últimos 10 juegos realizados en la \sm. Este detalle es utilizado por el personal de los casinos
+para resolver posibles conflictos sobre el comportamiento del juego.
+
+Cada \recall~ debe contener entre otros datos: créditos apostados, símbolos que salieron sorteados, 
+líneas ganadoras con el detalle de los créditos ganados por línea. Además, la información de entrada y salida
+de dinero entre cada juego debe quedar registrada en el \recall.\newline
+Otro punto importante, es que la lista de \recall~ también es parte de los datos que 
+la funcionalidad de \resump~ debe tener en cuenta para persistir.
+
+\subsection{Communication protocols}
+\label{domain:comm}
+Es pertinente señalar que el \textit{software} de las máquinas tragamonedas está conectado a sistemas de monitoreo en tiempo real y esto se debe principalmente a la necesidad de control sobre el movimiento de dinero.
+
+Además de controlar el correcto funcionamiento de la \sm, los sistemas de monitoreo son utilizados para las
+operaciones de contaduría dentro y fuera de los casinos.\newline
+Para esto, existen diferentes normas sobre protocolos de comunicación, las cuales, utilizan diversas
+tecnologías entre las que se destacan el uso de puerto serie o conexiones \textit{ethernet}.
+
+Algunos protocolos funcionan con la técnica de \textit{polling}, en la cual, un servidor de monitoreo pide los datos a la \sm~
+de manera regular. También existen protocolos basados en \textit{web services}. % donde el intercambio de mensajes se
+%produce bidireccionalmente cuando es necesario.
+
+Es importante destacar que una \sm~ debe tener la capacidad de poder trabajar con más de un \comm~ al mismo tiempo. Estos protocolos 
+proveen a grandes rasgos la misma funcionalidad que incluye entre otras: la consulta de valores de los \meters~
+ó configurar una \sm~ de manera remota.
+
+La especificación de los \comms~ define cientos de mensajes, estos pueden ser agrupados en cuatro categorías:
+
+\begin{itemize}
+\item \textbf{Configuración remota}\newline
+Los mensajes en esta categoría son utilizados para configurar parte de una \sm~ de forma remota. El mensaje \textit{set current time} pertenece
+a esta clasificación y permite configurar la hora de la \sm.\newline
+Otro ejemplo se da en una \sm~ con múltiples juegos donde es posible seleccionar el juego actual de manera remota utilizando este tipo de mensajes. 
+
+\item \textbf{Consulta de \meters}\newline
+Este grupo define mensajes y respuestas utilizados para consultar los
+\meters~ en una \sm. Estos mensajes son los que se utilizan en los servidores para las actividades relacionadas
+con contaduría.
+
+\item \textbf{Sistema de \textit{ticketing}}\newline
+En algunos casinos no se utiliza dinero para interactuar con la \sm, sino que cuando el jugador ingresa a jugar compra 
+cierta cantidad de créditos y se le otorga un \textit{ticket}.
+
+Este \textit{ticket} puede ser insertado en la \sm~ y utilizando el
+código de barras que posee, se consulta con un servidor cuantos créditos deben acreditarse.
+
+Otra característica que posee el sistema, es que cuando el jugador realiza la operación de \textit{cashout}, se imprime un ticket.
+Este a su vez, puede ser insertado en otra \sm~ o
+puede ser cobrado por ventanilla. 
+
+Lo que respecta al manejo de \textit{tickets} es realizado por servidores dedicados y la comunicación de las \sm s con dichos servidores se realiza utilizando
+mensajes que pertenecen a esta categoría.
+
+\item \textbf{Eventos en tiempo real y \errors}\newline
+Muchos de los eventos que ocurren durante el juego deben ser reportados a los sistemas de monitoreo. Un claro ejemplo de esto
+son los denominados \textit{BeginGame} y \textit{EndGame}. 
+
+También de ser posible, deben ser reportados los eventos y \errors~ descriptos en la sección~\ref{domain:hardware}. \newline
+Esto es opcional en la mayoría de las regulaciones, debido a que no todos los dispositivos físicos tienen la misma capacidad
+para la detección de errores y generación de \errors. Si fuesen detectados, deben ser enviados mediante los protocolos de 
+comunicación, dado que es información útil para los casinos.
+\end{itemize}
+
+En el desarrollo del presente trabajo, se consideraron dos \comms. Uno de ellos es un protocolo propietario, del cual no se
+pueden dar detalles, el mismo será nombrado como PCP. \newline El otro protocolo elegido es abierto, basado en \textit{web services},
+denominado G2S~\cite{g2s}.
+
+\subsection{Modo Demo}
+\label{domain:demo}
+
+Es importante saber que las \sm~ deben cumplir con regulaciones, las cuales varían dependiendo del país o estado donde deba ser instalada. \newline
+Existen entes llamados laboratorios de certificación, quienes luego de realizar un amplio conjunto de pruebas, certifican que una \sm~ es apta para ser instalada. Estas pruebas son muy extensas, abarcan \'items como probar completamente la \textit{paytable} del juego o uso intensivo del \textit{hardware}.
+
+Para las pruebas de \textit{software}, las \sm s cuentan con un modo especial de funcionamiento denominado \textit{Demo}. 
+La principal característica del mismo es que el juego se comporta de manera particular, permitiendo simular el ingreso de créditos o forzar la salida de premios.\newline
+Esta funcionalidad es necesaria debido a que existen premios cuya probabilidad de salir es muy baja, al poder seleccionar que premio ganar en la
+próxima jugada se puede probar de forma completa la tabla de pagos del juego. 
+
+Una \sm~ funciona en modo \demo~ dependiendo el estado de un \textit{DIP switch} interno, pudiendo darse el caso de que un \sm~ instalada en un casino, sea pasada temporalmente a este modo. Por esto, las regulaciones exigen que los eventos en modo \demo, no deben ser contabilizados por los \meters~ ni deben reportarse a los \comms.
+
+\section{Concerns identificados en el dominio a nivel de requerimientos}
+Dada las características descriptas de las \sm s y nuestra experiencia de trabajo en el dominio, se identificaron los \cns~ que  se detallan a continuación:
+
+\begin{itemize}
+ \item \textbf{Game:} contiene la lógica de un juego de \textit{reels}. El juego tiene créditos, los cuales se utilizan para realizar una apuesta sobre determinadas \textit{paylines}, los \textit{reels} giran y con el resultado del sorteo se determina la cantidad de créditos ganados.
+ 
+ \item \textbf{Game Recall:} este \textit{concern} mantiene la información más relevante de los últimos juegos, que en caso de ser solicitada por personal del casino o un ente regulador la misma este disponible.
+ 
+ \item \textbf{Meters:} mantiene actualizada la colección de contadores que son obligatorios y relevantes en una \sm. Por ejemplo, cantidad de dinero ingresado, cantidad de juegos realizados, entre otros.
+ 
+ \item \textbf{Program resumption:} este \textit{concern} es el que implementa el soporte para que ante un corte de energía en la \sm, el juego pueda ser restaurado al estado previo al corte con todos los datos correspondientes.
+ 
+ \item \textbf{Erros conditions:} ante determinadas condiciones la \sm~ debe generar un error y actuar según especifican las regulaciones. Por ejemplo, deshabilitar el juego si una puerta es abierta, o encender la \textit{tower lamp} para llamar a personal del casino si se trabara una moneda.
+ 
+ \item \textbf{Comunication protocols:} los protocolos son capaces de recibir comandos, que pueden requerir datos, por ejemplo, el valor de un \textit{meter}. Estos comandos también puede cambiar el estado de la \sm, por ejemplo el comando \textit{set time}. Además, es opcional reportar estados y \textit{errors conditions} de la \sm~ según la regulación utilizada.
+ 
+ \item \textbf{Demo:} el \textit{concern} de \textit{demo} es el que permite forzar determinados premios. Todas las acciones
+ realizadas en este modo, no deben contabilizarse ni deben ser reportadas en los protocolos de comunicación.
+\end{itemize}
+  
+Dada la complejidad del dominio, se pueden encontrar diferentes maneras de descomponer los \cns, la elección descripta 
+fue realizada de manera tal que refleje las interacciones que son objeto de estudio de este trabajo.
+
+Cada uno de estos \cns~ tiene un conjunto de requerimientos que representa una característica o propiedad del sistema. Algunos de estos \cns~ serán modelados como aspectos y otros como componentes, el detalle del diseño obtenido se presentará en el próximo capítulo.
+
+\section{Relaciones entre concerns}
+\label{slots:sec:relations}
+% 
+% Las interacciones entre aspectos han sido estudiadas por varios autores. El desarrollo realizado en esta tesis se basa en el reporte técnico
+% de \textit{AOSD-Europe} sobre \textit{Aspects Interactions}~\cite{Sanen06}. En este reporte el autor clasifica las 
+% interacciones en \textit{dependency, conflict, mutex} y \textit{reinforcement}.
+% 
+% \begin{itemize}
+% \item \textbf{Dependency:} cuando un aspecto depende de la presencia de otro para funcionar correctamente.
+% 
+% \item \textbf{Conflict:} se da entre dos aspectos que cuando funcionan al mismo tiempo pueden generar errores o inconsistencias. 
+% 
+% \item \textbf{Mutex:} se trata de una exclusión mutua entre aspectos que implementan la misma funcionalidad y sólo uno puede ser usado a la vez.
+% 
+% \item \textbf{Reinforcement:} es una interacción positiva, que se da cuando un aspecto permite que otro pueda extender su funcionalidad.
+% 
+% \end{itemize}
+% 
+% Ejemplos de estas interacciones se pueden encontrar entre los \cns~ descriptos anteriormente. Existe un conflicto
+% entre \demo~ y \meters, dado que los \textit{meters} que varíen durante el modo \textit{demo} no deben ser contabilizados.\newline
+% Una interacción de tipo \textit{Mutex} se da cuando dos o más \comms, que proveen la misma funcionalidad, están activos al mismo tiempo.
+% 
+% Existe una interacción de tipo \textit{dependency} entre los \comms~ y el \cn~ de \meters, por el hecho de que estos deben ser reportados
+% por los protocolos. \newline
+% Por último una interacción de tipo \textit{reinforcement} se da cuando una \sm~ tiene la capacidad de detectar \errors. Estás son utilizadas
+% por los \comms~para ser reportadas en tiempo real, ampliando la funcionalidad de los protocolos.
+% 
+Las relaciones que se dan entre los \cns~ del dominio, se muestran mediante una notación \textit{ad-hoc} en la figura \ref{fig:interactions1}.%\newline
+% Esta es una selección de las interacciones más representativas, hay otras que no fueron incluídas en la figura para evitar sobrecargar el gráfico.
+  
+\begin{figure}[ht]
+   \centering \epsfig{file=img/3/interactions1, width=14cm}
+   \caption{Relaciones \textit{crosscutting} entre los \cns~del dominio.}
+   \label{fig:interactions1}
+\end{figure}
+
+En esta figura el \textit{base} \cn~ de \game~ es representado por un rectángulo, mientras que los \ccc~ son representados por óvalos.
+Las relaciones de \textit{crosscuts}, representadas por flechas, son las que se detallan a continuación:
+
+\begin{enumerate}
+\item \textit{Demo} a \textit{Game}: El \cn~ de \demo~ necesita alterar el comportamiento 
+ normal del juego para permitir la salida de premios.
+ 
+\item \textit{Game Recall} a \textit{Game}: \textit{Game Recall} requiere guardar datos a medida que el \cn~ de \game~ va cambiando de estados.
+
+\item \textit{Program resumption} a \textit{Game Recall}, \textit{Game},
+\textit{Meters}, \textit{PCP} y \textit{G2S}: el \cn~ de \textit{Program resumption} controla la persistencia de datos y es por esto 
+que tiene una relación con los \cns~ donde varían datos que deben ser restaurados.
+
+\item  \textit{Meters} a \textit{Game}: parte de los datos que contienen los \meters~ pertenecen al \cn~ de \game~ y los mismos deben estar actualizados en todo momento.
+
+\item \textit{PCP} a \textit{Game}: Varios eventos generados en el \cn~ de \game~ requieren ser reportados mediante los protocolos.
+
+\item \textit{G2S} a \textit{Game}: Al igual que \textit{PCP}, este protocolo debe reportar cambios en el estado del juego.
+
+\item \textit{Error Conditions} a \textit{Game}: dado que varias de las condiciones que pueden generar las \errors~ están dentro del comportamiento del \cn~ de \game.
+
+\end{enumerate}
+% 
+% % Las interacciones indicadas en la figura \ref{fig:interactions} son las siguientes:
+% 
+% % \begin{enumerate}
+% \item[8.] \textbf{Conflict} entre \textit{Demo} y \textit{Program
+% Resumption}:  dado que los datos alterados en modo \demo~ no deben ser persistidos.
+% 
+% \item[9.] \textbf{Conflict} entre \textit{Demo} y \textit{G2S}: se genera por el hecho que ambos \cns~ no pueden estar
+% activos al mismo tiempo, dado que uno de los requerimientos del modo demo es que los eventos no sean reportados a los \comms.
+% 
+% \item[10.] \textbf{Dependency} de \textit{G2S} y \textit{PCP} sobre \textit{Meters}: 
+% una de las características de los \comms~ es que deben reportar el estado de los \textit{meters}. 
+% Para esto dependen del correcto funcionamiento del \cn~ de \meters~ para enviar datos válidos.
+% 
+% \item[12.]\textbf{Mutex} entre \textit{G2S} y \textit{PCP}: esta interacción se genera porque ambos protocolos implementan una
+% misma funcionalidad. Por ejemplo, con ambos protocolos activos, de recibirse un comando que cambia la hora de la \sm~ de manera
+% remota, podrían producirse inconsistencias.
+% 
+% \item[11.] \textbf{Reinforcement} de \textit{G2S} con \textit{Error Conditions}: dado que el requerimiento 
+% de reportar las \errors~ no es obligatorio, se da una interacción de tipo \textit{reinforcement} cuando
+% estos datos están disponibles y pueden ser utilizados por los protocolos para el reporte de los mismos en tiempo real.
+
+% \end{enumerate}
+
+% \clearpage
+% \section{Resumen del capítulo}
+% En este capítulo se describieron las principales características del dominio de las \textit{Slot Machines}. Luego se identificaron
+% los \cns~ más representativos del dominio que se clasificaron en:
+% 
+% \begin{itemize}
+%  \item Game 
+%  \item Meters
+%  \item PCP Communication protocol
+%  \item G2S Communication protocol
+%  \item Game Recall
+%  \item Program Resumption
+%  \item Demo
+%  \item Error Conditions
+% \end{itemize}
+% 
+% Se analizó la manera en que interactúan entre ellos, encontrando \textit{base} y
+% \ccc. Entre estos últimos se esperan identificar interacciones en las categorías propuestas 
+% por Sanen~\etal: \textit{dependency, conflict, mutex} y \textit{reinforcement}.
+
+% De las interacciones encontradas bajo esta clasificación se seleccionaron las siguientes:
+% 
+% \begin{itemize}
+% \item \textbf{Mutex}: entre los \comm~ \textit{G2S} y \textit{PCP}.
+% \item \textbf{Conflict}: entre \demo~ y: \meters, \recall, \comm~ y \resump.
+% \item \textbf{Dependency}:  \comm(\textit{G2S, PCP}) sobre \meters.
+% \item \textbf{Reinforcement}: \error~ a \comm.
+% \end{itemize}
+
+% Estas serán analizadas y de ser posible se propondrán mecanismos para su tratamiento.
+% La necesidad de los mecanismos surge ya que las interacciones entre los \ccc~ 
+% tienen un alto impacto dentro del \textit{software} que contiene una \sm~ y esto
+% pueden ser la causa de errores o comportamientos no deseados.
+\ifx\all\undefined
+\end{document}
+\fi

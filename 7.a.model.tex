@@ -1,0 +1,270 @@
+\ifx\all\undefined
+\include{0.base}
+\begin{document}
+\fi
+
+\chapter{Modelo de Objetos}
+En el cap\'itulo 4 se decriben detalles de implementaci\'on de cada \cn~teniendo en cuenta como los objetos interact\'uan con los aspectos del sistema.
+A continuaci\'on se detallan las reponsabilidades de los objetos involucrados en la soluci\'on.
+
+\section{Paquete Game}
+ 
+Las clases del paquete \textit{Game} se pueden ver en la figura \ref{fig:game_classes}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/game.eps}
+\caption{Clases del paquete \textit{Game}.}
+\label{fig:game_classes}
+\end{figure}
+
+\clearpage
+
+\begin{itemize}
+\item \texttt{Game}
+\begin{itemize}
+\item implementa la interfaz de alto nivel de un juego de apuestas.
+\item el juego puede estar habilitado o deshabilitado.
+\item un juego necesita de créditos para realizar una jugada, adem\'as de estar habilitado.
+\item en cada jugada se descuentan los cr\'editos que se apuestan y se suman los ganados, si es que los hubo. 
+\item se puede jugar mientras queden cr\'editos o hasta que el jugador retira los mismos.
+\newline
+\end{itemize}
+
+\item \texttt{BetManager}
+\begin{itemize}
+\item Maneja el sistema de apuestas del juego: configuración de las líneas de pago, cantidad de líneas apostadas, cantidad de cr\'editos apostados por línea.
+\item Conoce el costo de cada jugada ( \textit{betPerLine} x \textit{selectedPaylines} ).
+\item Define una colección de objetos \texttt{Payline}, los cuales se utilizan para saber si hay líneas ganadoras entre las seleccionadas.
+\newline
+\end{itemize}
+
+\item \texttt{Payline}: 
+\begin{itemize}
+\item Representa una l\'inea de apuesta en un juego de \textit{reels}. 
+\item Una \textit{payline} puede estar activa, es decir apostada o no.
+\item Permite determinar que cantidad de s\'imbolos iguales consecutivos hay en sus posiciones y con esto saber si es o no una línea ganadora.
+\newline
+\end{itemize}
+
+\item \texttt{ReelsManager}: 
+\begin{itemize}
+\item Crea e inicializa 5 objetos de la clase \texttt{Reel}.
+\item La operaci\'on de \texttt{spin()} delega en cada \textit{reel} el sorteo de la nueva posición.
+\item Permite consultar la ventana de s\'imbolos resultante del sorteo.
+\newline
+\end{itemize}
+
+\item \texttt{Reel}: 
+\begin{itemize}
+\item Modela una tira circular de s\'imbolos.
+\item El m\'etodo \texttt{spin()} genera una nuevo \textit{offset} de manera aleatoria.
+\end{itemize}
+
+\end{itemize}
+
+
+\clearpage
+\section{Paquete HAL}
+Las clases del paquete \textit{HAL} se pueden ver en la figura \ref{fig:hal_classes}.
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/hal.eps}
+\caption{Clases del paquete \textit{HAL}.}
+\label{fig:hal_classes}
+\end{figure}
+\FloatBarrier
+\begin{itemize}
+
+\item \texttt{Device}
+\begin{itemize}
+\item Representa un disposivo de \textit{hardware}.
+\item Un disposivo puede estar o no activo.
+\newline
+\end{itemize}
+
+\item \texttt{CoinAcceptor}
+\begin{itemize}
+\item Esta clase representa un disposivo que permite el ingreso de monedas al juego a trav\'es de la \textit{HAL}.
+\item Una moneda ingresada puede:
+\begin{itemize}
+\item ser v\'alida y tener un valor reconocido.
+\item ser inv\'alida (\textit{invalidCoin}).
+\item trabar y deshabilitar el dispositivo (\textit{coinTilt}).
+\newline
+\end{itemize}
+\end{itemize}
+
+\item \texttt{Door}
+\begin{itemize}
+\item Esta clase representa un puerta del gabinete, como puede ser la \textit{main door}.
+\item Una EGM tiene un puerta principal que de ser abierta, debe deshabilitar el juego por completo.
+\newline
+\end{itemize}
+
+\item \texttt{NVRAM}
+\begin{itemize}
+\item Esta clase representa un dispositivo de memoria de acceso aleatorio no volátil.
+\item Permite guardar datos como un par ( clave, valor ).
+\item Permite recuperar datos a partir de una clave.
+\newline
+\end{itemize}
+
+\item \texttt{TowerLamp}
+\begin{itemize}
+\item Representa la l\'ampara que tiene una EGM que puede encenderse o apagarse de acuerdo a los distintos estados de la EGM.
+\newline
+\end{itemize}
+
+\item \texttt{HAL}
+\begin{itemize}
+\item \textit{Hardware Abstraction Layer}
+\item Esta clase abstrae de la comunicaci\'on con los dispositivos f\'isicos al resto de los componentes del \textit{software}.
+\newline
+\end{itemize}
+
+\end{itemize}
+
+\section{Paquete Meters}
+ 
+Las clases del paquete \textit{Meters} se pueden ver en la figura \ref{fig:meters_classes}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/meters.eps}
+\caption{Clases del paquete \textit{Meters}.}
+\label{fig:meters_classes}
+\end{figure}
+
+\begin{itemize}
+\item \texttt{Meter}
+\begin{itemize}
+\item Esta clase se utiliza para definir un tipo enumerativo. El mismo es usado para el manejo de \textit{meters}.
+\item Algunos valores son: GAMES, CREDITS, LINES, WIN, CASHOUT.
+\newline
+\end{itemize}
+
+\item \texttt{MetersManager}
+\begin{itemize}
+\item Mantiena un mapa de \textit{meters}.
+\item Para el acceso a los mismos se utiliza el tipo enumerativo anteriormente descripto.
+\item Para un \textit{meter} en particular esta clase permite: 
+\begin{itemize}
+\item asignar un valor espec\'ifico.
+\item consultar el valor actual.
+\item incrementar el valor actual.
+\item decrementar el valor actual.
+\end{itemize}
+\end{itemize}
+
+\end{itemize}
+
+\section{Paquete Game Recall}
+ 
+Las clases del paquete \textit{Game Recall} se pueden ver en la figura \ref{fig:gameRecall_classes}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/gameRecall.eps}
+\caption{Clases del paquete \textit{Game Recall}.}
+\label{fig:gameRecall_classes}
+\end{figure}
+
+\begin{itemize}
+\item \texttt{GameRecall}
+\begin{itemize}
+\item Un objeto \texttt{GameRecall} mantiene información de una jugada en particular.
+\item Esta información se compone de:
+\begin{itemize}
+\item fecha y hora en que se realiz\'o la jugada.
+\item datos de la apuesta realizada (\textit{bet}, \textit{lines}).
+\item cantidad de cr\'editos que hab\'ia en el juego antes de realizar la jugada.
+\item cantidad de cr\'editos ganados.
+\item s\'imbolos de los \textit{reels} que resultaron del sorteo.
+\newline
+\end{itemize}
+
+\end{itemize}
+
+\item \texttt{GameRecallManager}
+\begin{itemize}
+\item Mantiene una pila con las \'ultimos \textit{game recalls}.
+\item Permite agregar un nuevo objeto \texttt{GameRecall}.
+\item Permite consultar el contenido de la pila.
+\end{itemize}
+
+\end{itemize}
+
+\section{Paquete Errors}
+
+Las clases del paquete \textit{Errors} se pueden ver en la figura \ref{fig:errors_classes}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/errors.eps}
+\caption{Clases del paquete \textit{Erros}.}
+\label{fig:errors_classes}
+\end{figure}
+
+
+\begin{itemize}
+\item \texttt{Action}
+\begin{itemize}
+\item Representa una acción a ser realizada ante una \textit{error condition}.
+\item Una acción puede aplicarse o desaplicarse.
+\item Las clases \texttt{DisableGame}, \texttt{TurnOffInputDevices} y \texttt{TowerLampOn} implementan la interfaz \texttt{Action}.
+\end{itemize}
+
+\item \texttt{ErrorCondition}
+\begin{itemize}
+\item Es una clase abstracta que contiene las acciones que se toman al generarse una \textit{error condition} particular.
+\item Al generarse una \textit{error condition} se aplican las acciones.
+\item Cuando una \textit{error condition} deja de estar presente, se desaplican las acciones.
+\end{itemize}
+
+\item \texttt{DoorOpen}
+\begin{itemize}
+ \item Es un tipo de \texttt{ErrorCondition} que se genera al abrirse un puerta y se cancela al cerrarse la misma.
+ \newline
+\end{itemize}
+\end{itemize}
+
+\clearpage
+\section{Paquete Protocols}
+
+Las clases del paquete \textit{Protocols} se pueden ver en la figura \ref{fig:protocols_classes}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale=0.60]{img/modelo/protocols.eps}
+\caption{Clases del paquete \textit{Protocols}.}
+\label{fig:protocols_classes}
+\end{figure}
+
+\begin{itemize}
+\item \texttt{ProtocolCmd}
+\begin{itemize}
+ \item Es una interfaz que deben implementar los comandos que se env\'ian y reciben a trav\'es de un protocolo de comunicación.
+ \item Las siguientes clases implementan dicha interfaz:
+ \begin{itemize}
+ \item \texttt{SetTime} este comando al ejecutarse configura la hora de la EGM.
+ %\item \textit{SetProgressive}
+ \item \texttt{GetMeter} al recibir este comando debe retornarse el valor del \textit{meter} requerido.
+ \item \texttt{GetGameRecall} al recibir este comando se retorna la lista de \textit{game recalls}.
+ \newline	
+\end{itemize}
+\end{itemize}
+
+\item \texttt{CommProtocol}
+\begin{itemize}
+ \item Una instancia de esta clase, es un \textit{thread} que esta a la espera de recibir un objeto \texttt{ProtocolCmd}.
+ \item Tambi\'en tiene la responsabilidad de enviar a los protocolos los eventos que ocurren en la \sm.
+ \item Al recibirse un \textit{ProtocolCmd} se ejecuta la acción asociada al comando.
+\end{itemize}
+\end{itemize}
+
+\ifx\all\undefined
+\end{document}
+\fi
