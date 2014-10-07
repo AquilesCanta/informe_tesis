@@ -4,7 +4,7 @@
 \fi
 \chapter{Introducción técnica}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben utilizar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. Lifia lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor \emph{Wari}.
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben utilizar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor \emph{Wari}.
 
 \section{Transmisión}
 
@@ -14,7 +14,35 @@ Esta limitación de bitrate establece una cota superior para el número se servici
 
 \section{Multiplexación}
 
+El formato del flujo multiplexado de servicios está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades, como identificar el contenido del mismo.
+
+Los contenidos de los paquetes de \textbf{Transport stream} llevan partes de \emph{secciones} o \emph{packetized elementary streams}.
+
 \section{Decodificación}
+
+El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
+
+El formato \emph{transport stream} se divide en dos categorías: \emph{sistema} y \emph{compresión}. La primera capa corresponde a la información específica de multiplexación de los servicios. Señaliza los contenidos del flujo de transporte para su posterior demultiplexación. También incluye información específica de la red (\emph{network}) a la que pertenece el \textbf{Transport Stream}. La principal componente de la capa de sistema son las tablas que son transportadas por secciones del \emph{ts}.
+
+\subsection{Secciones y tablas}
+
+El formato \textbf{MPEG-TS} define varias tablas. Puede definirse cierta jerarquía sobre las mismas.
+
+\subsubsection{\emph{Program allocation table}}
+
+La \textbf{PAT} entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre o su tipo.
+
+\subsubsection{\emph{Program mapping table}}
+
+Lorore rore
+
+\subsubsection{\emph{Service description table}}
+
+SDT++
+
+\subsection{\emph{Packetized elementary streams}}
+
+El audio y video enviados en un \emph{ts} utilizan paquetes \textbf{PES}, que poseen longitud variable. Estos paquetes se dividen luego entre paquetes \emph{ts} para ser multiplexados luegos al flujo de transporte final.
 
 \ifx\all\undefined
 \end{document}
