@@ -1,0 +1,1 @@
+pdflatex -c-style-errors -output-directory=output -aux-directory=aux tesis
