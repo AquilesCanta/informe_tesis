@@ -30,15 +30,15 @@ El formato \textbf{MPEG-TS} define varias tablas. Puede definirse cierta jerarqu
 
 \subsubsection{\emph{Program allocation table}}
 
-La \textbf{PAT} entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre o su tipo.
+La \pat\ es la primera tabla que debe buscar el decodificador. Viaja con \pid 0. Existe una \pat\ por flujo de transporte. Lleva información general del del flujo y de la red de transmisión. Más importante aún, la \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
 
 \subsubsection{\emph{Program mapping table}}
 
-Lorore rore
+La \pmt\ define los programas. Tiene un \pid\ referido por la \pat. Cada \pmt\ está asociada a un servicio que viaja por el \emph{ts} y le permite al decodificador acceder a los paquetes que llevan los \emph{elementary streams}a través de la definición de sus respectivos \pid.  
 
 \subsubsection{\emph{Service description table}}
 
-SDT++
+La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc
 
 \subsection{\emph{Packetized elementary streams}}
 
