@@ -4,29 +4,42 @@
 \fi
 \chapter{Introducción técnica}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben utilizar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor \emph{Wari}.
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben respetar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor \emph{Wari}.
 
 \section{Transmisión}
 
-La televisión terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La radiofrecuencia se divide en canales físicos de $6 MHz$ por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación.
+La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La radiofrecuencia se divide en canales físicos de $6 MHz$ por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo].
 
-Esta limitación de bitrate establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos.
+Esta limitación de bitrate establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Para ejemplificar, con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
+
+\subsection{Estructura general del sistema \textbf{ISDB-Tb}}
+
+[TODO: Agregar gráfica de la estructura general de ISDB-Tb]
+
+El sistema \textbf{ISDB-Tb} se puede dividir en niveles. 
+
+\begin{itemize}
+\item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
+\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios.
+\item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
+\item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
+\end{itemize}
 
 \section{Multiplexación}
 
 El formato del flujo multiplexado de servicios está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades, como identificar el contenido del mismo.
 
-Los contenidos de los paquetes de \textbf{Transport stream} llevan partes de \emph{secciones} o \emph{packetized elementary streams}.
+El contenido de un flujo de transporte se puede dividir en información y contenido multimedia. El primer grupo, los datos que se incorporan al \emph{ts}, viajan en forma de tablas sobre un formato específico denominado ``secciones'', a diferencia del audio y el video, que utilizan paquetes \pes. Tanto las secciones como los paquetes \pes\ tienen longitud variable y potencialmente muy superior a la de un paquete \textbf{TS} de 188 \emph{bytes}. Luego, se dividen para poder ser enviados a través de este esquema. Parte de la responsabilidad de un receptor es reconstruir estas estructuras. 
 
-\section{Decodificación}
+\subsection{Tablas}
 
-El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
-
-El formato \emph{transport stream} se divide en dos categorías: \emph{sistema} y \emph{compresión}. La primera capa corresponde a la información específica de multiplexación de los servicios. Señaliza los contenidos del flujo de transporte para su posterior demultiplexación. También incluye información específica de la red (\emph{network}) a la que pertenece el \textbf{Transport Stream}. La principal componente de la capa de sistema son las tablas que son transportadas por secciones del \emph{ts}.
-
-\subsection{Secciones y tablas}
-
-El formato \textbf{MPEG-TS} define varias tablas. Puede definirse cierta jerarquía sobre las mismas.
+Las tablas de un \emph{ts} se clasifican en 3 conjuntos.
+\begin{itemize}
+\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \pat, \cat\ y \pmt. La \pat\ y \pmt\ serán explicadas más adelante.
+\item \textbf{SI (System information):} Contiene información asociada a servicios y eventos. Son tablas privadas, algunas de ellas opcionales. A este conjunto pertenecen la \textbf{BAT}, \textbf{NIT}, \textbf{SDT}, \textbf{EIT}, \textbf{TDT}, \textbf{TOT} y \textbf{ST}. Más adelante se revisará la \textbf{SDT}. 
+\item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionado con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo.
+\end{itemize}
 
 \subsubsection{\emph{Program allocation table}}
 
@@ -42,7 +55,13 @@ La \sdt\ describe con más detalle que otras los programas transportados por un \
 
 \subsection{\emph{Packetized elementary streams}}
 
-El audio y video enviados en un \emph{ts} utilizan paquetes \textbf{PES}, que poseen longitud variable. Estos paquetes se dividen luego entre paquetes \emph{ts} para ser multiplexados luegos al flujo de transporte final.
+El contenido multimedia enviado en un \emph{ts} utiliza paquetes \textbf{PES}, que poseen longitud variable. Estos paquetes se dividen luego entre paquetes \textbf{TS} para ser multiplexados finalmente al flujo de transporte resultante. El formato \textbf{MPEG-TS} permite la multiplexación de varios servicios de \emph{bitrate} variable, pero el \emph{ts} debe garantizar la salud de los \emph{buffers} del receptor. Esto es, en ningún punto de la reproducción del servicio pueden ocurrir \emph{overflows} o \emph{underflows}. Esto implica que en ningún punto de la transmisión la suma de los \emph{bitrates} individuales debe exceder al \emph{bitrate} del \emph{ts}.
+
+\section{Decodificación}
+
+El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
+
+La librería \textbf{mpeg-parser} captura los paquetes de un \emph{ts}, identifica los servicios que lleva el mismo y 
 
 \ifx\all\undefined
 \end{document}
