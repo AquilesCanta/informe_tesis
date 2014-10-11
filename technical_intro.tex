@@ -4,19 +4,19 @@
 \fi
 \chapter{Introducción técnica}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben respetar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor \emph{Wari}.
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben adoptar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
 
 \section{Transmisión}
 
-La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La radiofrecuencia se divide en canales físicos de $6 MHz$ por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo].
+La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo].
 
 Esta limitación de bitrate establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Para ejemplificar, con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
 
 \subsection{Estructura general del sistema \textbf{ISDB-Tb}}
 
-[TODO: Agregar gráfica de la estructura general de ISDB-Tb]
+El sistema \textbf{ISDB-Tb} se puede dividir en niveles. [NOTA: Esta imagen debe cambiarse para respetar un esquema de colores y traducirse al español]
 
-El sistema \textbf{ISDB-Tb} se puede dividir en niveles. 
+\includegraphics[width=10cm]{imgs/services.png}
 
 \begin{itemize}
 \item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
@@ -28,26 +28,26 @@ El sistema \textbf{ISDB-Tb} se puede dividir en niveles.
 
 \section{Multiplexación}
 
-El formato del flujo multiplexado de servicios está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades, como identificar el contenido del mismo.
+La estructura del flujo multiplexado de servicios está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades. Uno de los campos primordiales transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que asigna el paquete a un flujo específico.
 
 El contenido de un flujo de transporte se puede dividir en información y contenido multimedia. El primer grupo, los datos que se incorporan al \emph{ts}, viajan en forma de tablas sobre un formato específico denominado ``secciones'', a diferencia del audio y el video, que utilizan paquetes \pes. Tanto las secciones como los paquetes \pes\ tienen longitud variable y potencialmente muy superior a la de un paquete \textbf{TS} de 188 \emph{bytes}. Luego, se dividen para poder ser enviados a través de este esquema. Parte de la responsabilidad de un receptor es reconstruir estas estructuras. 
 
 \subsection{Tablas}
 
-Las tablas de un \emph{ts} se clasifican en 3 conjuntos.
+Como se mencionó ya, es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos contenidos viajan en tablas, las cuales se clasifican en 3 tipos:
 \begin{itemize}
-\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \pat, \cat\ y \pmt. La \pat\ y \pmt\ serán explicadas más adelante.
+\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \pat, \cat\ y \pmt. La \pat\ y \pmt\ serán explicadas más adelante. La \cat\ incluye datos referentes al acceso condicional.
 \item \textbf{SI (System information):} Contiene información asociada a servicios y eventos. Son tablas privadas, algunas de ellas opcionales. A este conjunto pertenecen la \textbf{BAT}, \textbf{NIT}, \textbf{SDT}, \textbf{EIT}, \textbf{TDT}, \textbf{TOT} y \textbf{ST}. Más adelante se revisará la \textbf{SDT}. 
-\item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionado con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo.
+\item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionada con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo. [TODO: Esto me hace ruido. Quizás se debería eliminar.]
 \end{itemize}
 
 \subsubsection{\emph{Program allocation table}}
 
-La \pat\ es la primera tabla que debe buscar el decodificador. Viaja con \pid 0. Existe una \pat\ por flujo de transporte. Lleva información general del del flujo y de la red de transmisión. Más importante aún, la \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
+La \pat\ es la primera tabla que debe buscar el decodificador. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte. Lleva información general del flujo y de la red de transmisión. Más importante aún, la \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
 
 \subsubsection{\emph{Program mapping table}}
 
-La \pmt\ define los programas. Tiene un \pid\ referido por la \pat. Cada \pmt\ está asociada a un servicio que viaja por el \emph{ts} y le permite al decodificador acceder a los paquetes que llevan los \emph{elementary streams}a través de la definición de sus respectivos \pid.  
+La \pmt\ define los programas. Tiene un \pid\ referido por la \pat. Cada \pmt\ está asociada a un servicio que viaja por el \emph{ts} y le permite al decodificador acceder a los paquetes que llevan los \emph{elementary streams} a través de la definición de sus respectivos \pid. Además de esta asociación incluye información de los flujos elementales.
 
 \subsubsection{\emph{Service description table}}
 
@@ -59,9 +59,33 @@ El contenido multimedia enviado en un \emph{ts} utiliza paquetes \textbf{PES}, q
 
 \section{Decodificación}
 
-El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
+El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{MPEG-TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
 
-La librería \textbf{mpeg-parser} captura los paquetes de un \emph{ts}, identifica los servicios que lleva el mismo y 
+\subsection{Obtención de servicios}
+
+La lectura de los servicios de un \emph{ts} se hace de forma independiente respecto del medio del cual se obtiene. A fin de comprender cualquier tipo de modificación de la librería \textbf{mpeg-parser}, es necesario ver el proceso de obtención y reproducción de servicios:
+
+\begin{enumerate}
+\item Se sintoniza el canal físico por el que viaja el \emph{ts} que lleva el servicio.
+\item Se filtra la \pat\ y se obtiene de la misma el \pid\ con el que viaja la \pmt\ asociada al servicio.
+\item Se filtra la \pmt\ del servicio y se extraen los \pid\ de los flujos elementales, sean audio y video.
+\item Los \pid\ de los flujos elementales se entregan a la librería \emph{Canvas}. [TODO: No se ha introcido aún la librería]
+\end{enumerate}
+
+\subsection{Reproducción}
+
+La entrega de los flujos al reproductor se realiza a través de una URL que incluye los \pid\ de los flujos elementales componentes del servicio a entregar. Una característica a notar de la librería \emph{Canvas} que interpreta la URL es la naturaleza polimórfica del parámetro, dado que interpreta esquemas (o protocolos) diversos. \eg:
+
+\begin{itemize}
+\item srvdtv://videoPID:1234\&audioPID:5678 [TODO: Agregar un ejemplo bien]
+\item udp://@127.0.0.1:4000
+\end{itemize}
+
+El primero corresponde a un \emph{ts} consumido desde un dispositivo de sintonización de radiofrecuencia. El segundo a un socket alocado localmente asignado al puerto 4000. Es interesante notar que tal URL no debe estar necesariamente ligada un socket local.
+
+\section{Descripción de clases}
+
+[TODO: Agregar UML]
 
 \ifx\all\undefined
 \end{document}
