@@ -16,7 +16,7 @@ Esta limitación de bitrate establece una cota superior para el número se servici
 
 El sistema \textbf{ISDB-Tb} se puede dividir en niveles. [NOTA: Esta imagen debe cambiarse para respetar un esquema de colores y traducirse al español]
 
-\includegraphics[width=10cm]{imgs/services.png}
+\includegraphics[width=8cm]{imgs/services.png}
 
 \begin{itemize}
 \item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
@@ -41,6 +41,7 @@ Como se mencionó ya, es necesario incluir información al \emph{ts} a fin de iden
 \item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionada con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo. [TODO: Esto me hace ruido. Quizás se debería eliminar.]
 \end{itemize}
 
+
 \subsubsection{\emph{Program allocation table}}
 
 La \pat\ es la primera tabla que debe buscar el decodificador. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte. Lleva información general del flujo y de la red de transmisión. Más importante aún, la \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
@@ -52,6 +53,12 @@ La \pmt\ define los programas. Tiene un \pid\ referido por la \pat. Cada \pmt\ e
 \subsubsection{\emph{Service description table}}
 
 La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc
+
+\subsection{Descriptores}
+
+Buena parte de la información de las tablas viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado unívocamente por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
+
+Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. 
 
 \subsection{\emph{Packetized elementary streams}}
 
@@ -85,7 +92,43 @@ El primero corresponde a un \emph{ts} consumido desde un dispositivo de sintoniz
 
 \section{Descripción de clases}
 
-[TODO: Agregar UML]
+\includegraphics[width=12cm]{imgs/classes.png}
+
+A continuación se presentan descripciones de las clases más relevantes de la librería \textbf{mpeg-parser} en términos de identificación y entrega de servicios. El enfoque es descendente. Esto es, las primeras clases son las más cercanas a conceptos ya presentadas y, a partir de ellas, se reduce el nivel de abstracción.
+
+\subsection{\texttt{Tuner}}
+
+Esta clase(podría traducirse como \texttt{Sintonizador}), provee interfaz para escanear y sintonizar servicios, y es accedida directamente desde las librerías que utilizan \textbf{mpeg-parser}. Para realizar estas tareas hace uso de la jerarquía compuesta por \texttt{ServiceProvider} y su superclase \texttt{ServiceManager}.
+
+\subsection{\texttt{ServiceProvider}}
+
+Permite comenzar el proceso de \emph{scanning} de servicios. Al detectar un servicio, crea el modelo del mismo, asociando un \emph{listener} sobre el flujo de transporte para los elementos del \emph{ts} relacionados a los servicios como lo son su \pmt, la \sdt, la \nit\ y sus respectivos flujos elementales. Estos últimos sólo al momento de su reproducción. Este modelo es reflejado por la clase \texttt{Service}. 
+
+\texttt{Service provider} es una especialización de \texttt{ServiceManager}, pero actualmente no existe otra utilidad para la clase más genérica, por ello no se realiza una diferenciación explícita de las responsabilidades de cada una. 
+
+\subsection{\texttt{Service}}
+
+Modela un servicio de alguno de los \emph{ts} capturados por la librería. Entre otras responsabilidades, procesa las tablas y descriptores encontrados en una tabla, modificándose acordemente. Lleva información sobre los flujos elementales componentes que resulta necesaria para la sintonización del servicio.
+
+\subsection{Tablas: \texttt{PAT}, \texttt{PMT}, \texttt{SDT}}
+
+Cada tabla del estándar posee un modelo que la refleja en la librería e incluye toda la información que pudiera viajar por estos medios. De esta manera, un servicio adquiere su nombre a través del procesamiento de una instancia de la clase que corresponde a la \sdt.
+
+\subsection{\texttt{Descriptors}}
+
+Esta clase modela un \emph{loop} de descriptores. Cada descriptor posee a su vez una representación a través de un registro \texttt{struct}, sin comportamiento. El servicio utiliza la información que obtenga del descriptor de la forma que corresponda. Es importante remarcar que una clase descriptors se modela con un arreglo de \emph{bytes}, de modo que el salto de abstracción se debe realizar de alguna manera. De este proceso se encargan los \emph{descriptor parsers}.
+
+\subsection{Macro: \texttt{DESC\_PARSE}, \emph{descriptor tag} y función asociada}
+
+Los servicios usan el \texttt{DESC\_PARSE} para encontrar descriptores en un \emph{loop} de descriptores. Para esto, se debe iterar una función de \emph{parsing} a lo largo de todo el arreglo. A cada paso, en el proceso de iteración, se invoca la función de \emph{parsing} asociada al \emph{descriptor tag} encontrado. La asociación se realiza a nivel de compilación por \emph{matching} de nombres descriptor/función.
+
+La función de \emph{parsing} entonces recibe un arreglo de \emph{bytes} con un \emph{offset} que permite encontrar el comienzo de su descriptor dentro del \emph{loop}. A partir de ahí utiliza el formato para extraer los datos que transporta.
+
+\subsection{\texttt{Filter} y \texttt{Demuxer}}
+
+Como ya se sabe, los descriptores se encuentran en tablas. Pero para obtener las tablas es necesario antes construir la sección en la que se ubica la tabla. Entonces, si se buscan los descriptores de la \sdt, antes debe obtener suficientes paquetes con \pid\ 17(el correspondiente a la tabla) como para reconstruir la sección y luego, a partir de la misma, obtener la información que contiene, verificando ausencia de errores.
+
+De la tarea de filtrar paquetes con cierto \pid\ se encarga la clase \texttt{Filter}. De la segunda tarea se encargan las instancias de la clase \texttt{Demuxer}.
 
 \ifx\all\undefined
 \end{document}
