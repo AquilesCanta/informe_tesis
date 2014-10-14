@@ -11,6 +11,34 @@
 \section{Objetivos}
 
 
+
+
+
+\subsubsection{Compatibilidad con versiones anteriores}
+
+El estándar ISDB-Tb ya es utilizado en un gran números de sistemas de recepción. Una cualidad esencial de una extensión con las características de este trabajo es la compatibilidad con versiones anteriores. Es decir, aquellos servicios que se sigan transmitiendo por radiofrecuencia, deben seguir siendo accesibles.
+
+\subsubsection{Cambios necesarios mínimos}
+
+Una cualidad buscada en el diseño debe ser la minimización del número de cambios introducidos al estándar. Los motivos para esto son tanto mantener simplicidad en la extensión como requerir la menor cantidad de trabajo posible en los cambios de receptores ya funcionales.
+
+En este capítulo se describe el diseño utilizado para lograr la referencia de un \emph{ts} que viaja por radiofrecuencia y otro que viaja por un medio distinto: una red \textbf{IP}.
+
+\subsection{En entrega de servicios IPTV}
+
+\subsubsection{Aprovechamiento eficiente de la infraestructura}
+
+En el caso de las redes IP, el uso eficiente de los recursos de red, como \emph{buffers} o ancho de banda es importante para proteger la infraestructura de transmisión, a diferencia de la emisión \emph{broadcast} de ISDB-Tb cuya integridad no sufre el aumento de consumidores, \eg\ es necesario enviar paquetes nulos para completar el \emph{bitrate} constante del \textbf{TS}. El envío de paquetes nulos en el caso de las redes IP es inútil.
+
+\subsection{En recepción}
+
+\subsubsection{Conservación de las interfaces}
+
+Los cambios a realizar deberían limitarse idealmente a la librería \textbf{mpeg-parser} de modo que sus clientes puedan aprovechar la extensión de forma transparente. Esto implicaría que cualquiera de los reproductores de \emph{Kuntur} podrían consumir la lista de servicios extendida.
+
+
+
+
 \section{Contribuci\'on y resultados obtenidos}
 
 \section{Estructura del documento}

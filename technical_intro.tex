@@ -66,7 +66,7 @@ El contenido multimedia enviado en un \emph{ts} utiliza paquetes \textbf{PES}, q
 
 \section{Decodificación}
 
-El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{MPEG-TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción.
+El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{MPEG-TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción. La reproducción es realizada por la librería \emph{Canvas}, también parte de \emph{Kuntur}.
 
 \subsection{Obtención de servicios}
 
@@ -76,7 +76,7 @@ La lectura de los servicios de un \emph{ts} se hace de forma independiente respe
 \item Se sintoniza el canal físico por el que viaja el \emph{ts} que lleva el servicio.
 \item Se filtra la \pat\ y se obtiene de la misma el \pid\ con el que viaja la \pmt\ asociada al servicio.
 \item Se filtra la \pmt\ del servicio y se extraen los \pid\ de los flujos elementales, sean audio y video.
-\item Los \pid\ de los flujos elementales se entregan a la librería \emph{Canvas}. [TODO: No se ha introcido aún la librería]
+\item Los \pid\ de los flujos elementales se entregan a la librería \emph{Canvas}.
 \end{enumerate}
 
 \subsection{Reproducción}
@@ -84,7 +84,7 @@ La lectura de los servicios de un \emph{ts} se hace de forma independiente respe
 La entrega de los flujos al reproductor se realiza a través de una URL que incluye los \pid\ de los flujos elementales componentes del servicio a entregar. Una característica a notar de la librería \emph{Canvas} que interpreta la URL es la naturaleza polimórfica del parámetro, dado que interpreta esquemas (o protocolos) diversos. \eg:
 
 \begin{itemize}
-\item srvdtv://videoPID:1234\&audioPID:5678 [TODO: Agregar un ejemplo bien]
+\item srvdtv://audioPID=4000,audioType=3,pcrPID=3000,videoPID=3000,videoType=2
 \item udp://@127.0.0.1:4000
 \end{itemize}
 
@@ -139,6 +139,10 @@ Se denomina de esta manera a cualquier contenido televisivo cuya entrega se real
 \item \textbf{Televisión en diferido}: Reproducción de un servicio que fue emitido previamente con una limitación predefinida de diferencia temporal.
 \item \textbf{\emph{Video on demand}}: Entrega de un servicio elegido de un catálogo en cualquier momento. La única implementación posible es a través de \emph{unicast}.
 \end{itemize}
+
+\section{OpenCaster}
+
+Para facilitar la generación de estructuras \textbf{MPEG-TS} este trabajo utiliza el conjunto de herramientas provistas en el proyecto \emph{OpenCaster}. [TODO: Debería introducirse una explicación de OpenCaster?]
 
 
 \ifx\all\undefined

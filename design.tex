@@ -5,48 +5,96 @@
  
 \chapter{Diseño}
 
-El objetivo de este trabajo es el desarrollo de un prototipo de sistema que integre transmisión ISDB-Tb e IPTV. Este capítulo trata las decisiones tomadas más importantes en el proceso.
-
-Hay tres principales vías de trabajo.
+El objetivo de este trabajo es el desarrollo de un prototipo de sistema que integre transmisión ISDB-Tb e IPTV. El sistema posee tres principales vías de trabajo:
 
 \begin{itemize}
-\item Entrega de servicios por ISDB-Tb
-\item Entrega de servicios por redes IP (o IPTV)
-\item Recepción y combinación de ambas
+\item Entrega de servicios por ISDB-Tb, formato \textbf{MPEG-TS} extendido.
+\item Entrega de servicios por redes IP (o IPTV) con esquema \emph{multicast}.
+\item Recepción y combinación de ambas.
 \end{itemize}
 
-\section{Principios de diseño}
+\section{Extensión del formato \textbf{MPEG-TS}}
 
-\subsection{En entrega de servicios ISDB-Tb}
+El primer paso es dar soporte al formato para los servicios cuyos flujos elementales no se transmiten por el mismo \emph{ts}. En este trabajo, los paquetes \pes\ asociados son transportados por una red IP. A fin de que un receptor pueda consumir estos paquetes necesitan invariablemente de una dirección IP y un número de puerto. De esa manera, cuando el usuario sintoniza un servicio cuyos \emph{elementary streams} se transmiten por IP, el receptor puede unirse al grupo \emph{multicast} por el que se emiten y así consumirlos.
 
-\subsubsection{Compatibilidad con versiones anteriores}
+\subsection{Recipiente de datos}
 
-El estándar ISDB-Tb ya es utilizado en un gran números de sistemas de recepción. Una cualidad esencial de una extensión con las características de este trabajo es la compatibilidad con versiones anteriores. Es decir, aquellos servicios que se sigan transmitiendo por radiofrecuencia, deben seguir siendo accesibles.
+Para enviar los datos necesarios se define un nuevo descriptor denominado \emph{elementaries relocation descriptor} con \emph{descriptor tag} 0xAA. En un receptor, encontrar este descriptor en la \pmt\ de un servicio implica que los flujos elementales a reproducir para tal servicio se emiten de manera \emph{multicast} en el grupo y puerto identificados por los datos contenidos en el descriptor.
 
-\subsubsection{Cambios necesarios mínimos}
+Sólamente una vez el usuario haya solicitado un servicio con el descriptor 0xAA el receptor intentará unirse al grupo \emph{multicast} asociado. De esta manera, la utilización de recursos de red se limita a lo estrictamente necesario.
 
-Una cualidad buscada en el diseño debe ser la minimización del número de cambios introducidos al estándar. Los motivos para esto son tanto mantener simplicidad en la extensión como requerir la menor cantidad de trabajo posible en los cambios de receptores ya funcionales.
+\section{Entrega de servicios por redes IP}
 
-En este capítulo se describe el diseño utilizado para lograr la referencia de un \emph{ts} que viaja por radiofrecuencia y otro que viaja por un medio distinto: una red \textbf{IP}.
+De acuerdo a la definición presentada anteriormente, la televisión digital clasifica como televisión en vivo. La implementación ideal (en términos de aprovechamento eficiente de recursos) implica utilizar emisión \emph{multicast}. De esa manera el uso de ancho de banda y \emph{buffering} se mantiene igual al de enviar un flujo multimedia a un único cliente.
 
-\subsection{En entrega de servicios IPTV}
+Sin embargo, el envío \emph{multicast} exige la utilización de datagramas en lugar de un sistema con entrega garantizada como TCP. Esto quiere decir que el formato contenedor de los contenidos debe ser tolerante a fallos y errores. Cabe notar que el \textbf{MPEG-TS} está diseñado para este tipo de ambientes.
 
-\subsubsection{Aprovechamiento eficiente de la infraestructura}
+Entonces, para el envío de contenido multimedia por IP se utiliza un \emph{transport stream} mínimo. Llamamos así a aquel \emph{ts} que contiene un único servicio sin paquetes nulos.
 
-En el caso de las redes IP, el uso eficiente de los recursos de red, como \emph{buffers} o ancho de banda es importante para proteger la infraestructura de transmisión, a diferencia de la emisión \emph{broadcast} de ISDB-Tb cuya integridad no sufre el aumento de consumidores, \eg\ es necesario enviar paquetes nulos para completar el \emph{bitrate} constante del \textbf{TS}. El envío de paquetes nulos en el caso de las redes IP es inútil.
+\section{Modificaciones en \textbf{mpeg-parser}}
 
-\subsection{Televisión en vivo}
+Las modificaciones en la librería se pueden comprender en tres partes. En primer instancia, el sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos. En segundo lugar, de acuerdo a estos contenidos, se debe modificar el modelo/estdo del sistema y, finalmente, éste debe poder reaccionar acordemente a las modificaciones. Es decir, cuando así se requiera, la reproducción debe obtener sus fuentes del medio correcto.
 
-La transmisión \emph{broadcast}, como es el caso de ISDB-Tb, clasifica naturalmente en la primera categoría. 
+\subsection{Obtención y \emph{parsing} del descriptor}
+
+Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca process descriptors.
+
+\subsection{Modificación del modelo}
+
+Se metió un booleano en la clase descriptor, junto a un string que modela el grupo multicast y un short para el puerto. Una crotada básicamente.
+
+\subsection{Reproducción de servicio}
+
+Si se encuentra que es un servicio relocado, entonces en la URL se manda una dirección IP en vez del URL inventado.
 
 
-\section{Extensión de la lista de servicios}
+
+\section{Proceso de extensión de un \emph{Transport Stream}}
+
+El proceso de agregar servicios cuyos flujos elementales se transmiten por IP se detalla a continuación:
+
+\begin{enumerate}
+\item Agregar una entrada a la \pat\ correspondiente al servicio nuevo.
+\item Agregar el servicio en la \sdt, adjuntándole tipo y nombre.
+\item Agregarle una \pmt\ correspondiente al servicio agregado al flujo y multiplexarlo respetando la limitación de aparecer cada 200 milisegundos. Esta \pmt\ debe incluir un \emph{elementaries relocation descriptor} con la dirección IP y puerto que identifican a los flujos elementales del servicio.
+\end{enumerate}
+
+\section{Lista de servicios extendida}
+
+El primer paso es construir un \emph{transport stream} que contenga servicios que vienen por otro medio, una red IP. Para ello el \emph{ts} debe proveer un mecanismo de acceso para los contenidos. En el caso de TCP o UDP, la identificación es la misma: Una dirección IP y un puerto asociado, independientemente del esquema utilizado, \emph{unicast} o \emph{multicast}.
+
+Como recipiente de estos datos, agregamos un descriptor privado denominado \emph{elementaries relocation descriptor}, con \emph{descriptor tag} 0xAA.
 
 Se debe agregar una entrada a la PAT
+
 Se debe agregar un descriptor a la SDT (OJO! Puede implicar la necesidad de dividir la sección en dos paquetes!)
+
 Se debe crear una nueva PMT e insertarla en el TS válido de partida.
 
-\section{Realocación de los \emph{elementary streams} de los servicios agregados}
+* Hay que enviar por UDP sí o sí.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Relocación de los \emph{elementary streams} de los servicios agregados}
+
+\section{Emisión de los flujos elementales por IP}
+
+El envío de \emph{elementary streams} por IP \emph{multicast} permite evitar la repetición de paquetes iguales enviados de forma simultánea a múltiples receptores. Èste esquema requiere el uso de datagramas. Como este protocolo es suceptible a pérdidas, el formato enviado debe poder recuperarse ante tales problemas. El \textbf{MPEG-TS} es ideal para este tipo de envíos. 
 
 \ifx\all\undefined
 \end{document}
