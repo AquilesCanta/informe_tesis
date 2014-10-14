@@ -5,7 +5,40 @@
  
 \chapter{Diseño}
 
+El objetivo de este trabajo es el desarrollo de un prototipo de sistema que integre transmisión ISDB-Tb e IPTV. Este capítulo trata las decisiones tomadas más importantes en el proceso.
+
+Hay tres principales vías de trabajo.
+
+\begin{itemize}
+\item Entrega de servicios por ISDB-Tb
+\item Entrega de servicios por redes IP (o IPTV)
+\item Recepción y combinación de ambas
+\end{itemize}
+
+\section{Principios de diseño}
+
+\subsection{En entrega de servicios ISDB-Tb}
+
+\subsubsection{Compatibilidad con versiones anteriores}
+
+El estándar ISDB-Tb ya es utilizado en un gran números de sistemas de recepción. Una cualidad esencial de una extensión con las características de este trabajo es la compatibilidad con versiones anteriores. Es decir, aquellos servicios que se sigan transmitiendo por radiofrecuencia, deben seguir siendo accesibles.
+
+\subsubsection{Cambios necesarios mínimos}
+
+Una cualidad buscada en el diseño debe ser la minimización del número de cambios introducidos al estándar. Los motivos para esto son tanto mantener simplicidad en la extensión como requerir la menor cantidad de trabajo posible en los cambios de receptores ya funcionales.
+
 En este capítulo se describe el diseño utilizado para lograr la referencia de un \emph{ts} que viaja por radiofrecuencia y otro que viaja por un medio distinto: una red \textbf{IP}.
+
+\subsection{En entrega de servicios IPTV}
+
+\subsubsection{Aprovechamiento eficiente de la infraestructura}
+
+En el caso de las redes IP, el uso eficiente de los recursos de red, como \emph{buffers} o ancho de banda es importante para proteger la infraestructura de transmisión, a diferencia de la emisión \emph{broadcast} de ISDB-Tb cuya integridad no sufre el aumento de consumidores, \eg\ es necesario enviar paquetes nulos para completar el \emph{bitrate} constante del \textbf{TS}. El envío de paquetes nulos en el caso de las redes IP es inútil.
+
+\subsection{Televisión en vivo}
+
+La transmisión \emph{broadcast}, como es el caso de ISDB-Tb, clasifica naturalmente en la primera categoría. 
+
 
 \section{Extensión de la lista de servicios}
 
