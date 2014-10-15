@@ -3,7 +3,7 @@
 \begin{document}
 \fi
  
-\chapter{Diseño}
+\chapter{Diseño y desarrollo}
 
 El objetivo de este trabajo es el desarrollo de un prototipo de sistema que integre transmisión ISDB-Tb e IPTV. El sistema posee tres principales vías de trabajo:
 
@@ -23,6 +23,22 @@ Para enviar los datos necesarios se define un nuevo descriptor denominado \emph{
 
 Sólamente una vez el usuario haya solicitado un servicio con el descriptor 0xAA el receptor intentará unirse al grupo \emph{multicast} asociado. De esta manera, la utilización de recursos de red se limita a lo estrictamente necesario.
 
+\subsection{Construcción de \emph{transport streams}}
+
+En la construcción de un flujo de transporte de referencia se utilizó el proyecto OpenCaster. Dado que el mismo no da soporte nativo a estructuras ajenas al formato \textbf{MPEG-TS}, se agregó a la API de construcción una clase correspondiente al \emph{elementaries relocation descriptor}. Esto implica que un \emph{transport stream} con servicios por IPTV pueden ser generados con OpenCaster.
+
+El proceso de extender un \emph{ts} ya válido para agregarle servicios cuyos flujos elementales vienen por \emph{multicast} es el siguiente:
+\begin{enumerate}
+\item Agregar una entrada a la \pat\ correspondiente al servicio nuevo. Se puede hacer a través de la utilización de OpenCaster.
+\item Agregar el servicio en la \sdt, adjuntándole tipo y nombre. Se puede hacer a través de OpenCaster.
+\item Agregarle una \pmt\ correspondiente al servicio agregado al flujo y multiplexarlo respetando la limitación de aparecer cada 200 milisegundos. Esta \pmt\ debe incluir un \emph{elementaries relocation descriptor} con la dirección IP y puerto que identifican a los flujos elementales del servicio.
+
+[TODO: Darle identidad a la suite de herramientas creada para la tesis y desde acá sólo referir a tal suite como si fuera OpenCaster] Para realizar este paso se creó una herramienta de inserción de paquetes dentro del proyecto ``ts\_util''.
+
+\end{enumerate}
+
+La emisión de un \emph{transport stream} extendido no difiere de la de uno regular.
+
 \section{Entrega de servicios por redes IP}
 
 De acuerdo a la definición presentada anteriormente, la televisión digital clasifica como televisión en vivo. La implementación ideal (en términos de aprovechamento eficiente de recursos) implica utilizar emisión \emph{multicast}. De esa manera el uso de ancho de banda y \emph{buffering} se mantiene igual al de enviar un flujo multimedia a un único cliente.
@@ -31,7 +47,18 @@ Sin embargo, el envío \emph{multicast} exige la utilización de datagramas en lug
 
 Entonces, para el envío de contenido multimedia por IP se utiliza un \emph{transport stream} mínimo. Llamamos así a aquel \emph{ts} que contiene un único servicio sin paquetes nulos.
 
-\section{Modificaciones en \textbf{mpeg-parser}}
+\section{Recepción}
+
+Las tareas de un dispositivo receptor de \emph{transport stream} extendido se resumen en lo siguiente:
+
+\begin{itemize}
+\item Construir la lista de servicios disponibles.
+\item Asociar cada servicio a un conjunto de flujos elementales.
+\item Entregar los paquetes PES asociados al servicio sintonizado al reproductor.
+\end{itemize}
+
+
+\subsection{Modificaciones en \textbf{mpeg-parser}}
 
 Las modificaciones en la librería se pueden comprender en tres partes. En primer instancia, el sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos. En segundo lugar, de acuerdo a estos contenidos, se debe modificar el modelo/estdo del sistema y, finalmente, éste debe poder reaccionar acordemente a las modificaciones. Es decir, cuando así se requiera, la reproducción debe obtener sus fuentes del medio correcto.
 
@@ -49,15 +76,6 @@ Si se encuentra que es un servicio relocado, entonces en la URL se manda una dir
 
 
 
-\section{Proceso de extensión de un \emph{Transport Stream}}
-
-El proceso de agregar servicios cuyos flujos elementales se transmiten por IP se detalla a continuación:
-
-\begin{enumerate}
-\item Agregar una entrada a la \pat\ correspondiente al servicio nuevo.
-\item Agregar el servicio en la \sdt, adjuntándole tipo y nombre.
-\item Agregarle una \pmt\ correspondiente al servicio agregado al flujo y multiplexarlo respetando la limitación de aparecer cada 200 milisegundos. Esta \pmt\ debe incluir un \emph{elementaries relocation descriptor} con la dirección IP y puerto que identifican a los flujos elementales del servicio.
-\end{enumerate}
 
 \section{Lista de servicios extendida}
 
