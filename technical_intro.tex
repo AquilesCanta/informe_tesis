@@ -4,9 +4,40 @@
 \fi
 \chapter{Introducción técnica}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben adoptar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
+La televisión digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década de 1950. El término \textbf{Televisión digital} define a la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
-\section{Transmisión}
+Las ventajas de la televisión digital por sobre la analógica son numerosas:
+\begin{enumerate}
+\item Exhibe una mejor calidad de sonido e imagen.
+\item Permite contenidos en alta definición.
+\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora.
+\item Permite que se integren y complementen los contenidos con  Internet
+\item Permite nuevos servicios asociados a la interactividad y otros como la guía electrónica de programación, ejecución de aplicaciones, \etc.
+\item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
+\item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, GPS con sintonizador, \etc.
+\item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}.
+\end{enumerate}
+
+La televisión digital es todo formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son:
+\begin{itemize}
+\item Terrestre: Emite la señal través del espectro de radiofrecuencia de la atmósfera terrestre.
+\item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra. 
+\item Cable: Utilizan la señal propagada por redes de cable coaxial o fibra óptica.
+\item IPTV: Es el envío de contenido televisivo digital a través de redes IP.
+\end{itemize}
+
+Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. Son considerados servicios públicos y se encuentran rigurosamente legislados y regulados en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
+
+\begin{itemize}
+\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} es una una adaptación de este estándar ha sido adoptado en gran parte de sudamérica
+\item \emph{Digital Video Broadcasting-Terrestrial (DVB-T)}: Estándar adoptado en Europa, Australia y Nueva Zelanda.
+\item \emph{Advanced Television System Committee (ATSC)}: Estándar adoptado en Estados Unidos, Canadá, México, Corea del Sur, República Dominicana y Honduras.
+\item \emph{Digital Terrestrial Multimedia Broadcasting (DTMB)}: Estándar adoptado en la República Popular China, incluyendo Hong Kong y Macao.
+\end{itemize} 
+
+\section{ISDB-Tb}
+
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben adoptar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
 
 La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo].
 
