@@ -4,50 +4,119 @@
 \fi
 \chapter{Introducción técnica}
 
-La televisión digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década de 1950. El término \textbf{Televisión digital} define a la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
+La televisión digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50. El término \textbf{Televisión digital} define a la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
 Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
 \item Exhibe una mejor calidad de sonido e imagen.
 \item Permite contenidos en alta definición.
 \item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora.
-\item Permite que se integren y complementen los contenidos con  Internet
+\item Permite que se integren y complementen los contenidos con Internet.
 \item Permite nuevos servicios asociados a la interactividad y otros como la guía electrónica de programación, ejecución de aplicaciones, \etc.
 \item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
 \item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, GPS con sintonizador, \etc.
 \item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}.
 \end{enumerate}
 
-La televisión digital es todo formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son:
+El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son:
 \begin{itemize}
 \item Terrestre: Emite la señal través del espectro de radiofrecuencia de la atmósfera terrestre.
 \item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra. 
 \item Cable: Utilizan la señal propagada por redes de cable coaxial o fibra óptica.
-\item IPTV: Es el envío de contenido televisivo digital a través de redes IP.
+\item IPTV: Consiste en la distribución de programación y servicios mediante redes que utilizan la \emph{suite} de protocolos IP.
 \end{itemize}
 
 Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. Son considerados servicios públicos y se encuentran rigurosamente legislados y regulados en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
 
 \begin{itemize}
-\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} es una una adaptación de este estándar ha sido adoptado en gran parte de sudamérica
-\item \emph{Digital Video Broadcasting-Terrestrial (DVB-T)}: Estándar adoptado en Europa, Australia y Nueva Zelanda.
+\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} es una una adaptación de este estándar ha sido adoptado en gran parte de sudamérica.
+\item \emph{Digital Video Broadcasting-Terrestrial (DVB-T)}: Estándar adoptado en Europa, Australia y Nueva Zelanda. 
 \item \emph{Advanced Television System Committee (ATSC)}: Estándar adoptado en Estados Unidos, Canadá, México, Corea del Sur, República Dominicana y Honduras.
 \item \emph{Digital Terrestrial Multimedia Broadcasting (DTMB)}: Estándar adoptado en la República Popular China, incluyendo Hong Kong y Macao.
 \end{itemize} 
 
+La última categoría, IPTV, generalmente hace uso de redes privadas que emplean la infraestructura de planteles telefónicos, tendidos eléctricos (BPL, \emph{broadband over power lines}), cable coaxial o fibra óptica. Los proveedores de servicios suelen proveer un \emph{set top box} o receptor junto con la conexión. Al ser redes privadas, el formato de la distribución de contenidos no está regulada. 
+
 \section{ISDB-Tb}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina. La multiplexación de los servicios respeta el estándar \textbf{MPEG-2 Transport Stream}. Los reproductores de televisión digital terrestre deben adoptar estas normas para capturar, demultiplexar, procesar y entregar los servicios al usuario. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina.
 
-La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo].
+\subsection{Modulación}
 
-Esta limitación de bitrate establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Para ejemplificar, con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
+La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
 
-\subsection{Estructura general del sistema \textbf{ISDB-Tb}}
+\begin{figure}[h!]
+	\includegraphics[width=12cm]{imgs/cable_flujo_mpeg.png}
+	\caption{Diagrama de composición de un flujo de transporte} 
+	\centering 
+\end{figure}
 
-El sistema \textbf{ISDB-Tb} se puede dividir en niveles. [NOTA: Esta imagen debe cambiarse para respetar un esquema de colores y traducirse al español]
+La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
 
-\includegraphics[width=12cm]{imgs/mpeg_structure.png}
+Para ejemplificar, un fragmento de la señal emitida por la frecuencia 527 de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] presenta 3 servicios. TV Públic HD, Tecnópolis y TV Pública con videos HD, SD y LD respectivamente. El bitrate promedio para estos videos es 11.7, 2.0 y 0.3.
+
+% +---------------+---------------+---------------+---------------+
+% |PID            |Bytes          |Percentage     |Mbps           |
+% +---------------+---------------+---------------+---------------+
+% |0              |280496         |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |16             |28012          |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |17             |13912          |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |18             |2308264        |            0.7|            0.1|
+% +---------------+---------------+---------------+---------------+
+% |20             |5640           |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |36             |28012          |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |39             |41736          |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |258            |280496         |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |259            |280496         |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |288            |485416         |            0.1|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |289            |218471416      |           67.7|           11.7|
+% +---------------+---------------+---------------+---------------+
+% |290            |1830932        |            0.5|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |291            |4685524        |            1.4|            0.2|
+% +---------------+---------------+---------------+---------------+
+% |304            |485416         |            0.1|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |305            |37562964       |           11.6|            2.0|
+% +---------------+---------------+---------------+---------------+
+% |306            |1874172        |            0.5|            0.1|
+% +---------------+---------------+---------------+---------------+
+% |528            |121448         |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |529            |6201556        |            1.9|            0.3|
+% +---------------+---------------+---------------+---------------+
+% |530            |935488         |            0.2|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |532            |42300          |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |8136           |280496         |            0.0|            0.0|
+% +---------------+---------------+---------------+---------------+
+% |8191           |46091208       |           14.2|            2.4|
+% +---------------+---------------+---------------+---------------+
+
+
+\subsection{MPEG-TS}
+ 
+ El flujo multiplexado de servicios que viaja por un canal físico de radiofrecuencia en el estándar ISDB-Tb respeta el formato \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Los receptores de televisión digital terrestre en Argentina deben adoptar estas normas para demultiplexar, procesar y entregar los servicios al usuario.
+
+\subsection{Estructura general del sistema \textbf{MPEG-TS}}
+
+El sistema \textbf{MPEG-TS} se puede dividir jerárquicamente de la siguiente manera:
+
+\begin{figure}[h!]
+	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
+	\caption{Diagrama de composición de un flujo de transporte} 
+	\centering 
+\end{figure}
 
 \begin{itemize}
 \item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
@@ -59,7 +128,7 @@ El sistema \textbf{ISDB-Tb} se puede dividir en niveles. [NOTA: Esta imagen debe
 
 \section{Multiplexación}
 
-La estructura del flujo multiplexado de servicios está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades. Uno de los campos primordiales transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que asigna el paquete a un flujo específico.
+La estructura del flujo de transporte está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades. Uno de los campos primordiales transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que asigna el paquete a un flujo específico.
 
 El contenido de un flujo de transporte se puede dividir en información y contenido multimedia. El primer grupo, los datos que se incorporan al \emph{ts}, viajan en forma de tablas sobre un formato específico denominado ``secciones'', a diferencia del audio y el video, que utilizan paquetes \pes. Tanto las secciones como los paquetes \pes\ tienen longitud variable y potencialmente muy superior a la de un paquete \textbf{TS} de 188 \emph{bytes}. Luego, se dividen para poder ser enviados a través de este esquema. Parte de la responsabilidad de un receptor es reconstruir estas estructuras. 
 
@@ -106,6 +175,8 @@ La utilización de la API requiere crear un \emph{script} que genere las estructu
 Una vez se poseen todas las componentes del flujo, las mismas se pueden multiplexar a través de la herramienta provista en el proyecto. Con esta herramienta se puede determinar el \emph{bitrate} final del \emph{ts}. Es necesario tener en cuenta el \emph{bitrate} de los flujos elementales contenidos para evitar que la distribución de la carga final sea errónea.
 
 \section{Decodificación}
+
+ \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
 
 El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{MPEG-TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción. La reproducción es realizada por la librería \emph{Canvas}, también parte de \emph{Kuntur}.
 
