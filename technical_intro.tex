@@ -41,7 +41,7 @@ La última categoría, IPTV, generalmente hace uso de redes privadas que emplean l
 
 \textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina.
 
-\subsection{Modulación}
+\subsection{Modulación y bitrate disponible}
 
 La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
 
@@ -53,7 +53,11 @@ La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de 
 
 La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
 
-Para ejemplificar, un fragmento de la señal emitida por la frecuencia 527 de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] presenta 3 servicios. TV Públic HD, Tecnópolis y TV Pública con videos HD, SD y LD respectivamente. El bitrate promedio para estos videos es 11.7, 2.0 y 0.3.
+Para ejemplificar, un fragmento de la señal emitida por la frecuencia 527 Mhz de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos es $11,7$Mbps, $2,0$Mbps y $0,3$Mbps, respectivamente. Lo cual suma un total de $14$ Mbps. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
+
+Cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
+
+Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agregar un servicio LD sin riesgo de que falte bitrate. No obstante, es importante tener en mente que las magnitudes presentes son calculadas por promedio. En el caso del servicio HD, el video alcanza los $24$ Mbps, por momentos. Por la variabilidad del bitrate de los contenidos multimedia, es necesario que la suma de los bitrate promedio sea inferior al bitrate total si se busca una calidad estable en los servicios. 
 
 % +---------------+---------------+---------------+---------------+
 % |PID            |Bytes          |Percentage     |Mbps           |
@@ -74,43 +78,47 @@ Para ejemplificar, un fragmento de la señal emitida por la frecuencia 527 de la 
 % +---------------+---------------+---------------+---------------+
 % |258            |280496         |            0.0|            0.0|
 % +---------------+---------------+---------------+---------------+
-% |259            |280496         |            0.0|            0.0|
+% |259            |280496         |            0.0|            0.0| PMT del servicio 59202
 % +---------------+---------------+---------------+---------------+
-% |288            |485416         |            0.1|            0.0|
+% |288            |485416         |            0.1|            0.0| Probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |289            |218471416      |           67.7|           11.7|
+% |289            |218471416      |           67.7|           11.7| Video HD
 % +---------------+---------------+---------------+---------------+
-% |290            |1830932        |            0.5|            0.0|
+% |290            |1830932        |            0.5|            0.0| Probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |291            |4685524        |            1.4|            0.2|
+% |291            |4685524        |            1.4|            0.2| Probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |304            |485416         |            0.1|            0.0|
+% |304            |485416         |            0.1|            0.0| Ni idea, probablemente PES (tiene PCR)
 % +---------------+---------------+---------------+---------------+
-% |305            |37562964       |           11.6|            2.0|
+% |305            |37562964       |           11.6|            2.0| VIDEO SD, pero igual a los de abajo.
 % +---------------+---------------+---------------+---------------+
-% |306            |1874172        |            0.5|            0.1|
+% |306            |1874172        |            0.5|            0.1| Ni idea, probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |528            |121448         |            0.0|            0.0|
+% |528            |121448         |            0.0|            0.0| Ni idea, probablemente PES (tiene PCR)
 % +---------------+---------------+---------------+---------------+
-% |529            |6201556        |            1.9|            0.3|
+% |529            |6201556        |            1.9|            0.3| Ni idea, probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |530            |935488         |            0.2|            0.0|
+% |530            |935488         |            0.2|            0.0| Ni idea, probablemente PES
 % +---------------+---------------+---------------+---------------+
-% |532            |42300          |            0.0|            0.0|
-% +---------------+---------------+---------------+---------------+
-% |8136           |280496         |            0.0|            0.0|
+% |532            |42300          |            0.0|            0.0| Es un PES pero no se aún de qué
+% +---------------+---------------+---------------+---------------+ 
+% |8136           |280496         |            0.0|            0.0| PMT del programa 59224
 % +---------------+---------------+---------------+---------------+
 % |8191           |46091208       |           14.2|            2.4|
 % +---------------+---------------+---------------+---------------+
 
 
-\subsection{MPEG-TS}
+\section{MPEG Transport stream}
  
- El flujo multiplexado de servicios que viaja por un canal físico de radiofrecuencia en el estándar ISDB-Tb respeta el formato \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Los receptores de televisión digital terrestre en Argentina deben adoptar estas normas para demultiplexar, procesar y entregar los servicios al usuario.
+ El formato de los datos mencionado previamente está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. El flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
+
+[TODO:  MPEG-2 ISO/IEC standard 13818-1 or ITU-T Rec. H.222.0]
+
+La capacidad de transmisión de cada canal físico de radiofrecuencia permite la inclusión de varios servicios. El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables independientes e incluye mecanismos para la identificación y presentación de estos servicios.
 
 \subsection{Estructura general del sistema \textbf{MPEG-TS}}
 
-El sistema \textbf{MPEG-TS} se puede dividir jerárquicamente de la siguiente manera:
+La terminología utilizada en el flujo de transporte MPEG se puede dividir jerárquicamente de la siguiente manera [TODO: Agregar ver figura sarasa]:
 
 \begin{figure}[h!]
 	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
@@ -124,6 +132,18 @@ El sistema \textbf{MPEG-TS} se puede dividir jerárquicamente de la siguiente man
 \item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
 \item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
 \item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
+\end{itemize}
+
+\subsubsection{Ejemplo de transport stream}
+
+Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
+
+\begin{itemize}
+\item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
+\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
+\item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
+\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos.
 \end{itemize}
 
 \section{Multiplexación}
