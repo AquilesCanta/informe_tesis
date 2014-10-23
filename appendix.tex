@@ -1,0 +1,52 @@
+\ifx\all\undefined
+\include{base}
+\begin{document}
+\fi
+
+\chapter{Appendix} %Si no recuerdo mal, esto no es un capítulo si no una seccion especial de latex
+
+\section{Motivación}
+
+
+\section{Objetivos}
+
+
+
+
+
+
+\begin{figure}[h!]
+	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
+	\caption{Diagrama de composición de un flujo de transporte} 
+	\centering 
+\end{figure}
+
+\begin{itemize}
+\item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
+\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios.
+\item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
+\item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
+\end{itemize}
+
+\subsubsection{Ejemplo de transport stream}
+
+Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
+
+\begin{itemize}
+\item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
+\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
+\item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
+\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos. Existen en el flujo de transporte otros \emph{elementary streams} que caen fuera del alcance de este informe.
+\end{itemize}
+
+\section{Contribuci\'on y resultados obtenidos}
+
+\section{Estructura del documento}
+
+\ifx\all\undefined
+\end{document}
+\fi
+
+

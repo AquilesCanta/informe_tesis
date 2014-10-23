@@ -110,53 +110,36 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 
 \section{MPEG Transport stream}
  
- El formato de los datos mencionado previamente está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. El flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
+ El formato de los datos mencionado previamente está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Esto se debe a que el flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
 
 [TODO:  MPEG-2 ISO/IEC standard 13818-1 or ITU-T Rec. H.222.0]
 
-La capacidad de transmisión de cada canal físico de radiofrecuencia permite la inclusión de varios servicios. El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables independientes e incluye mecanismos para la identificación y presentación de estos servicios.
+La capacidad de transmisión de cada canal físico de radiofrecuencia permite la inclusión de varios servicios. El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables independientes e incluye mecanismos para la identificación y presentación de estos servicios. Se puede pensar en cada canal físico como un flujo constante de bits. Para organizar este sistema, el flujo de transporte MPEG agrupa los bits en paquetes de 188 bytes. 
+
+Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios programas en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos.
+
+Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos.
 
 \subsection{Estructura general del sistema \textbf{MPEG-TS}}
 
-La terminología utilizada en el flujo de transporte MPEG se puede dividir jerárquicamente de la siguiente manera [TODO: Agregar ver figura sarasa]:
+Como se ha dicho ya, a partir de la digitalización de las señales, la posibilidad de enviar varios servicios a través de un mismo canal físico le exige al formato la posibilidad de multiplexarlos en el mismo flujo de información. Con este fin, ya no es sólo necesario enviar el contenido multimedia, sino también enviar información para identificar los servicios, asignándoles nombre y flujos multimedia correspondiente.
 
-\begin{figure}[h!]
-	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
-	\caption{Diagrama de composición de un flujo de transporte} 
-	\centering 
-\end{figure}
+\subsubsection{Flujos elementales}
 
-\begin{itemize}
-\item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
-\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios.
-\item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
-\item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
-\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
-\end{itemize}
+El primer grupo de contenido, el que incluye a los audios y videos, corresponde a los flujos elementales o \emph{elementary streams}. Típicamente, un servicio de televisión dispone de al menos un flujo elemental de audio y un flujo elemental de video. En el caso de ``Televisión Pública HD'' del ejemplo anterior, el servicio dispone de un video HD y dos audios.
 
-\subsubsection{Ejemplo de transport stream}
+El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Por eso, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. A fin de posibilitar la reconstrucción, todos los paquetes que pertenecen al mismo flujo elemental viajan con el mismo PID.
 
-Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
+En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 289 y los audios con PID 290 y 291. Cabe notar que los flujos elementales también pueden corresponder a \emph{closed caption} y contenido interactivo. 
+\subsubsection{Secciones}
 
-\begin{itemize}
-\item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
-\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
-\item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
-\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
-\item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos.
-\end{itemize}
-
-\section{Multiplexación}
-
-La estructura del flujo de transporte está dado por el formato estándar \textbf{MPEG-2 TS}. El mismo se compone de paquetes de tamaño fijo de 188 \emph{bytes} que contienen un prefijo de 4 \emph{bytes} con varias utilidades. Uno de los campos primordiales transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que asigna el paquete a un flujo específico.
-
-El contenido de un flujo de transporte se puede dividir en información y contenido multimedia. El primer grupo, los datos que se incorporan al \emph{ts}, viajan en forma de tablas sobre un formato específico denominado ``secciones'', a diferencia del audio y el video, que utilizan paquetes \pes. Tanto las secciones como los paquetes \pes\ tienen longitud variable y potencialmente muy superior a la de un paquete \textbf{TS} de 188 \emph{bytes}. Luego, se dividen para poder ser enviados a través de este esquema. Parte de la responsabilidad de un receptor es reconstruir estas estructuras. 
+El último grupo, los metadatos que se incorporan al flujo de transporte con información \emph{sobre} el mismo, viajan en construcciones sintácticas sobre un formato específico denominado ``secciones''. Las consrucciones sintácticas mencionadas se denominan \textbf{tablas}. El problema de la transmisión de secciones, es que las mismas poseen longitud variable y potencialmente más grande que lo que permite transportar un sólo paquete de flujo de transporte. Por ello, las secciones se deben dividir entre tantos paquetes como sean necesarios.
 
 \subsection{Tablas}
 
-Como se mencionó ya, es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos contenidos viajan en tablas, las cuales se clasifican en 3 tipos:
+Es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos contenidos viajan en tablas, las cuales se clasifican en 3 tipos. Una lista completa de las tablas de formato \textbf{MPEG-TS} se incluye en [TODO: Agregar apéndice].
 \begin{itemize}
-\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \pat, \cat\ y \pmt. La \pat\ y \pmt\ serán explicadas más adelante. La \cat\ incluye datos referentes al acceso condicional.
+\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \emph{Program allocation table}(\pat), y \emph{Program mapping table}(\pmt). 
 \item \textbf{SI (System information):} Contiene información asociada a servicios y eventos. Son tablas privadas, algunas de ellas opcionales. A este conjunto pertenecen la \textbf{BAT}, \textbf{NIT}, \textbf{SDT}, \textbf{EIT}, \textbf{TDT}, \textbf{TOT} y \textbf{ST}. Más adelante se revisará la \textbf{SDT}. 
 \item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionada con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo. [TODO: Esto me hace ruido. Quizás se debería eliminar.]
 \end{itemize}
