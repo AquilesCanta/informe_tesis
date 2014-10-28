@@ -53,7 +53,7 @@ La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de 
 
 La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
 
-Para ejemplificar, un fragmento de la señal emitida por la frecuencia 527 Mhz de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos es $11,7$Mbps, $2,0$Mbps y $0,3$Mbps, respectivamente. Lo cual suma un total de $14$ Mbps. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
+Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos es $11,7$Mbps, $2,0$Mbps y $0,3$Mbps, respectivamente. Lo cual suma un total de $14$ Mbps. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
 
 Cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
 
@@ -118,9 +118,17 @@ La capacidad de transmisión de cada canal físico de radiofrecuencia permite la i
 
 Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios programas en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos.
 
-Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos.
+\subsection{Análisis de la estructura general del sistema \textbf{MPEG-TS}}
 
-\subsection{Estructura general del sistema \textbf{MPEG-TS}}
+Para analizar la estructura del sistema \textbf{MPEG-TS}, ampliaremos sobre el ejemplo anterior del canal 23. A continuación se detallan los pasos que deber seguir un dispositivo de recepción para brindar los servicios al usuario:
+
+\begin{enumerate}
+\item Recorrer todas las frecuencias posibles, memorizando la información del sistema.
+\item ...
+\item Si cambia, se recomienza desde el paso tal.
+\end{enumerate}
+
+Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos.
 
 Como se ha dicho ya, a partir de la digitalización de las señales, la posibilidad de enviar varios servicios a través de un mismo canal físico le exige al formato la posibilidad de multiplexarlos en el mismo flujo de información. Con este fin, ya no es sólo necesario enviar el contenido multimedia, sino también enviar información para identificar los servicios, asignándoles nombre y flujos multimedia correspondiente.
 
@@ -140,11 +148,11 @@ El último grupo, los metadatos que se incorporan al flujo de transporte con info
 
 Es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos datos viajan en \textbf{tablas} que, como se dijo, se agrupan en secciones. El formato \textbf{MPEG-TS} define una lista que luego es extendida por las entidades que lo utilizan, como es el caso de \textbf{ISDB-T}, que la extiende. Una lista completa de las tablas de formato \textbf{MPEG-TS} se incluye en [TODO: Agregar apéndice].
 
-Las tablas son una definición sintáctica para entregar información al receptor. 
+Las tablas son una definición sintáctica para entregar información al receptor. A continuación se detallan aquellas que son relevantes para este trabajo:
 
 \subsubsection{\emph{Program allocation table}}
 
-La \pat\ es la primera tabla que debe buscar el decodificador. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte. Lleva información general del flujo y de la red de transmisión. Más importante aún, la \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
+La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un servicio. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte. La \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
 
 \subsubsection{\emph{Program mapping table}}
 
@@ -156,13 +164,13 @@ La \sdt\ describe con más detalle que otras los programas transportados por un \
 
 \subsection{Descriptores}
 
-Buena parte de la información de las tablas viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado unívocamente por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
+Parte de la información de las tablas viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado numéricamente de forma unívoca por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
 
 Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. 
 
-\subsection{\emph{Packetized elementary streams}}
+% \subsection{\emph{Packetized elementary streams}}
 
-El contenido multimedia enviado en un \emph{ts} utiliza paquetes \textbf{PES}, que poseen longitud variable. Estos paquetes se dividen luego entre paquetes \textbf{TS} para ser multiplexados finalmente al flujo de transporte resultante. El formato \textbf{MPEG-TS} permite la multiplexación de varios servicios de \emph{bitrate} variable, pero el \emph{ts} debe garantizar la salud de los \emph{buffers} del receptor. Esto es, en ningún punto de la reproducción del servicio pueden ocurrir \emph{overflows} o \emph{underflows}. Esto implica que en ningún punto de la transmisión la suma de los \emph{bitrates} individuales debe exceder al \emph{bitrate} del \emph{ts}.
+% El contenido multimedia enviado en un \emph{ts} utiliza paquetes \textbf{PES}, que poseen longitud variable. Estos paquetes se dividen luego entre paquetes \textbf{TS} para ser multiplexados finalmente al flujo de transporte resultante. El formato \textbf{MPEG-TS} permite la multiplexación de varios servicios de \emph{bitrate} variable, pero el \emph{ts} debe garantizar la salud de los \emph{buffers} del receptor. Esto es, en ningún punto de la reproducción del servicio pueden ocurrir \emph{overflows} o \emph{underflows}. Esto implica que en ningún punto de la transmisión la suma de los \emph{bitrates} individuales debe exceder al \emph{bitrate} del \emph{ts}.
 
 \subsection{Generación de \emph{transport streams}}
 
