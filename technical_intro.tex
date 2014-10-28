@@ -128,22 +128,19 @@ Como se ha dicho ya, a partir de la digitalización de las señales, la posibilida
 
 El primer grupo de contenido, el que incluye a los audios y videos, corresponde a los flujos elementales o \emph{elementary streams}. Típicamente, un servicio de televisión dispone de al menos un flujo elemental de audio y un flujo elemental de video. En el caso de ``Televisión Pública HD'' del ejemplo anterior, el servicio dispone de un video HD y dos audios.
 
-El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Por eso, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. A fin de posibilitar la reconstrucción, todos los paquetes que pertenecen al mismo flujo elemental viajan con el mismo PID.
+El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete \pes\ de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Por eso, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. A fin de posibilitar la reconstrucción, todos los paquetes que pertenecen al mismo flujo elemental viajan con el mismo PID.
 
 En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 289 y los audios con PID 290 y 291. Cabe notar que los flujos elementales también pueden corresponder a \emph{closed caption} y contenido interactivo. 
+
 \subsubsection{Secciones}
 
-El último grupo, los metadatos que se incorporan al flujo de transporte con información \emph{sobre} el mismo, viajan en construcciones sintácticas sobre un formato específico denominado ``secciones''. Las consrucciones sintácticas mencionadas se denominan \textbf{tablas}. El problema de la transmisión de secciones, es que las mismas poseen longitud variable y potencialmente más grande que lo que permite transportar un sólo paquete de flujo de transporte. Por ello, las secciones se deben dividir entre tantos paquetes como sean necesarios.
+El último grupo, los metadatos que se incorporan al flujo de transporte con información \emph{sobre} el mismo, viajan en construcciones sintácticas sobre un formato específico denominado ``secciones''. Las consrucciones sintácticas mencionadas se denominan \textbf{tablas}. El problema de la transmisión de secciones, es que las mismas poseen longitud variable y potencialmente más grande que lo que permite transportar un sólo paquete de flujo de transporte. Por ello, las secciones se deben dividir entre tantos paquetes como sean necesarios. Puede establecerse una analogía y decir que las secciones son a las tablas lo que los paquetes \pes\ son al audio y video.
 
 \subsection{Tablas}
 
-Es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos contenidos viajan en tablas, las cuales se clasifican en 3 tipos. Una lista completa de las tablas de formato \textbf{MPEG-TS} se incluye en [TODO: Agregar apéndice].
-\begin{itemize}
-\item \textbf{PSI (Program Specific Information):} Contienen información esencial sobre la composición del flujo \textbf{TS}, necesaria para que el receptor pueda demultiplexar y decodificar los distintos servicios. Son tablas obligatorias. En este grupo se encuentran las tablas \emph{Program allocation table}(\pat), y \emph{Program mapping table}(\pmt). 
-\item \textbf{SI (System information):} Contiene información asociada a servicios y eventos. Son tablas privadas, algunas de ellas opcionales. A este conjunto pertenecen la \textbf{BAT}, \textbf{NIT}, \textbf{SDT}, \textbf{EIT}, \textbf{TDT}, \textbf{TOT} y \textbf{ST}. Más adelante se revisará la \textbf{SDT}. 
-\item \textbf{ECM, EMM y DSM-CC:} Contienen información relacionada con el manejo de claves de acceso, información de control y datos de usuarios, entre otros. La DSM-CC envía información de acceso a servicios digitales interactiovs. Estas tablas escapan al alcance de este trabajo. [TODO: Esto me hace ruido. Quizás se debería eliminar.]
-\end{itemize}
+Es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos datos viajan en \textbf{tablas} que, como se dijo, se agrupan en secciones. El formato \textbf{MPEG-TS} define una lista que luego es extendida por las entidades que lo utilizan, como es el caso de \textbf{ISDB-T}, que la extiende. Una lista completa de las tablas de formato \textbf{MPEG-TS} se incluye en [TODO: Agregar apéndice].
 
+Las tablas son una definición sintáctica para entregar información al receptor. 
 
 \subsubsection{\emph{Program allocation table}}
 
