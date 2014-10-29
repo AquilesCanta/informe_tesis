@@ -116,57 +116,124 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 
 La capacidad de transmisión de cada canal físico de radiofrecuencia permite la inclusión de varios servicios. El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables independientes e incluye mecanismos para la identificación y presentación de estos servicios. Se puede pensar en cada canal físico como un flujo constante de bits. Para organizar este sistema, el flujo de transporte MPEG agrupa los bits en paquetes de 188 bytes. 
 
-Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios programas en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos.
+Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios servicios en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos, puesto que se intercalan paquetes de cada uno.
 
 \subsection{Análisis de la estructura general del sistema \textbf{MPEG-TS}}
 
 Para analizar la estructura del sistema \textbf{MPEG-TS}, ampliaremos sobre el ejemplo anterior del canal 23. A continuación se detallan los pasos que deber seguir un dispositivo de recepción para brindar los servicios al usuario:
 
 \begin{enumerate}
-\item Recorrer todas las frecuencias posibles, memorizando la información del sistema.
-\item ...
-\item Si cambia, se recomienza desde el paso tal.
+\item Cada canal físico ISDB-T transporta un flujo de transporte independiente. El receptor debe comenzar su funcionamiento con un ``SCAN'', que consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema.
+
+En el ejemplo, el SCAN habrá recorrido la frecuencia 527MHz, memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica'').
+
+\item De acuerdo a lo obtenido en el paso anterior, se debe construir la lista de servicios, que queda disponible para que el usuario pueda seleccionar cualquiera independientemente del servicio sintonizado en ese momento. También se incluye en este paso información de la guía electrónica de programación, si la hubiera.
+
+En el ejemplo, los tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521Mhz).
+
+\hrulefill
+
+\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz). Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
+
+El proceso de cambiar de canal físico, implica demodular la nueva señal y sincronizarse con la emisión, para distinguir el comienzo de cada paquete e interpretar correctamente la información.
+
+\item Una vez el receptor esté recibiendo el flujo buscado, debe lograr distinguir y filtrar los paquetes que pertenecen al servicio requerido por el usuario. Es decir, si se sintoniza ``Encuentro'', el receptor debe decodificar el video de este canal de televisión, y no de ``TV Pública HD''. Lo mismo ocurre con audio y \emph{closed caption}.
+
+\item Para finalizar, todo el contenido multimedia debe ser redirigido a los dispositivos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
+
+\item Un cambio de servicio de parte del usuario, implica comenzar desde el paso 3.
+
+
 \end{enumerate}
 
-Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos.
+\subsubsection{Estructura de los paquetes \textbf{MPEG-TS}}
 
-Como se ha dicho ya, a partir de la digitalización de las señales, la posibilidad de enviar varios servicios a través de un mismo canal físico le exige al formato la posibilidad de multiplexarlos en el mismo flujo de información. Con este fin, ya no es sólo necesario enviar el contenido multimedia, sino también enviar información para identificar los servicios, asignándoles nombre y flujos multimedia correspondiente.
+Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Entonces, cuando el receptor sintoniza un canal de radiofrecuencia dado, debe utilizar este campo para encontrar el comienzo de los paquetes.
 
-\subsubsection{Flujos elementales}
+Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Con este identificador, el receptor puede filtrar los paquetes. Tanto de datos como de video y audio.
 
-El primer grupo de contenido, el que incluye a los audios y videos, corresponde a los flujos elementales o \emph{elementary streams}. Típicamente, un servicio de televisión dispone de al menos un flujo elemental de audio y un flujo elemental de video. En el caso de ``Televisión Pública HD'' del ejemplo anterior, el servicio dispone de un video HD y dos audios.
+\begin{figure}[h!]
+	\includegraphics[width=14cm]{imgs/ts_packet.png}
+	\caption{Estructura de un paquete de flujo de transporte} 
+	\centering 
+\end{figure}
 
-El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete \pes\ de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Por eso, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. A fin de posibilitar la reconstrucción, todos los paquetes que pertenecen al mismo flujo elemental viajan con el mismo PID.
 
-En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 289 y los audios con PID 290 y 291. Cabe notar que los flujos elementales también pueden corresponder a \emph{closed caption} y contenido interactivo. 
 
-\subsubsection{Secciones}
+% \subsubsection{Secciones}
 
-El último grupo, los metadatos que se incorporan al flujo de transporte con información \emph{sobre} el mismo, viajan en construcciones sintácticas sobre un formato específico denominado ``secciones''. Las consrucciones sintácticas mencionadas se denominan \textbf{tablas}. El problema de la transmisión de secciones, es que las mismas poseen longitud variable y potencialmente más grande que lo que permite transportar un sólo paquete de flujo de transporte. Por ello, las secciones se deben dividir entre tantos paquetes como sean necesarios. Puede establecerse una analogía y decir que las secciones son a las tablas lo que los paquetes \pes\ son al audio y video.
+% El último grupo, los metadatos que se incorporan al flujo de transporte con información \emph{sobre} el mismo, viajan en construcciones sintácticas sobre un formato específico denominado ``secciones''. Las consrucciones sintácticas mencionadas se denominan \textbf{tablas}. El problema de la transmisión de secciones, es que las mismas poseen longitud variable y potencialmente más grande que lo que permite transportar un sólo paquete de flujo de transporte. Por ello, las secciones se deben dividir entre tantos paquetes como sean necesarios. Puede establecerse una analogía y decir que las secciones son a las tablas lo que los paquetes \pes\ son al audio y video.
+
+% \subsubsection{Flujos elementales}
+
+% El primer grupo de contenido, el que incluye a los audios y videos, corresponde a los flujos elementales o \emph{elementary streams}. Típicamente, un servicio de televisión dispone de al menos un flujo elemental de audio y un flujo elemental de video. En el caso de ``Televisión Pública HD'' del ejemplo anterior, el servicio dispone de un video HD y dos audios.
+
+% El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete \pes\ de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Por eso, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. A fin de posibilitar la reconstrucción, todos los paquetes que pertenecen al mismo flujo elemental viajan con el mismo PID.
+
+% En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 289 y los audios con PID 290 y 291. Cabe notar que los flujos elementales también pueden corresponder a \emph{closed caption} y contenido interactivo. 
 
 \subsection{Tablas}
 
-Es necesario incluir información al \emph{ts} a fin de identificar los servicios que incluye y proveer al receptor de datos útiles. Estos datos viajan en \textbf{tablas} que, como se dijo, se agrupan en secciones. El formato \textbf{MPEG-TS} define una lista que luego es extendida por las entidades que lo utilizan, como es el caso de \textbf{ISDB-T}, que la extiende. Una lista completa de las tablas de formato \textbf{MPEG-TS} se incluye en [TODO: Agregar apéndice].
+A excepción del 5, los pasos que realiza el receptor requieren de información por parte del emisor, fuera del contenido multimedia propiamente dicho. Por ejemplo, para construir la lista de servicios. Para esto, se utilizan las \textbf{tablas}. Las tablas son una definición sintáctica para entregar información al receptor.
 
-Las tablas son una definición sintáctica para entregar información al receptor. A continuación se detallan aquellas que son relevantes para este trabajo:
+Los paquetes tienen tamaño de 188 bytes y disponen de aún menos para enviar contenidos. Las tablas, por ejemplo, pueden exceder este tamaño. Por ello viajan en un formato denominado ``secciones'' de longitud variable, que se dividen entre tantos paquetes como sean necesarios. El receptor debe recostruir las secciones para obtener las tablas que contiene. 
 
-\subsubsection{\emph{Program allocation table}}
+El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un rol específico. A su vez, ISDB-T extiende esta lista con algunas tablas. Una lista completa de las tablas de formato \textbf{ISDB-T} se incluye en [TODO: Agregar apéndice].
 
-La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un servicio. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte. La \pat\ entrega al decodificador la asociación \textbf{PMT}(que se explica a continuación) con \textbf{PID}. Cada \textbf{PMT} corresponde a un servicio incluido en el \textbf{Transport stream}. Es decir que la \pat\ describe una lista de los servicios del \emph{ts}. A cada uno de estos le corresponde un número identificador que será utilizado por el resto de las tablas para adjuntar información específica, como el nombre, su tipo o \emph{elementary streams}.
+\subsubsection{\emph{Program allocation table} (\pat)}
 
-\subsubsection{\emph{Program mapping table}}
+La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un servicio. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte y asocia a cada servicio con un \textbf{PID}. La identificación del servicio se hace a través del número de \emph{service\_id}.
 
-La \pmt\ define los programas. Tiene un \pid\ referido por la \pat. Cada \pmt\ está asociada a un servicio que viaja por el \emph{ts} y le permite al decodificador acceder a los paquetes que llevan los \emph{elementary streams} a través de la definición de sus respectivos \pid. Además de esta asociación incluye información de los flujos elementales.
+\subsubsection{\emph{Program map table} (\pmt)}
 
-\subsubsection{\emph{Service description table}}
+La \pmt\ define los contenidos multimedia que corresponden a un programa. El \pid\ que tiene asignado un servicio por \pat, es el \pid\ con el que viaja la \pmt\ de tal servicio. Esta tabla le permite al decodificador acceder a los paquetes que llevan los flujos con contenidos multimedia a través de sus respectivos \pid. 
+
+\subsubsection{\emph{Service description table} (\sdt)}
 
 La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc
 
-\subsection{Descriptores}
+\subsubsection{\emph{Network Information Table} (\nit)}
 
-Parte de la información de las tablas viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado numéricamente de forma unívoca por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
+La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestre. Contiene información obligatoria sobre la organización física de la red de transmisión que la emite, pero también de forma opcional puede enviar información de otras redes.
 
-Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. 
+\subsubsection{Descriptores}
+
+Dentro de las tablas, parte de la información viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado numéricamente de forma unívoca por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
+
+Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-T se provee en [TODO: Apéndice de descriptores].
+
+Un ejemplo de descriptor es el \emph{service descriptor} con \emph{descriptor tag} 0x48 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
+
+\subsection{Decodificación de tablas en flujos de transporte}
+
+Se define a continuación la relevancia de las tablas en el proceso de obtención de servicios para el usuario:
+
+ \begin{enumerate}
+
+\item En el proceso de SCAN, la información del sistema se obtiene de las tablas \nit\ y \sdt. De la primera se extrae la información relacionada con la red de transmisión. De la segunda se extrae la información de los servicios. Para decodificar estas tablas el receptor filtra los paquetes por los que viajan de acuerdo a su \pid. La \nit\ viaja con \pid\ 0x10 y la \sdt\ viaja con \pid\ 0x11. El proceso de decodificación incluye la extracción de cualquier descriptor que incluya la tabla. 
+
+\item La construcción de la lista de servicios se basa en la \sdt. Del \emph{service\_descriptor}, el receptor puede obtener el nombre y el tipo de servicio, para distinguir televisión de radio, por ejemplo.
+
+\hrulefill
+
+-----------------------------------------------------
+
+
+\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz). Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
+
+El proceso de cambiar de canal físico, implica demodular la nueva señal y sincronizarse con la emisión, para distinguir el comienzo de cada paquete e interpretar correctamente la información.
+
+\item Una vez el receptor esté recibiendo el flujo buscado, debe lograr distinguir y filtrar los paquetes que pertenecen al servicio requerido por el usuario. Es decir, si se sintoniza ``Encuentro'', el receptor debe decodificar el video de este canal de televisión, y no de ``TV Pública HD''. Lo mismo ocurre con audio y \emph{closed caption}.
+
+\item Para finalizar, todo el contenido multimedia debe ser redirigido a los dispositivos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
+
+\item Un cambio de servicio de parte del usuario, implica comenzar desde el paso 3.
+
+
+\end{enumerate}
+
+
+
 
 % \subsection{\emph{Packetized elementary streams}}
 
