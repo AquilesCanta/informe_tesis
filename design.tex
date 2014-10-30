@@ -5,15 +5,35 @@
  
 \chapter{Diseño y desarrollo}
 
-El objetivo de este trabajo es el desarrollo de un prototipo de sistema que integre transmisión ISDB-Tb e IPTV. El sistema posee tres principales vías de trabajo:
+Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. En una red de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Aún teniendo en mente que el formato antiguo de transmisión utilizado.
+
+El problema de ISDB-T radica en la escacés de canales físicos para la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
+
+La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de algunos millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del servicio tiene repercusiones graves.
+
+El problema de IPTV radica en que la infraestructura es compleja y delicada. Es, además, suceptible a la sobreexigencia.
+
+En el caso de la televisión analógica terrestre, este problema es insondable. Con la introducción de la televisión digital y la combinación con IPTV, ambos esquemas de transmisión puede complementarse para obtener un mejor sistema.   
+
+\section{Señalización y distribución de servicios}
+
+El primer paso para combinar los sistemas de transmisión es definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. En cualquier sistema de entrega de contenidos, es necesario que la lista de señales llegue a todos los consumidores.
+
+El mecanismo de entrega de esta lista también es un punto de desarrollo del sistema. 
+
+\section{Estructura general del sistema combinado}
+La entrega de contenidos televisivos posee agentes de emisión y recepción. En el caso de un sistema que integre transparentemente IPTV e ISDB-T, naturalmente posee dos agentes de emisión. La emisión, a su vez, está asociada a un formato de transmisión. El sistema entonces, posee tres puntos de estudio:
 
 \begin{itemize}
 \item Entrega de servicios por ISDB-Tb, formato \textbf{MPEG-TS} extendido.
 \item Entrega de servicios por redes IP (o IPTV) con esquema \emph{multicast}.
-\item Recepción y combinación de ambas.
+\item Recepción y combinación de ambas. Desarrollo de \textbf{Mara}.
 \end{itemize}
 
+
 \section{Extensión del formato \textbf{MPEG-TS}}
+
+En algún punto del proceso de identificación de servicios del receptor se deben introducir los medios necesarios para acceder a los servicios a los que se accede por Internet. 
 
 El primer paso es dar soporte al formato para los servicios cuyos flujos elementales no se transmiten por el mismo \emph{ts}. En este trabajo, los paquetes \pes\ asociados son transportados por una red IP. A fin de que un receptor pueda consumir estos paquetes necesitan invariablemente de una dirección IP y un número de puerto. De esa manera, cuando el usuario sintoniza un servicio cuyos \emph{elementary streams} se transmiten por IP, el receptor puede unirse al grupo \emph{multicast} por el que se emiten y así consumirlos.
 
