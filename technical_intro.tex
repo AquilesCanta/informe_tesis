@@ -216,14 +216,11 @@ Se define a continuación la relevancia de las tablas en el proceso de obtención 
 
 \hrulefill
 
------------------------------------------------------
+\item La sintonización de un canal físico es un proceso independiente de los contenidos de los flujos de transporte salvo por la asociación entre servicio y frecuencia. Esto es, si el usuario decide reproducir ``TV Pública HD'' de la lista, del paso 2, luego de haber memorizado la información de la SDT, el receptor sabe que se encuentra en el canal 23. Nuevamente, si el servicio que se estaba sintonizando hasta entonces ya se encontraba en la misma frecuencia, como ``Tecnópolis'', el cambio de frecuencia es innecesario.
 
+\item Una vez el canal físico está en sintonía, y el receptor sincronizado con el flujo de transporte, el receptor debe reconstruir la sección que viaja con \pid\ 0 y que corresponde a la \pat. En la tabla encontrará los 3 servicios. Sabiendo que el nombre ``TV Pública HD'' corresponde al \emph{service\_id} [[[TODO AGREGAR EL SERVICE ID]]], de la \pat\ se obtiene el PID con que viaja la \pmt. En el caso de la muestra de canal 23, éste es [[[TODO: Agregar PID de la PMT de TV PUBLICA HD]]].
 
-\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz). Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
-
-El proceso de cambiar de canal físico, implica demodular la nueva señal y sincronizarse con la emisión, para distinguir el comienzo de cada paquete e interpretar correctamente la información.
-
-\item Una vez el receptor esté recibiendo el flujo buscado, debe lograr distinguir y filtrar los paquetes que pertenecen al servicio requerido por el usuario. Es decir, si se sintoniza ``Encuentro'', el receptor debe decodificar el video de este canal de televisión, y no de ``TV Pública HD''. Lo mismo ocurre con audio y \emph{closed caption}.
+\item Conociendo el \pid, el receptor extrae los \pid\ de los flujos elementales y de los relojes para sincronizar audio y video. Con ésta información, ya es posible reconstruir los contenidos multimedia. En el caso del ejemplo [[[TODO: agregar pids de audio y video en el ejemplo.]]]
 
 \item Para finalizar, todo el contenido multimedia debe ser redirigido a los dispositivos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
 
