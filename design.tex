@@ -7,19 +7,25 @@
 
 Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. En una red de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Aún teniendo en mente que el formato antiguo de transmisión utilizado.
 
-El problema de ISDB-T radica en la escacés de canales físicos para la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
+La escacés de servicios que ofrece ISDB-T radica en el número de canales físicos de radiofrecuencia asignados a la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
 
 La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de algunos millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del servicio tiene repercusiones graves.
 
 El problema de IPTV radica en que la infraestructura es compleja y delicada. Es, además, suceptible a la sobreexigencia.
 
-En el caso de la televisión analógica terrestre, este problema es insondable. Con la introducción de la televisión digital y la combinación con IPTV, ambos esquemas de transmisión puede complementarse para obtener un mejor sistema.   
+Con el objetivo de obtener las mejores características de cada sistema, se pueden combinar ambos sistemas de transmisión. El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
 
 \section{Señalización y distribución de servicios}
 
-El primer paso para combinar los sistemas de transmisión es definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. En cualquier sistema de entrega de contenidos, es necesario que la lista de señales llegue a todos los consumidores.
+El primer paso para combinar los sistemas de transmisión es definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. Llamaremos a la entrega de información sobre los servicios para la construcción de la lista \emph{señalización}. 
 
-El mecanismo de entrega de esta lista también es un punto de desarrollo del sistema. 
+La señalización del sistema de entrega debe ser, en lo posible, centralizada y debe estar disponible siempre que el sistema de entrega lo esté. Para estos fines, la transmisión ISDB-T resulta adecuada:
+
+\begin{itemize}
+\item La transmisión alcanza todos los dispositivos de recepción con señal.
+\item La señalización no se ve amenazada por sobreexigencia.
+\item Se puede aprovechar el sistema de señalización que ya provee ISDB-T.
+\end{itemize}
 
 \section{Estructura general del sistema combinado}
 La entrega de contenidos televisivos posee agentes de emisión y recepción. En el caso de un sistema que integre transparentemente IPTV e ISDB-T, naturalmente posee dos agentes de emisión. La emisión, a su vez, está asociada a un formato de transmisión. El sistema entonces, posee tres puntos de estudio:
