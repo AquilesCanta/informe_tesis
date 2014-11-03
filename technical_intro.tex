@@ -10,7 +10,7 @@ Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
 \item Exhibe una mejor calidad de sonido e imagen.
 \item Permite contenidos en alta definición.
-\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora.
+\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora. Además permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.
 \item Permite que se integren y complementen los contenidos con Internet.
 \item Permite nuevos servicios asociados a la interactividad y otros como la guía electrónica de programación, ejecución de aplicaciones, \etc.
 \item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
@@ -180,17 +180,57 @@ Los paquetes tienen tamaño de 188 bytes y disponen de aún menos para enviar cont
 
 El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un rol específico. A su vez, ISDB-T extiende esta lista con algunas tablas. Una lista completa de las tablas de formato \textbf{ISDB-T} se incluye en [TODO: Agregar apéndice].
 
+\subsubsection{\emph{Service description table} (\sdt)}
+
+La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc\\
+
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ l | c | c }
+\emph{service\_id} & Nombre del servicio & Tipo del servicio \\
+\hline 
+59201 & TV Pública HD & Televisión \\
+59202 & Tecnópolis & Televisión \\
+59224 & TV Pública & (Data Service) Televisión Móvil \\
+\end{tabular}
+\caption{Contenidos de la SDT emitida por Canal 23}
+\end{center}
+\end{table}
+
 \subsubsection{\emph{Program allocation table} (\pat)}
 
-La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un servicio. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte y asocia a cada servicio con un \textbf{PID}. La identificación del servicio se hace a través del número de \emph{service\_id}.
+La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un servicio. Viaja con \pid\ 0. Existe una \pat\ por flujo de transporte y asocia a cada servicio con un \textbf{PID}. La identificación del servicio se hace a través del número de \emph{service\_id}.\\
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ l | c }
+\emph{service\_id} & Program PID (o PID de PMT) \\
+\hline 
+59201 & 258 \\
+59202 & 8136 \\
+59224 & 259 \\
+\end{tabular}
+\caption{Contenidos de la PAT emitida por Canal 23}
+\end{center}
+\end{table}
 
 \subsubsection{\emph{Program map table} (\pmt)}
 
-La \pmt\ define los contenidos multimedia que corresponden a un programa. El \pid\ que tiene asignado un servicio por \pat, es el \pid\ con el que viaja la \pmt\ de tal servicio. Esta tabla le permite al decodificador acceder a los paquetes que llevan los flujos con contenidos multimedia a través de sus respectivos \pid. 
+La \pmt\ define los contenidos multimedia que corresponden a un programa. El \pid\ que tiene asignado un servicio por \pat, es el \pid\ con el que viaja la \pmt\ de tal servicio. Esta tabla le permite al decodificador acceder a los paquetes que llevan los flujos con contenidos multimedia a través de sus respectivos \pid. \\
 
-\subsubsection{\emph{Service description table} (\sdt)}
-
-La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ l | c }
+Tipo de flujo & PID del flujo \\
+\hline 
+27(Video) & 289 \\
+17(Audio) & 290 \\
+17(Audio) & 291 \\
+\end{tabular}
+\caption{PMT que viaja con PID 258 en el ejemplo de Canal 23}
+\end{center}
+\end{table}
 
 \subsubsection{\emph{Network Information Table} (\nit)}
 
@@ -202,15 +242,15 @@ Dentro de las tablas, parte de la información viaja en un formato de longitud va
 
 Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-T se provee en [TODO: Apéndice de descriptores].
 
-Un ejemplo de descriptor es el \emph{service descriptor} con \emph{descriptor tag} 0x48 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
+Un ejemplo de descriptor es el \emph{service descriptor} con \emph{descriptor tag} 72 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
 
 \subsection{Decodificación de tablas en flujos de transporte}
 
-Se define a continuación la relevancia de las tablas en el proceso de obtención de servicios para el usuario:
+A continuación se explica el proceso de construcción de lista de servicios y sintonización en términos de las tablas involucradas:
 
  \begin{enumerate}
 
-\item En el proceso de SCAN, la información del sistema se obtiene de las tablas \nit\ y \sdt. De la primera se extrae la información relacionada con la red de transmisión. De la segunda se extrae la información de los servicios. Para decodificar estas tablas el receptor filtra los paquetes por los que viajan de acuerdo a su \pid. La \nit\ viaja con \pid\ 0x10 y la \sdt\ viaja con \pid\ 0x11. El proceso de decodificación incluye la extracción de cualquier descriptor que incluya la tabla. 
+\item En el proceso de SCAN, la información del sistema se obtiene de las tablas \nit\ y \sdt. De la primera se extrae la información relacionada con la red de transmisión. De la segunda se extrae la información de los servicios. Para decodificar estas tablas el receptor filtra los paquetes por los que viajan de acuerdo a su \pid. La \nit\ viaja con \pid\ 16 y la \sdt\ viaja con \pid\ 17. El proceso de decodificación incluye la extracción de cualquier descriptor que incluya la tabla. 
 
 \item La construcción de la lista de servicios se basa en la \sdt. Del \emph{service\_descriptor}, el receptor puede obtener el nombre y el tipo de servicio, para distinguir televisión de radio, por ejemplo.
 
@@ -218,18 +258,25 @@ Se define a continuación la relevancia de las tablas en el proceso de obtención 
 
 \item La sintonización de un canal físico es un proceso independiente de los contenidos de los flujos de transporte salvo por la asociación entre servicio y frecuencia. Esto es, si el usuario decide reproducir ``TV Pública HD'' de la lista, del paso 2, luego de haber memorizado la información de la SDT, el receptor sabe que se encuentra en el canal 23. Nuevamente, si el servicio que se estaba sintonizando hasta entonces ya se encontraba en la misma frecuencia, como ``Tecnópolis'', el cambio de frecuencia es innecesario.
 
-\item Una vez el canal físico está en sintonía, y el receptor sincronizado con el flujo de transporte, el receptor debe reconstruir la sección que viaja con \pid\ 0 y que corresponde a la \pat. En la tabla encontrará los 3 servicios. Sabiendo que el nombre ``TV Pública HD'' corresponde al \emph{service\_id} [[[TODO AGREGAR EL SERVICE ID]]], de la \pat\ se obtiene el PID con que viaja la \pmt. En el caso de la muestra de canal 23, éste es [[[TODO: Agregar PID de la PMT de TV PUBLICA HD]]].
+\item Una vez el canal físico está en sintonía, y el receptor sincronizado con el flujo de transporte, el receptor debe reconstruir la sección que viaja con \pid\ 0 y que corresponde a la \pat. En la tabla encontrará la lista con los 3 servicios. Sabiendo por la \sdt\ que el nombre ``TV Pública HD'' corresponde al \emph{service\_id} 59201, de la \pat\ se obtiene el PID con que viaja la \pmt, que en el ejemplo es 258.
 
-\item Conociendo el \pid, el receptor extrae los \pid\ de los flujos elementales y de los relojes para sincronizar audio y video. Con ésta información, ya es posible reconstruir los contenidos multimedia. En el caso del ejemplo [[[TODO: agregar pids de audio y video en el ejemplo.]]]
+\item Con el \pid\ de la \pmt, el receptor reconstruye la sección que lleva la tabla. De ella extrae los \pid\ de los flujos elementales. ``TV Pública HD'' envía dos flujos de audio (\pid s 290 y 291) y un flujo de video HD con \pid\ 289. Con éstos \pid, ya es posible reconstruir los contenidos multimedia.
 
-\item Para finalizar, todo el contenido multimedia debe ser redirigido a los dispositivos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
+\item Estos flujos elementales deben decodificarse y enviarse a los periféricos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
 
 \item Un cambio de servicio de parte del usuario, implica comenzar desde el paso 3.
 
 
 \end{enumerate}
 
+A continuación se presenta un esquema final del flujo de transporte:
 
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=12cm]{imgs/canal_23_tables.png}
+\caption{Esquema general de tablas en el ejemplo de Canal 23}
+\end{center}
+\end{figure}
 
 
 % \subsection{\emph{Packetized elementary streams}}
@@ -238,18 +285,15 @@ Se define a continuación la relevancia de las tablas en el proceso de obtención 
 
 \section{Generación de flujos de transporte}
 
-El proceso de multiplexación de servicios de acuerdo al formato MPEG-TS debe seguir estrictos lineamientos. Por ejemplo, si se volcara todo el contenido y se analizara, se encontraría el byte de sincronización cada 188 bytes. También, muchos de los paquetes encontrados serían nulos, que sirven para completar el bitrate que ofrece el medio y que no se puede completar con contenido real. 
+El proceso de transformación de la información desde que se captura en un estudio de televisión hasta que es entregada al usuario a través de un reproductor de TV está compuesto por tres etapas:
 
-El proceso de construcción posee los siguientes pasos:
-
-\begin{enumerate}
-\item Definir servicios de acuerdo a bitrate, que a su vez es de acuerdo a los parámetros de modulación
-\item  sacar Flujos
-\item Pes
-\item Paquetes Pes
-\item tablas
-\item multiplexar
+\begin{enumerate}[label=\alph*]
+\item \textbf{Generación de contenidos:} en una estación de televisión hay un conjunto de tecnologías para este fin. Cámaras, \emph{switchers}, generadores de efectos, consolas de audio, \etc. que entregan flujos elementales (audio y video) de alta velocidad para su posterior codificación. En general, cada flujo se entrega a \textbf{Codificación} por separado.
+\item \textbf{Codificación y empaquetado:} en esta etapa se realiza la compresión del audio y video, para adaptarla a la capacidad de transmisión de los canales físicos. La información contenida en cada flujo elemental es segmentada en paquetes de bits llamados PES(\emph{Packetized elementary streams}), que luego son divididos nuevamente a paquetes \textbf{MPEG-TS} de 188 bytes. En general, cada programa genera tres flujos de paquetes \textbf{MPEG-TS}: video, audio y datos.
+\item \textbf{Señalización y multiplexación de programas:} en la etapa final se compone el flujo binario \textbf{MPEG-TS} de entrega. Integra el audio, video y datos de los servicios que lo compongan, completamente optimizado para la transmisión. En este punto se incorporan las tablas que señalizan los servicios.
 \end{enumerate}
+
+El proceso final de señalización y multiplexación de servicios debe seguir estrictos lineamientos, de acuerdo al formato MPEG-TS. Por ejemplo, si se volcara todo el contenido y se analizara, se encontraría el byte de sincronización cada 188 bytes. Existen otras restricciones a parte de las sintácticas. La \pat\ debe emitirse. 
 
 \subsection{OpenCaster}
 
