@@ -11,12 +11,20 @@ En una red privada de transmisión de televisión analógica por cable, el número d
 
 La escacés de servicios que ofrece ISDB-T radica en el número de canales físicos de radiofrecuencia asignados a la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
 
+IPTV usa una red de internet que además está siendo exigida por otros clientes. Lo cual quiere decir que cualquiera de los nodos puede caerse por motivos ajenos  a iptv. Es decir, no es una infraestructura dedicada. Con lo cual está sujeta a la cantidad de clientes, no solo en iptv, si no en tv.
+
 La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del sistema implica dejar sin servicio a un gran porcentaje de la población, potencialmente.
 
-El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega, parcial o totalmente a los receptores.
+El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega parcial o totalmente a los receptores.
 
-El objetivo de este capítulo es explicar el diseño  y detallar el método de construcción de un prototipo de recepción. un sistema que obtenga las mejores características de cada formato de entrega. Los puntos de 
-El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
+El objetivo de este capítulo es explicar el diseño  y detallar el método de construcción de un prototipo de recepción. un sistema que obtenga las mejores características de cada formato de entrega. El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
+
+
+
+
+
+
+
 
 \section{Señalización y distribución de servicios}
 
@@ -24,83 +32,156 @@ El primer paso para combinar los sistemas de transmisión es definir qué servicio
 
 La señalización del sistema de entrega debe ser, en lo posible, centralizada y debe estar disponible siempre que el sistema de entrega lo esté. Para estos fines, la transmisión ISDB-T resulta adecuada:
 
-\begin{itemize}
-\item La transmisión alcanza todos los dispositivos de recepción con señal.
-\item La señalización no se ve amenazada por sobreexigencia.
-\item Se puede aprovechar el sistema de señalización que ya provee ISDB-T.
-\end{itemize}
-
-\section{Estructura general del sistema combinado}
-La entrega de contenidos televisivos posee agentes de emisión y recepción. En el caso de un sistema que integre transparentemente IPTV e ISDB-T, naturalmente posee dos agentes de emisión. La emisión, a su vez, está asociada a un formato de transmisión. El sistema entonces, posee tres puntos de estudio:
+Como hipótesis de trabajo, la señalización de los servicios debe poseer las siguientes características:
 
 \begin{itemize}
-\item Entrega de servicios por ISDB-Tb, formato \textbf{MPEG-TS} extendido.
-\item Entrega de servicios por redes IP (o IPTV) con esquema \emph{multicast}.
-\item Recepción y combinación de ambas. Desarrollo de \textbf{Mara}.
+\item Centralizada.
+\item Disponible para todos los dispositivos de recepción, independientemente de los consumidores del servicio.
+\item Debe aprovechar el sistema de señalización que ya provee ISDB-T a través del formato MPEG-TS.
 \end{itemize}
 
+\subsection{Extensión del formato MPEG-TS}
 
-\section{Extensión del formato \textbf{MPEG-TS}}
+El primer punto de trabajo es agregar una extensión al flujo de transporte para que sea capaz de indicarle al receptor la existencia de un servicio cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast.
 
-En algún punto del proceso de identificación de servicios del receptor se deben introducir los medios necesarios para acceder a los servicios a los que se accede por Internet. 
+Para que un receptor reconozca un servicio y lo incluya a su lista de servicios disponibles, debe encontrar una entrada correspondiente en la \sdt, en la \pat\ y, finalmente, una \pmt\ asignada al servicio. Como es ésta última la encargada de indicar la ubicación de los flujos elementales, la extensión corresponde (y debe limitarse a) esta tabla.
 
-El primer paso es dar soporte al formato para los servicios cuyos flujos elementales no se transmiten por el mismo \emph{ts}. En este trabajo, los paquetes \pes\ asociados son transportados por una red IP. A fin de que un receptor pueda consumir estos paquetes necesitan invariablemente de una dirección IP y un número de puerto. De esa manera, cuando el usuario sintoniza un servicio cuyos \emph{elementary streams} se transmiten por IP, el receptor puede unirse al grupo \emph{multicast} por el que se emiten y así consumirlos.
+\section{\emph{Elementaries relocation descriptor}}
 
-\subsection{Recipiente de datos}
+Siguiendo el segundo de los principios de diseño \textbf{SOLID}(\emph{Open/Closed Principle}), uno de los objetivos de este desarrollo es evitar violar el formato MPEG-TS tanto como sea posible, sino extenderlo. Entonces, se busca agregar los comportamientos a entidades nuevas en lugar de modificar las ya existentes.
 
-Para enviar los datos necesarios se define un nuevo descriptor denominado \emph{elementaries relocation descriptor} con \emph{descriptor tag} 0xAA. En un receptor, encontrar este descriptor en la \pmt\ de un servicio implica que los flujos elementales a reproducir para tal servicio se emiten de manera \emph{multicast} en el grupo y puerto identificados por los datos contenidos en el descriptor.
+Para señalizar nuevos servicios cuyos flujos elementales se deben obtener desde una red IP, entonces, se utilizará el \emph{Elementaries Relocation Descriptor}. Como su nombre lo indica, esta entidad denota un descriptor del estándar MPEG-TS. Éste descriptor sólo puede hallarse en la \pmt\ e implica que el servicio al cual está asociada la tabla, posee las características mencionadas.
 
-Sólamente una vez el usuario haya solicitado un servicio con el descriptor 0xAA el receptor intentará unirse al grupo \emph{multicast} asociado. De esta manera, la utilización de recursos de red se limita a lo estrictamente necesario.
+El \emph{Elementaries Relocation Descriptor} tiene asignado el \emph{descriptor\_tag} 170. No existe, actualmente, un descriptor en el formato MPEG-TS con el mismo nombre o \emph{descriptor\_tag} o semántica similar.
 
-\subsection{Construcción de \emph{transport streams}}
+Para que el receptor sea capaz de obtener los flujos elementales, al ser una red IP el medio y multicast el esquema de envío de paquetes, es necesario proveer a través del descriptor un grupo multicast y un puerto asociado. Entonces la sintaxis del descriptor es la siguiente:
 
-En la construcción de un flujo de transporte de referencia se utilizó el proyecto OpenCaster. Dado que el mismo no da soporte nativo a estructuras ajenas al formato \textbf{MPEG-TS}, se agregó a la API de construcción una clase correspondiente al \emph{elementaries relocation descriptor}. Esto implica que un \emph{transport stream} con servicios por IPTV pueden ser generados con OpenCaster.
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ | l | c | c | c | } 
+\hline
+Elemento                   & Rango de valores            & Número de bits asignado & Bit de comienzo \\
+\hline 
+\emph{descriptor\_tag}     & 170                         & 8        & 0       \\
+\emph{descriptor\_length}  & 6                           & 8        & 8       \\
+\textbf{Grupo Multicast}            & 3758096384 -- 4026531839    & 32       & 16      \\
+\textbf{Puerto}                     & 1 -- 65535                  & 16       & 48      \\
+\hline 
+\end{tabular}
+\caption{Sintaxis del \emph{Elementaries Relocation Descriptor}}
+\end{center}
+\end{table}
 
-El proceso de extender un \emph{ts} ya válido para agregarle servicios cuyos flujos elementales vienen por \emph{multicast} es el siguiente:
+Descripción de los elementos:
+\begin{itemize}
+\item \emph{descriptor\_tag}: Elemento requerido por la definición sintáctica de los descriptores. Lleva el valor 170 para identificar al \emph{Elementaries Relocation Descriptor} en el \emph{descriptor loop}.
+\item \emph{descriptor\_length}: Elementor requerido por la definición sintáctica de los descriptores. El \emph{Elementaries Relocation Descriptor} tiene una longitud fija de 8 bytes. De modo que este campo siempre lleva el valor 6 (no incluye los primeros dos campos del descriptor).
+\item \textbf{Grupo Multicast}: Grupo Multicast al que se debe unir el receptor para capturar los flujos elementales del servicio al que está asociada la PMT en la que viaja este descriptor. El rango de valores se debe a que las direcciones IP asignadas a los grupos multicast se hallan en el rango 224.0.0.0 -- 239.255.255.255. Estas direcciones IP codificadas en \emph{big-endian} (el byte más significativo en la menor dirección de memoria) resultan en esos valores.
+\item \textbf{Puerto}: El puerto al cual se realiza la emisión. Son dos bytes codificados en \emph{big-endian}. Cabe notar que el valor 0 representa un número de puerto inválido.
+\end{itemize}
+
+\section{Construcción de un flujo de transporte de referencia}
+
+Para la descripción de la construcción de un flujo de referencia para el sistema de transmisión, se parte de un flujo de transporte ISDB-T válido. Es decir, se explicará el agregado de servicios a un flujo de tranporte existente. Se utilizará como ejemplo el ejemplo de canal 23 del capítulo de introducción técnica.
+
+Los pasos de extensión se resumen a continuación. Este procedimiento se debe repetir por cada servicio que se quiera agregar al flujo de transporte.
+
 \begin{enumerate}
-\item Agregar una entrada a la \pat\ correspondiente al servicio nuevo. Se puede hacer a través de la utilización de OpenCaster.
-\item Agregar el servicio en la \sdt, adjuntándole tipo y nombre. Se puede hacer a través de OpenCaster.
-\item Agregarle una \pmt\ correspondiente al servicio agregado al flujo y multiplexarlo respetando la limitación de aparecer cada 200 milisegundos. Esta \pmt\ debe incluir un \emph{elementaries relocation descriptor} con la dirección IP y puerto que identifican a los flujos elementales del servicio.
-
-[TODO: Darle identidad a la suite de herramientas creada para la tesis y desde acá sólo referir a tal suite como si fuera OpenCaster] Para realizar este paso se creó una herramienta de inserción de paquetes dentro del proyecto ``ts\_util''.
-
+	\item Crear una entrada en la \sdt\ que indique:
+	\begin{enumerate}
+		\item \emph{service\_id} del servicio
+		\item Nombre del servicio
+		\item Tipo del servicio (en general, 1, correspondiente a televisión digital)
+		\item TODO: Alguno más?
+	\end{enumerate}
+	\item Crear una entrada en la \pat. La entrada debe incluir:
+	\begin{enumerate}
+		\item \emph{service\_id} del servicio
+		\item \pid\ de la PMT que se le agregará al flujo de transporte
+	\end{enumerate}
+	\item Crear una \pmt\ correspondiente al servicio a agregar. Los elementos que incluye la \pmt\ son:
+	\begin{enumerate}
+		\item \emph{service\_id} del servicio
+		\item El \emph{Elementaries Relocation Descriptor} con grupo multicast y puerto por los que se emiten los flujos elementales.
+		\item TODO: Qué pasa si no le ponemos flujos la PMT! Eso está bueno
+	\end{enumerate} 
+	\item Insertar la \pmt\ al flujo de transporte. Siendo que la \pmt\ debe hallarse en un período de 200 milisegundos, es necesario conocer el bitrate de emisión. 
 \end{enumerate}
 
-La emisión de un \emph{transport stream} extendido no difiere de la de uno regular.
+\subsection{Extensión de OpenCaster}
 
-\section{Entrega de servicios por redes IP}
+Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión al proyecto OpenCaster. Esta extensión le permite a la herramienta reconocer el descriptor agregado, como si fuera parte del estándar, para así incluirla en la PMT, de igual manera que con cualquier otro descriptor.
 
-De acuerdo a la definición presentada anteriormente, la televisión digital clasifica como televisión en vivo. La implementación ideal (en términos de aprovechamento eficiente de recursos) implica utilizar emisión \emph{multicast}. De esa manera el uso de ancho de banda y \emph{buffering} se mantiene igual al de enviar un flujo multimedia a un único cliente.
+TODO: Agregar un diagrama de clases de opencaster con el descriptor nuevo?
 
-Sin embargo, el envío \emph{multicast} exige la utilización de datagramas en lugar de un sistema con entrega garantizada como TCP. Esto quiere decir que el formato contenedor de los contenidos debe ser tolerante a fallos y errores. Cabe notar que el \textbf{MPEG-TS} está diseñado para este tipo de ambientes.
+El \emph{Elementaries Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Definiendo el método \texttt{bytes}, la clase luego se empaqueta en la estructura sintáctica definida anteriormente.
 
-Entonces, para el envío de contenido multimedia por IP se utiliza un \emph{transport stream} mínimo. Llamamos así a aquel \emph{ts} que contiene un único servicio sin paquetes nulos.
+La forma de instanciar la clase correspondiente al descriptor es:
 
-\section{Recepción}
+\lstinputlisting[language=Python,caption={Instanciación del descriptor en OpenCaster}]{src_code/descriptor_instantiation.py}
 
-Las tareas de un dispositivo receptor de \emph{transport stream} se resumen en lo siguiente:
+Donde XX.XX.XX.XX debe ser reemplazado por el grupo multicast e YYYY por el puerto.
+
+\subsection{Construcción de flujo de transporte de referencia}
+
+Para la construcción del flujo de transporte se pueden aprovechar las herramientas incluidas en OpenCaster. Los elementos requeridos en el paso a paso presentado anteriormente se pueden construir con un \emph{script python} similar al siguiente.
+
+\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/table_gen.py}
+
+TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
+
+
+\section{Software de recepción}
+
+El siguiente paso en el sistema es construir un software de recepción que sea capaz de capturar al flujo de transporte extendido y reaccionar acordemente. Esto es:
 
 \begin{itemize}
-\item Construir la lista de servicios disponibles.
-\item Asociar cada servicio a un conjunto de flujos elementales.
-\item Entregar los paquetes PES asociados al servicio sintonizado al reproductor.
+	\item Construir la lista de servicios disponibles.
+	\item Identificar aquellos que posean el \emph{Elementaries Relocation Descriptor} asociado.
+	\item Asociar el servicio sintonizado por el usuario a los flujos elementales apropiados:
+	\begin{itemize}
+		\item Si la \pmt\ del servicio no posee el descriptor agregado, el receptor se debe comportar de manera tradicional
+		\item Si la \pmt\ sí posee el descriptor asociado, entonces debe unirse al grupo multicast indicado en el mismo y capturar los flujos elementales desde ese medio.
+	\end{itemize}
 \end{itemize}
 
-El caso de un \emph{transport stream} extendido no es diferente. Sin embargo, la entrega de los paquetes PES sí lo es. A continuación se detallan los cambios requeridos.
+Notando que la mayoría de los comportamientos del software de recepción se mantienen igual a uno tradicional, los cambios se aplicarán a un reproductor existente: \emph{Wari}. Llamaremos \emph{Mara} al nuevo reproductor, resultante de la extensión introducida.
 
-\subsection{Modificaciones en \textbf{mpeg-parser}}
+\subsection{Construcción de Mara}
 
-Las modificaciones en la librería se pueden comprender en tres partes. En primer instancia, el sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos. En segundo lugar, de acuerdo a estos contenidos, se debe modificar el modelo/estdo del sistema y, finalmente, éste debe poder reaccionar acordemente a las modificaciones. Es decir, cuando así se requiera, la reproducción debe obtener sus fuentes del medio correcto.
+Los pasos de modificación del reproductor \emph{Wari} son:
+
+\begin{enumerate}
+	\item El sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos.
+	\item En concordancia con los contenidos del descriptor, se debe modificar el modelo/estdo del sistema.
+	\item Finalmente, cuando el usuario sintoniza un servicio, el contenido audiovisual de la reproducción debe ser adquirido del medio correcto. 
+\end{enumerate}
 
 \subsection{Obtención y \emph{parsing} del descriptor}
+
+TODO: Agregar el diagrama de clases de como está. Explicar la modificación y explicar el nuevo diagrama de clases.
+
+TODO: Luego agregar un diagrama de secuencia.
 
 Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca process descriptors.
 
 \subsection{Modificación del modelo}
 
+TODO: Agregar diagrama de clases del sistema en el estado actual.
+
+TODO: Agregar un diagrama de secuencia de cómo se capturan los flujos elementales.
+
+TODO: Explicar cómo funciona la captura de los elementary streams
+
+TODO: Agregar el nuevo diagrama de secuencia.
+
 Se metió un booleano en la clase descriptor, junto a un string que modela el grupo multicast y un short para el puerto. Una crotada básicamente.
 
 \subsection{Reproducción de servicio}
+
+TODO: Se le manda a Tuner un start(serviceID), se busca el servicio y se devuelve una URL o algo.
+
+TODO: Diagrama de clases, luego diagrama de secuencia nuevo.
 
 Si se encuentra que es un servicio relocado, entonces en la URL se manda una dirección IP en vez del URL inventado.
 
@@ -119,30 +200,25 @@ Se debe agregar un descriptor a la SDT (OJO! Puede implicar la necesidad de divi
 
 Se debe crear una nueva PMT e insertarla en el TS válido de partida.
 
-* Hay que enviar por UDP sí o sí.
 
 
 
+\section{Emisión multicast de los flujos elementales por IP}
+
+La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe protección ante pérdida de paquetes.
+
+El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces resulta adecuado para estas características de transmisión. Sin embargo, existen algunas diferencias con el uso que se le da en televisión digital terrestre:
+
+TODO: Mandar TS por multicast me parece una pelotudez, ahora que lo pienso bien.
+
+\begin{itemize}
+	\item El bitrate de emisión de una red IP no es necesariamente constante, de modo que los paquetes nulos incurren en un desperdicio de ancho de banda.
+	\item Por el mismo motivo, los paquetes no se envian en un flujo constante, si no que pueden ser enviados en ráfagas. 
+	\item En el caso de la televisión digital terrestre, cada canal tiene un bitrate independiente y se busca aprovechar cada uno al máximo. En el caso de la transmisión multicast, las vías de transmisión (los grupos multicast) comparten la infraestructura. De modo que la multiplexación de servicios no tiene razón de ser.
+
+\end{itemize}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Relocación de los \emph{elementary streams} de los servicios agregados}
-
-\section{Emisión de los flujos elementales por IP}
-
-El envío de \emph{elementary streams} por IP \emph{multicast} permite evitar la repetición de paquetes iguales enviados de forma simultánea a múltiples receptores. Èste esquema requiere el uso de datagramas. Como este protocolo es suceptible a pérdidas, el formato enviado debe poder recuperarse ante tales problemas. El \textbf{MPEG-TS} es ideal para este tipo de envíos. 
 
 \ifx\all\undefined
 \end{document}
