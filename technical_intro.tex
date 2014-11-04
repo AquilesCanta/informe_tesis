@@ -307,9 +307,9 @@ Una vez se poseen todas las componentes del flujo, las mismas se pueden multiple
 
 \section{Decodificación}
 
- \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que incluye, entre otras cosas, el reproductor de televisión digital \emph{Wari}.
+La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21]. Siendo un estándar abierto, existen varias implementaciones. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que agrupa librerías y aplicaciones relacionadas con la televisión digital.
 
-El reproductor \emph{Wari} se utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto \emph{Kuntur}, para la manipulación de \textbf{MPEG-TS}. La responsabilidad de esta libería es capturar los paquetes de \textbf{Transport stream}, reconstruir secciones y flujos elementales, para identificar los servicios y poder entregarlos para su reproducción. La reproducción es realizada por la librería \emph{Canvas}, también parte de \emph{Kuntur}.
+Kuntur incluye varios reproductores de televisión digital que siguen el estándar. \emph{Wari} es uno de los reproductores de Kuntur que fue ideado para utilizarse en computadoras personales. Al igual que el resto de los reproductores de Kuntur, Wari utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto, para la captura y decodificación del formato de flujo de transporte.
 
 \subsection{Obtención de servicios}
 

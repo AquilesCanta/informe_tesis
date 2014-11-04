@@ -5,15 +5,18 @@
  
 \chapter{Diseño y desarrollo}
 
-Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. En una red de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Aún teniendo en mente que el formato antiguo de transmisión utilizado.
+Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. 
+
+En una red privada de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Está claro que la televisión digital terrestre no puede competir con la televisión por cable en este ámbito. A pesar del uso más eficiente que implica la digitalización de la señal.
 
 La escacés de servicios que ofrece ISDB-T radica en el número de canales físicos de radiofrecuencia asignados a la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
 
-La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de algunos millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del servicio tiene repercusiones graves.
+La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del sistema implica dejar sin servicio a un gran porcentaje de la población, potencialmente.
 
-El problema de IPTV radica en que la infraestructura es compleja y delicada. Es, además, suceptible a la sobreexigencia.
+El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega, parcial o totalmente a los receptores.
 
-Con el objetivo de obtener las mejores características de cada sistema, se pueden combinar ambos sistemas de transmisión. El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
+El objetivo de este capítulo es explicar el diseño  y detallar el método de construcción de un prototipo de recepción. un sistema que obtenga las mejores características de cada formato de entrega. Los puntos de 
+El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
 
 \section{Señalización y distribución de servicios}
 
