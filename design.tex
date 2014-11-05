@@ -110,9 +110,18 @@ Los pasos de extensión se resumen a continuación. Este procedimiento se debe rep
 
 \subsection{Extensión de OpenCaster}
 
-Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión al proyecto OpenCaster. Esta extensión le permite a la herramienta reconocer el descriptor agregado, como si fuera parte del estándar, para así incluirla en la PMT, de igual manera que con cualquier otro descriptor.
+Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión al proyecto OpenCaster. Esta extensión le permite a la herramienta reconocer el descriptor agregado, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
 
-TODO: Agregar un diagrama de clases de opencaster con el descriptor nuevo?
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/open_caster_modif}
+}
+
+\caption{Diagrama de Clases de OpenCaster modificado}
+\end{center}
+\end{figure}
 
 El \emph{Elementaries Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Definiendo el método \texttt{bytes}, la clase luego se empaqueta en la estructura sintáctica definida anteriormente.
 
@@ -128,10 +137,33 @@ Para la construcción del flujo de transporte se pueden aprovechar las herramient
 
 \lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/table_gen.py}
 
+\subsection{Extensión del flujo de transporte del Canal 23}
+
+Utilizaremos como base el flujo de transporte con los tres servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública'' emitido por la frecuencia 527MHz. En el ejemplo se revisa cómo se incluyen dos servicios cuyos flujos elementales se emiten por un grupo multicast.
+
+Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``La Plata TV''.
+
+Repasando la lista anterior, repasamos los pasos de construcción:
+
+\begin{enumerate}
+	\item El primer paso es crear una entrada en la \sdt\ que indique los nombres de los servicios y que son servicios de TV digital. Para esto, la \sdt\ debe hacer referencia al \emph{service\_id}. La única limitación que existe para elegir este número es que no haya sido ocupado por algún otro servicio en el mismo flujo de transporte o ser 0. Los \emph{service\_id} ya utilizados en el TS son 59201, 59224 y 59202.
+		\subitem Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La Plata''.
+	\item A continuación se debe incluir una entrada a la \pat\ para cada servicio. Habiendo ya definido los \emph{service\_id}, sólo queda definir \pid s para cada \pmt. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado. Se incluye una lista en el apéndice [TODO: Apéndice].
+		\subitem Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
+	\item Como son dos los servicios a agregar al flujo de transporte, es necesario crear dos \pmt. Una por cada uno. 
+		\subitem Ya se definieron sus \pid\ y sus \emph{service\_id}. El único elemento restante es el \emph{Elementaries Relocation Descriptor}, que a su vez debe incluir grupo multicast y puerto por los que se emiten los flujos elementales. Asignaremos el grupo 239.1.1.1 a ``TV Universidad'' y 239.1.1.2 a ``TV La Plata''. Ambos por puerto 1000.
+	\item Finalmente, sólo resta insertar las \pmt\ al flujo de transporte. Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
+	\item Para poner en funcionamiento el sistema se debe modular el flujo de transporte en radiofrecuencia, emitir los flujos elementales por los grupos multicast y puertos adecuados, y consumir todo desde un software de recepción. A continuación se presenta \emph{Mara}, diseñado con este objetivo. 
+\end{enumerate}
+
+
+%----------------------------------------------------------------------------------------------------------
+TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
 TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
+TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
+%----------------------------------------------------------------------------------------------------------
 
-
-\section{Software de recepción}
+\section{Software de recepción: Mara}
 
 El siguiente paso en el sistema es construir un software de recepción que sea capaz de capturar al flujo de transporte extendido y reaccionar acordemente. Esto es:
 
@@ -159,49 +191,104 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 
 \subsection{Obtención y \emph{parsing} del descriptor}
 
-TODO: Agregar el diagrama de clases de como está. Explicar la modificación y explicar el nuevo diagrama de clases.
+\begin{figure}
+\begin{center}
 
-TODO: Luego agregar un diagrama de secuencia.
+\resizebox{\linewidth}{!}{
+\input{diagrams/descriptor_parsing_class_diagram}
+}
+
+\caption{Diagrama de Clases de parseo de descriptores en Wari}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/descriptor_parsing_sequence_diagram}
+}
+\caption{Diagrama de Secuencia de parseo de descriptores en Wari}
+\end{center}
+\end{figure}
+
 
 Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca process descriptors.
 
 \subsection{Modificación del modelo}
 
-TODO: Agregar diagrama de clases del sistema en el estado actual.
+\begin{figure}
+\begin{center}
 
-TODO: Agregar un diagrama de secuencia de cómo se capturan los flujos elementales.
+\resizebox{\linewidth}{!}{
+\input{diagrams/wari_service_model}
+}
+\caption{Diagrama de clases del modelo de servicios en Wari}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/wari_elem_streams_capture_sequence}
+}
+\caption{Diagrama de secuencia de captura de flujos elementales en Wari}
+\end{center}
+\end{figure}
+
 
 TODO: Explicar cómo funciona la captura de los elementary streams
 
-TODO: Agregar el nuevo diagrama de secuencia.
+
+
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/mara_elem_streams_capture_sequence}
+}
+\caption{Diagrama de secuencia de captura de flujos elementales en Mara}
+\end{center}
+\end{figure}
 
 Se metió un booleano en la clase descriptor, junto a un string que modela el grupo multicast y un short para el puerto. Una crotada básicamente.
 
 \subsection{Reproducción de servicio}
 
-TODO: Se le manda a Tuner un start(serviceID), se busca el servicio y se devuelve una URL o algo.
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/play_class_diagram}
+}
+\caption{Diagrama de clases de infraestructura de reproducción en Wari}
+\end{center}
+\end{figure}
 
 TODO: Diagrama de clases, luego diagrama de secuencia nuevo.
 
+\begin{figure}
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/play_sequence_diagram_wari}
+}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Wari}
+\end{center}
+\end{figure}
+
 Si se encuentra que es un servicio relocado, entonces en la URL se manda una dirección IP en vez del URL inventado.
 
+\begin{figure}
+\begin{center}
 
-
-
-\section{Lista de servicios extendida}
-
-El primer paso es construir un \emph{transport stream} que contenga servicios que vienen por otro medio, una red IP. Para ello el \emph{ts} debe proveer un mecanismo de acceso para los contenidos. En el caso de TCP o UDP, la identificación es la misma: Una dirección IP y un puerto asociado, independientemente del esquema utilizado, \emph{unicast} o \emph{multicast}.
-
-Como recipiente de estos datos, agregamos un descriptor privado denominado \emph{elementaries relocation descriptor}, con \emph{descriptor tag} 0xAA.
-
-Se debe agregar una entrada a la PAT
-
-Se debe agregar un descriptor a la SDT (OJO! Puede implicar la necesidad de dividir la sección en dos paquetes!)
-
-Se debe crear una nueva PMT e insertarla en el TS válido de partida.
-
-
-
+\resizebox{\linewidth}{!}{
+\input{diagrams/play_sequence_diagram_mara}
+}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Mara}
+\end{center}
+\end{figure}
 
 \section{Emisión multicast de los flujos elementales por IP}
 
@@ -209,16 +296,11 @@ La emisión por multicast IP consiste en el envío de datagramas a múltiples recep
 
 El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces resulta adecuado para estas características de transmisión. Sin embargo, existen algunas diferencias con el uso que se le da en televisión digital terrestre:
 
-TODO: Mandar TS por multicast me parece una pelotudez, ahora que lo pienso bien.
-
 \begin{itemize}
 	\item El bitrate de emisión de una red IP no es necesariamente constante, de modo que los paquetes nulos incurren en un desperdicio de ancho de banda.
 	\item Por el mismo motivo, los paquetes no se envian en un flujo constante, si no que pueden ser enviados en ráfagas. 
 	\item En el caso de la televisión digital terrestre, cada canal tiene un bitrate independiente y se busca aprovechar cada uno al máximo. En el caso de la transmisión multicast, las vías de transmisión (los grupos multicast) comparten la infraestructura. De modo que la multiplexación de servicios no tiene razón de ser.
-
 \end{itemize}
-
-
 
 \ifx\all\undefined
 \end{document}

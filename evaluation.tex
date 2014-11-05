@@ -2,14 +2,25 @@
 \include{base}
 \begin{document}
 \fi
- 
-\chapter{Evaluación técnica}
 
-Este capítulo describe los resultados obtenidos por la prueba del prototipo desarrollado.
+\chapter{Evaluaci\'on t\'ecnica}
+
+Este capítulo plantea pruebas a realizar sobre el prototipo desarrollado, resultados esperados y obtenidos de las mismas.
+
+Un transport stream que refiere a dos servicios diferidos.
+Dos transport streams que refieren a dos servicios diferentes. Uno cada uno.
+Un transport stream que refiere a muchos servicios. Digamos 10.
+Un transport stream que refiere a 2 servicios. Uno de los cuales no tiene emisión.
+
 
 Closed caption
 Cómo se comportaría el acceso condicional con el esquema extendido
 EIT debería funcionar
+Todo el resto de las cosas deberían funcionar. Ver el tema del bitrate puede ser más complicado.
+Con este esquema es imposible usar varios audios.
+También es imposible mandar video por multicast y audio por ts.
+Todos los flujos elementales se deben enviar por el mismo medio.
+Está bueno que no le interesa al ts si el servicio es HD o SD. Inclusive podría cambiar, supongo yo.
 
 \ifx\all\undefined
 \end{document}
