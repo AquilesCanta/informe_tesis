@@ -1,0 +1,29 @@
+\begin{sequencediagram}
+
+%------------------------------------------
+% Intancias
+%------------------------------------------
+	\newthread{servprov}{:ServiceProvider}
+	\newinst{service}{:Service}
+
+	%------------------------------------------
+	% Secuencia
+	%------------------------------------------
+
+		\begin{call}{servprov}{process(SDT)}{service}{}
+			\begin{callself}{service}{process(Descriptors)}{}
+			\end{callself}
+		\end{call}
+		\begin{call}{servprov}{process(PAT)}{service}{}
+			\begin{callself}{service}{process(Descriptors)}{}
+			\end{callself}
+		\end{call}
+		\begin{call}{servprov}{process(PMT)}{service}{}
+			\begin{callself}{service}{process(Descriptors)}{}
+				\begin{sdblock}{Alt}{[si se encuentra el \emph{descriptor\_tag} 170]}
+					\begin{callself}{service}{parse(ElementariesRelocationDescriptor)}{}
+					\end{callself}
+				\end{sdblock}
+			\end{callself}
+		\end{call}
+\end{sequencediagram}

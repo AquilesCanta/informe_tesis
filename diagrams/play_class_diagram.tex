@@ -1,33 +1,59 @@
 \begin{tikzpicture}
-\begin{class}[text width=4cm]{Descriptor}{0,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
+
+%-----------------------------------------------------------
+%  Clases
+%-----------------------------------------------------------
+
+\begin{class}[text width=4cm]{Service}{10, 10}
+\attribute{name:String}
+\attribute{type:ServiceType}
+\attribute{\_elements:vector<ElementaryInfo>}
+\attribute{\_networkId:int}
+
+\operation{process(PMT):void}
+\operation{process(SDT):void}
+\operation{process(NIT):void}
+\operation{process(Descriptors):void}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{5,5}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
+\begin{class}[text width=5cm]{ServiceManager}{0, 10}
+\operation{findService(ServiceId):Service*}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{10,10}
+\begin{class}[text width=4.5cm]{ServiceProvider}{0,5}
+\inherit{ServiceManager}
+\operation{updateServices(Table) : void}
+\operation{start():void}
 \attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{15,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
+\begin{class}[text width=8cm]{Tuner}{7,5}
+\operation{nextScan():void}
+\operation{startScan():void}
+\operation{startService(network:int,serviceID:int):void}
+\operation{onLockChanged():void}
+\attribute{currentNetwork:int}
 % virtual operation
-\operation[0]{name(parameters list) : type of value returned}
 \end{class}
+
+\begin{class}[text width=5cm]{PlayerExtension}{0,-2}
+\operation{foo(bar):void}
+% virtual operation
+\end{class}
+
+\begin{class}[text width=5cm]{AvPlayer}{12,-2}
+\operation{foo(bar):void}
+\attribute{unAtributo:int}
+% virtual operation
+\end{class}
+
+%-----------------------------------------------------------
+% Asociaciones
+%-----------------------------------------------------------
+
+\composition{ServiceManager}{\_services}{1..*}{Service}
+\draw[objectline,->] (Tuner) -- (ServiceProvider);
+
+
+%umlcd style dashed line,->
 \end{tikzpicture}

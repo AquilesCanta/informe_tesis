@@ -1,28 +1,42 @@
 \begin{sequencediagram}
-	\newthread{ss}{:SimulationServer}
-	\newinst{ctr}{:SimControlNode}
-	\newinst{ps}{:PhysicsServer}
-	\newinst[1]{sense}{:SenseServer}
-	\begin{call}{ss}{Initialize()}{sense}{}
-	\end{call}
-	\begin{sdblock}{Run Loop}{The main loop}
-		\begin{call}{ss}{StartCycle()}{ctr}{}
-			\begin{call}{ctr}{ActAgent()}{sense}{}
+
+%------------------------------------------
+% Intancias
+%------------------------------------------
+	\newthread{main}{:MainThread}
+	\newinst{tuner}{:Tuner}
+	\newinst{provider}{:Provider}
+	\newinst{servprov}{:ServiceProvider}
+	\newinst{service}{:Service}
+
+%------------------------------------------
+% Secuencia
+%------------------------------------------
+	\begin{call}{main}{startScan()}{tuner}{}
+		\begin{sdblock}{Ciclo de SCAN}{Iteración sobre las N frecuencias disponibles}
+			\begin{call}{tuner}{setNetwork()}{provider}{}
 			\end{call}
-		\end{call}
-	\begin{call}{ss}{Update()}{ps}{}
-	\begin{messcall}{ps}{PrePhysicsUpdate()}{sense}{state}
-	\end{messcall}
-	\begin{sdblock}{Physics Loop}{}
-	\begin{callself}{ps}{PhysicsUpdate()}{}
-	\end{callself}
-	\end{sdblock}
-	\begin{call}{ps}{PostPhysicsUpdate()}{sense}{}
+			\begin{callself}{tuner}{onLockChanged()}{}
+				\begin{call}{tuner}{start()}{servprov}{}
+					\begin{call}{servprov}{process(SDT)}{service}{}
+						\begin{callself}{service}{process(Descriptors)}{}
+						\end{callself}
+					\end{call}
+					\begin{call}{servprov}{process(PAT)}{service}{}
+						\begin{callself}{service}{process(Descriptors)}{}
+						\end{callself}
+					\end{call}
+					\begin{call}{servprov}{process(PMT)}{service}{}
+						\begin{callself}{service}{process(Descriptors)}{}
+						\end{callself}
+					\end{call}
+				\end{call}
+			\end{callself}
+		\end{sdblock}
 	\end{call}
+
+	\begin{call}{main}{startService(ID$=$1..N)}{tuner}{}
 	\end{call}
-	\begin{call}{ss}{EndCycle()}{ctr}{}
-	\begin{call}{ctr}{SenseAgent()}{sense}{}
-	\end{call}
-	\end{call}
-	\end{sdblock}
+	
+	
 \end{sequencediagram}

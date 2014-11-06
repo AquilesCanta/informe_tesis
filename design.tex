@@ -213,7 +213,7 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 \end{figure}
 
 
-Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca process descriptors.
+Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca el parser del \emph{Elementaries Relocation Descriptor} en process descriptors.
 
 \subsection{Modificación del modelo}
 
@@ -221,9 +221,9 @@ Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. T
 \begin{center}
 
 \resizebox{\linewidth}{!}{
-\input{diagrams/wari_service_model}
+\input{diagrams/wari_service_model_modification}
 }
-\caption{Diagrama de clases del modelo de servicios en Wari}
+\caption{Detalle de parsing de descriptores en Mara}
 \end{center}
 \end{figure}
 
@@ -240,16 +240,17 @@ Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. T
 
 TODO: Explicar cómo funciona la captura de los elementary streams
 
-
-
 \begin{figure}
-\begin{center}
+	\begin{center}
 
-\resizebox{\linewidth}{!}{
-\input{diagrams/mara_elem_streams_capture_sequence}
-}
-\caption{Diagrama de secuencia de captura de flujos elementales en Mara}
-\end{center}
+		\begin{minipage}{.49\linewidth}
+			\centering
+			\resizebox{\linewidth}{!}{
+			\input{diagrams/mara_elem_streams_capture_sequence}
+			}
+		\end{minipage}
+		\caption{Diagrama de secuencia de captura de flujos elementales en Mara}
+	\end{center}
 \end{figure}
 
 Se metió un booleano en la clase descriptor, junto a un string que modela el grupo multicast y un short para el puerto. Una crotada básicamente.
