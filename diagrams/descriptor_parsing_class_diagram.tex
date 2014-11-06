@@ -1,33 +1,39 @@
 \begin{tikzpicture}
-\begin{class}[text width=4cm]{Descriptor}{0,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
+
+%-----------------------------------------------------------
+%  Clases
+%-----------------------------------------------------------
+
+\begin{class}[text width=5cm]{Provider}{0,0}
+\attribute{atributo : Tipo}
+\operation{funcion(parameter list) : retorno}
 % virtual operation
-\operation[0]{name(parameters list) : type of value returned}
+\operation{updateServices(Table) : void}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{5,5}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
+\begin{class}[text width=4cm]{Service}{10, 10}
 % virtual operation
-\operation[0]{name(parameters list) : type of value returned}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{10,10}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
+\begin{class}[text width=4cm]{ServiceManager}{0, 10}
 % virtual operation
-\operation[0]{name(parameters list) : type of value returned}
 \end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{15,0}
+\begin{class}[text width=3cm]{ServiceProvider}{0,5}
+\inherit{ServiceManager}
 \attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
 \end{class}
+
+\begin{class}[text width=4cm]{Tuner}{5,5}
+% virtual operation
+\end{class}
+
+%-----------------------------------------------------------
+% Asociaciones
+%-----------------------------------------------------------
+
+\composition{ServiceManager}{\_services}{1..*}{Service}
+
+\draw[](Tuner)(Provider);
+%umlcd style dashed line,->
 \end{tikzpicture}
