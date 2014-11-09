@@ -4,7 +4,7 @@
 %  Clases
 %-----------------------------------------------------------
 
-\begin{class}[text width=4cm]{Service}{10, 10}
+\begin{class}[text width=6.5cm]{Service}{8.25, 12}
 \attribute{name:String}
 \attribute{type:ServiceType}
 \attribute{\_elements:vector<ElementaryInfo>}
@@ -36,22 +36,31 @@
 % virtual operation
 \end{class}
 
-\begin{class}[text width=5cm]{PlayerExtension}{0,-2}
+\begin{class}[text width=5cm]{PlayerExtension}{-7,10}
 \operation{foo(bar):void}
 % virtual operation
 \end{class}
 
-\begin{class}[text width=5cm]{AvPlayer}{12,-2}
-\operation{foo(bar):void}
-\attribute{unAtributo:int}
-% virtual operation
+\begin{class}[text width=5cm]{Player}{-7,5}
+\operation{start():void}
+\operation{stop():void}
+\end{class}
+
+
+\begin{class}[text width=5.5cm]{AvPlayer}{-7,2}
+\inherit{Player}
+\operation{start():void}
+\operation{collectStreams(ElementaryInfo)}
+\attribute{\_url:string}
 \end{class}
 
 %-----------------------------------------------------------
 % Asociaciones
 %-----------------------------------------------------------
 
-\composition{ServiceManager}{\_services}{1..*}{Service}
+\composition{ServiceManager}{}{1..*}{Service}
+\composition{PlayerExtension}{}{1..*}{Player}
+\composition{ServiceManager}{}{}{PlayerExtension}
 \draw[objectline,->] (Tuner) -- (ServiceProvider);
 
 

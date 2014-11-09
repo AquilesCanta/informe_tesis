@@ -92,7 +92,6 @@ Los pasos de extensión se resumen a continuación. Este procedimiento se debe rep
 		\item \emph{service\_id} del servicio
 		\item Nombre del servicio
 		\item Tipo del servicio (en general, 1, correspondiente a televisión digital)
-		\item TODO: Alguno más?
 	\end{enumerate}
 	\item Crear una entrada en la \pat. La entrada debe incluir:
 	\begin{enumerate}
@@ -103,45 +102,40 @@ Los pasos de extensión se resumen a continuación. Este procedimiento se debe rep
 	\begin{enumerate}
 		\item \emph{service\_id} del servicio
 		\item El \emph{Elementaries Relocation Descriptor} con grupo multicast y puerto por los que se emiten los flujos elementales.
-		\item TODO: Qué pasa si no le ponemos flujos la PMT! Eso está bueno
+		\subitem Es importante notar que en el flujo de transporte que se emiten los servicios no viajan flujos elementales para el servicio que corresponde a la \pmt. De este modo, a diferencia de una \pmt\ común, la tabla no incluirá elementos en la lista de flujos elementales.
 	\end{enumerate} 
 	\item Insertar la \pmt\ al flujo de transporte. Siendo que la \pmt\ debe hallarse en un período de 200 milisegundos, es necesario conocer el bitrate de emisión. 
 \end{enumerate}
 
 \subsection{Extensión de OpenCaster}
 
-Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión al proyecto OpenCaster. Esta extensión le permite a la herramienta reconocer el descriptor agregado, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
+Para facilitar la construcción de las estructuras de MPEG-TS, siguiendo los pasos indicados previamente, se realizó una extensión al proyecto OpenCaster. El proyecto ya cuenta con funcionalidad para representar la mayoría de las entidades del estándar ISDB-T. La extensión le permite a la herramienta reconocer el descriptor \emph{Elementaries Relocation Descriptor}, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
 
-\begin{figure}
+A continuación, \cref{fig:opencastermodif}, se incluye un diagrama de clases que explica la jerarquía de descriptores de OpenCaster.
+
+\begin{figure}[H]
 \begin{center}
-
-\resizebox{\linewidth}{!}{
+\resizebox{0.5\linewidth}{!}{
 \input{diagrams/open_caster_modif}
 }
-
-\caption{Diagrama de Clases de OpenCaster modificado}
+\caption{Diagrama de Clases de OpenCaster con el nuevo descriptor\label{fig:opencastermodif}}
 \end{center}
 \end{figure}
 
+El proyecto OpenCaster presenta una jerarquía de clases para modelar las entidades \textbf{MPEG-TS} que se incluyen en un flujo de transporte. El formato reserva lugar para la extensíón por parte de privados. Al igual que otros estándares, ISDB-T introduce algunas entidades al formato \textbf{MPEG-TS}, como tablas y descriptores.
+
+La extensión consiste en la creación de la clase ``service\_elementaries\_relocation\_descriptor'', que hereda de \texttt{Descriptor} como se muestra en \cref{opencastermodif}.
+
 El \emph{Elementaries Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Definiendo el método \texttt{bytes}, la clase luego se empaqueta en la estructura sintáctica definida anteriormente.
 
-La forma de instanciar la clase correspondiente al descriptor es:
+TODO: Sería interesante proveer una tabla en opencaster, que pidiendo service id, grupo multicast, y puerto, te devuelva una pmt en opencaster con esas caracteristicas.
 
-\lstinputlisting[language=Python,caption={Instanciación del descriptor en OpenCaster}]{src_code/descriptor_instantiation.py}
-
-Donde XX.XX.XX.XX debe ser reemplazado por el grupo multicast e YYYY por el puerto.
-
-\subsection{Construcción de flujo de transporte de referencia}
-
-Para la construcción del flujo de transporte se pueden aprovechar las herramientas incluidas en OpenCaster. Los elementos requeridos en el paso a paso presentado anteriormente se pueden construir con un \emph{script python} similar al siguiente.
-
-\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/table_gen.py}
 
 \subsection{Extensión del flujo de transporte del Canal 23}
 
 Utilizaremos como base el flujo de transporte con los tres servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública'' emitido por la frecuencia 527MHz. En el ejemplo se revisa cómo se incluyen dos servicios cuyos flujos elementales se emiten por un grupo multicast.
 
-Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``La Plata TV''.
+Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``TV La Plata''.
 
 Repasando la lista anterior, repasamos los pasos de construcción:
 
@@ -162,6 +156,12 @@ TODO: Al final podemos poner una captura de pantalla de los servicios resultante
 TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
 TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
 %----------------------------------------------------------------------------------------------------------
+
+\subsection{Introducción del \emph{Elementaries Relocation Descriptor}}
+
+Haciendo uso de OpenCaster se pueden construir las \pmt\ que luego se incluyen en el flujo de transporte final. En [TODO: Apéndice] se incluye en \emph{script} utilizado completo. A continación se muestra la construcción de las \pmt\ y el descriptor incluido a través de OpenCaster.
+
+\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_gen.py}
 
 \section{Software de recepción: Mara}
 
@@ -189,9 +189,15 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 	\item Finalmente, cuando el usuario sintoniza un servicio, el contenido audiovisual de la reproducción debe ser adquirido del medio correcto. 
 \end{enumerate}
 
+
+%--------------------------------------------------------------------------------
+% Parsing del descriptor
+%--------------------------------------------------------------------------------
+
+
 \subsection{Obtención y \emph{parsing} del descriptor}
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -202,7 +208,9 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 \end{center}
 \end{figure}
 
-\begin{figure}
+El diagrama de clases UML explica parte de la relación estática entre las clases que realizan el \emph{parsing} de descriptores en \emph{Wari}. TODO: Acá tengo que explicar bien por qué teta puse este diagrama. Hay que entender que el desarrollo se divide en tres partes y que cada diagrama apunta a una parte: Parseo, modelado y reproducción.
+
+\begin{figure}[H]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -212,12 +220,15 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 \end{center}
 \end{figure}
 
+En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cambios en Wari:
 
-Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. También ahora el servicio invoca el parser del \emph{Elementaries Relocation Descriptor} en process descriptors.
+\begin{itemize}
+	\item Cuando en el \emph{loop} de descriptores se halla el \emph{descriptor\_tag} 170, se debe invocar a la función que interpreta el contenido.
+	\item Este contenido se debe invocar a un modelo en memoria del descriptor, un registro.
+	\item El servicio debe ser modificado acordemente, modificando su estado a partir del registro que representa al descriptor.
+\end{itemize}
 
-\subsection{Modificación del modelo}
-
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -227,49 +238,45 @@ Se agregó el modelo del descriptor, el descriptor tag y la función de parsing. T
 \end{center}
 \end{figure}
 
-\begin{figure}
-\begin{center}
 
-\resizebox{\linewidth}{!}{
-\input{diagrams/wari_elem_streams_capture_sequence}
-}
-\caption{Diagrama de secuencia de captura de flujos elementales en Wari}
-\end{center}
-\end{figure}
+%--------------------------------------------------------------------------------
+% Modificación del modelo
+%--------------------------------------------------------------------------------
 
+\subsection{Modificación del modelo}
 
-TODO: Explicar cómo funciona la captura de los elementary streams
-
-\begin{figure}
+\begin{figure}[H]
 	\begin{center}
 
-		\begin{minipage}{.49\linewidth}
-			\centering
-			\resizebox{\linewidth}{!}{
-			\input{diagrams/mara_elem_streams_capture_sequence}
-			}
-		\end{minipage}
-		\caption{Diagrama de secuencia de captura de flujos elementales en Mara}
+		\resizebox{\linewidth}{!}{
+		\input{diagrams/mara_service_class}
+		}
+		\caption{Modelo del servicio en Mara}
+		
 	\end{center}
 \end{figure}
 
-Se metió un booleano en la clase descriptor, junto a un string que modela el grupo multicast y un short para el puerto. Una crotada básicamente.
+
+
+%--------------------------------------------------------------------------------
+% Modificación de la reproducción
+%--------------------------------------------------------------------------------
 
 \subsection{Reproducción de servicio}
 
-\begin{figure}
-\begin{center}
+\begin{figure}[H]
+	\begin{center}
 
-\resizebox{\linewidth}{!}{
-\input{diagrams/play_class_diagram}
-}
-\caption{Diagrama de clases de infraestructura de reproducción en Wari}
-\end{center}
+	\resizebox{\linewidth}{!}{
+	\input{diagrams/play_class_diagram}
+	}
+	\caption{Diagrama de clases de infraestructura de reproducción en Wari\label{fig:classdiagramservices}}
+	\end{center}
 \end{figure}
 
-TODO: Diagrama de clases, luego diagrama de secuencia nuevo.
+El servicio de televisión digital cuenta con varias partes. El diagrama de clases en la \cref{fig:classdiagramservices} incluye únicamente las partes relacionadas con la sintonización de servicios. En la parte superior de la jerarquía de abstracción se halla la clase \texttt{Tuner}, que dispara el cambio de canal. Los pasos de ejecución responden al procedimiento indicado en [TODO: Introducción técnica, parte que indica lo que tiene que hacer un reproductor ante un cambio de canal].
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -279,15 +286,22 @@ TODO: Diagrama de clases, luego diagrama de secuencia nuevo.
 \end{center}
 \end{figure}
 
+
+
+
+Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
+
+Hay que mencionar que coleccionar los streams implica poner filtros para que se agarren los pid correspondientes a los elementary streams posta.
+
 Si se encuentra que es un servicio relocado, entonces en la URL se manda una dirección IP en vez del URL inventado.
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
 \input{diagrams/play_sequence_diagram_mara}
 }
-\caption{Diagrama de secuencia de infraestructura de reproducción en Mara}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Mara, para servicio con \emph{Elementaries Relocation Descriptor}}
 \end{center}
 \end{figure}
 

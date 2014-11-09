@@ -5,24 +5,38 @@
 %------------------------------------------
 \newthread{main}{:MainThread}
 \newinst{tuner}{:Tuner}
-\newinst{provider}{:Provider}
 \newinst{servprov}{:ServiceProvider}
 \newinst{service}{:Service}
-\newinst{player}{:AvPlayer}
 \newinst{playerext}{:PlayerExtension}
+\newinst{player}{:AvPlayer}
 
 %------------------------------------------
 % Secuencia
 %------------------------------------------
-	\begin{call}{main}{startService(ID)}{tuner}{}
-		\begin{call}{tuner}{findService(ID)}{servprov}{Service*}
-		\end{call}
-		\begin{call}{tuner}{getNetworkID()}{service}{NetworkID}
-		\end{call}
+	\begin{call}{main}{startService(networkId, serviceId)}{tuner}{}
 		\begin{sdblock}{Alt}{[si el servicio se encuentra en otra frecuencia]}
-			\begin{callself}{tuner}{startNetwork()}{}
+			\begin{callself}{tuner}{startNetwork(networkId)}{}
 			\end{callself}
 		\end{sdblock}
+		\begin{call}{tuner}{startService(serviceId)}{servprov}{}
+			\begin{callself}{servprov}{findService(serviceId)}{service}
+			\end{callself}
+			\begin{callself}{servprov}{startService(service)}{}
+			\end{callself}
+			\begin{call}{servprov}{onServiceStarted(service)}{playerext}{}
+				\begin{callself}{playerext}{start(service)}{}
+					\begin{call}{playerext}{elements()}{service}{ElementaryInfo}
+					\end{call}
+					\begin{call}{playerext}{collectStreams(ElementaryInfo)}{player}{}
+					\end{call}
+					\begin{call}{playerext}{start()}{player}{}
+						\begin{call}{player}{makeURL()}{playerext}{}
+						\end{call}
+					\end{call}
+				\end{callself}
+			\end{call}
+		\end{call}
 	\end{call}
-
+	\begin{call}{main}{url()}{player}{url}
+	\end{call}
 \end{sequencediagram}

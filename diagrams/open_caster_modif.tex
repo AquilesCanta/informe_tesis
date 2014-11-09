@@ -1,33 +1,25 @@
 \begin{tikzpicture}
-\begin{class}[text width=4cm]{Descriptor}{0,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
-\end{class}
 
-\begin{class}[text width=4cm]{Descriptor}{5,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
-\end{class}
+	\begin{package}[dvbutil]{util}
+		\begin{class}[text width=4cm]{DVBObject}{0,10}
+			\operation{set( ... ) : void}
+		\end{class}
+	\end{package}
 
-\begin{class}[text width=4cm]{Descriptor}{10,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
-\end{class}
+	\begin{package}[mpegdesc]{MPEG.Descriptor}
+		\begin{class}[text width=4cm]{Descriptor}{0,5}
+			\inherit{DVBObject}
+			\operation{pack() : Array<Byte>}
+			\operation[0]{bytes() : Array<Byte>}
+		\end{class}
+	\end{package}
 
-\begin{class}[text width=4cm]{Descriptor}{15,0}
-\attribute{name : attribute type}
-\attribute{name : attribute type = default value}
-\operation{name(parameter list) : type of value returned}
-% virtual operation
-\operation[0]{name(parameters list) : type of value returned}
-\end{class}
+	\begin{package}[sbtvdesc]{SBTVD.Descriptors}
+		\begin{class}[text width=8cm]{service elementaries descriptor}{0,0}
+			\inherit{Descriptor}
+			\attribute{target\_multicast\_group : string}
+			\attribute{target\_multicast\_port : int}
+			\operation{bytes() : void}
+		\end{class}
+	\end{package}
 \end{tikzpicture}

@@ -12,6 +12,8 @@
 
 		\begin{call}{servprov}{process(SDT)}{service}{}
 			\begin{callself}{service}{process(Descriptors)}{}
+				\begin{callself}{service}{parse(ServiceDescriptor)}{}
+				\end{callself}
 			\end{callself}
 		\end{call}
 		\begin{call}{servprov}{process(PAT)}{service}{}
