@@ -5,70 +5,59 @@
   
 \chapter{Diseño y desarrollo}
 
-Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. 
+El objetivo de este capítulo es explicar el diseño de un sistema de entrega de televisión digital que integra broadcast ISDB-T e IPTV. El sistema se divide en tres partes:
 
-En una red privada de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Está claro que la televisión digital terrestre no puede competir con la televisión por cable en este ámbito. A pesar del uso más eficiente que implica la digitalización de la señal.
-
-La escacés de servicios que ofrece ISDB-T radica en el número de canales físicos de radiofrecuencia asignados a la transmsión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
-
-IPTV usa una red de internet que además está siendo exigida por otros clientes. Lo cual quiere decir que cualquiera de los nodos puede caerse por motivos ajenos  a iptv. Es decir, no es una infraestructura dedicada. Con lo cual está sujeta a la cantidad de clientes, no solo en iptv, si no en tv.
-
-La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del sistema implica dejar sin servicio a un gran porcentaje de la población, potencialmente.
-
-El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega parcial o totalmente a los receptores.
-
-El objetivo de este capítulo es explicar el diseño  y detallar el método de construcción de un prototipo de recepción. un sistema que obtenga las mejores características de cada formato de entrega. El resultado esperado es un sistema de transmisión que cuente con la robustez del esquema broadcast y la extensibilidad de la transmisión multicast.
-
-
-
-
-
-
-
+\begin{itemize}
+	\item Extensión de ISDB-T
+	\item Diseño y desarrollo de un prototipo de recepción del sistema combinado.
+	\item Implementación de emisión IPTV.
+\end{itemize}
 
 \section{Señalización y distribución de servicios}
 
-El primer paso para combinar los sistemas de transmisión es definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. Llamaremos a la entrega de información sobre los servicios para la construcción de la lista \emph{señalización}. 
-
-La señalización del sistema de entrega debe ser, en lo posible, centralizada y debe estar disponible siempre que el sistema de entrega lo esté. Para estos fines, la transmisión ISDB-T resulta adecuada:
+El primer paso para combinar los sistemas de transmisión es definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. Llamaremos \emph{señalización} a la entrega de información sobre los servicios para la construcción de la lista y su reproducción. 
 
 Como hipótesis de trabajo, la señalización de los servicios debe poseer las siguientes características:
 
 \begin{itemize}
 \item Centralizada.
-\item Disponible para todos los dispositivos de recepción, independientemente de los consumidores del servicio.
+\item Disponible para todos los dispositivos de recepción.
 \item Debe aprovechar el sistema de señalización que ya provee ISDB-T a través del formato MPEG-TS.
 \end{itemize}
 
 \subsection{Extensión del formato MPEG-TS}
 
-El primer punto de trabajo es agregar una extensión al flujo de transporte para que sea capaz de indicarle al receptor la existencia de un servicio cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast.
+El primer punto es agregar una extensión al flujo de transporte. Esta extensión tiene el objetivo de posibilitar la indicación al receptor de la existencia de un servicio cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast.
 
 Para que un receptor reconozca un servicio y lo incluya a su lista de servicios disponibles, debe encontrar una entrada correspondiente en la \sdt, en la \pat\ y, finalmente, una \pmt\ asignada al servicio. Como es ésta última la encargada de indicar la ubicación de los flujos elementales, la extensión corresponde (y debe limitarse a) esta tabla.
 
 \section{\emph{Elementaries relocation descriptor}}
 
-Siguiendo el segundo de los principios de diseño \textbf{SOLID}(\emph{Open/Closed Principle}), uno de los objetivos de este desarrollo es evitar violar el formato MPEG-TS tanto como sea posible, sino extenderlo. Entonces, se busca agregar los comportamientos a entidades nuevas en lugar de modificar las ya existentes.
+Siguiendo el segundo de los principios de diseño \textbf{SOLID}(\emph{Open/Closed Principle}), es importante para este desarrollo evitar modificar el formato MPEG-TS tanto como sea posible, sino extenderlo. Entonces, se busca agregar los comportamientos por medio de entidades nuevas en lugar de modificar las ya existentes.
 
-Para señalizar nuevos servicios cuyos flujos elementales se deben obtener desde una red IP, entonces, se utilizará el \emph{Elementaries Relocation Descriptor}. Como su nombre lo indica, esta entidad denota un descriptor del estándar MPEG-TS. Éste descriptor sólo puede hallarse en la \pmt\ e implica que el servicio al cual está asociada la tabla, posee las características mencionadas.
+Para señalizar nuevos servicios cuyos flujos elementales se deben obtener desde una red IP, definiremos un nuevo descriptor de acuerdo al formato \textbf{MPEG-TS}. Lo llamaremos \emph{Elementaries Relocation Descriptor}. 
+
+Éste descriptor sólo puede hallarse (de forma opcional) en la \pmt\ e implica que el servicio correspondiente a la tabla, posee las características mencionadas. Esto es, sus flujos elementales se emiten por multicast.
 
 El \emph{Elementaries Relocation Descriptor} tiene asignado el \emph{descriptor\_tag} 170. No existe, actualmente, un descriptor en el formato MPEG-TS con el mismo nombre o \emph{descriptor\_tag} o semántica similar.
 
-Para que el receptor sea capaz de obtener los flujos elementales, al ser una red IP el medio y multicast el esquema de envío de paquetes, es necesario proveer a través del descriptor un grupo multicast y un puerto asociado. Entonces la sintaxis del descriptor es la siguiente:
+Para que el receptor sea capaz de obtener los flujos elementales, es necesario identificar el grupo multicast y el puerto por el que se envían los flujos. Para esto, es necesario proveer a través del descriptor esta información.
+
+La \cref{tab:descsyntax} define la sintaxis del descriptor:
 
 \begin{table}[H]
 \begin{center}
 \begin{tabular}{ | l | c | c | c | } 
 \hline
-Elemento                   & Rango de valores            & Número de bits asignado & Bit de comienzo \\
+Elemento                   			& Rango de valores            & Número de bits asignado & Bit de comienzo \\
 \hline 
-\emph{descriptor\_tag}     & 170                         & 8        & 0       \\
-\emph{descriptor\_length}  & 6                           & 8        & 8       \\
+\emph{descriptor\_tag}     			& 170                         & 8        & 0       \\
+\emph{descriptor\_length}  			& 6                           & 8        & 8       \\
 \textbf{Grupo Multicast}            & 3758096384 -- 4026531839    & 32       & 16      \\
 \textbf{Puerto}                     & 1 -- 65535                  & 16       & 48      \\
 \hline 
 \end{tabular}
-\caption{Sintaxis del \emph{Elementaries Relocation Descriptor}}
+\caption{Sintaxis del \emph{Elementaries Relocation Descriptor}\label{tab:descsyntax}}
 \end{center}
 \end{table}
 
@@ -124,24 +113,24 @@ A continuación, \cref{fig:opencastermodif}, se incluye un diagrama de clases que
 
 El proyecto OpenCaster presenta una jerarquía de clases para modelar las entidades \textbf{MPEG-TS} que se incluyen en un flujo de transporte. El formato reserva lugar para la extensíón por parte de privados. Al igual que otros estándares, ISDB-T introduce algunas entidades al formato \textbf{MPEG-TS}, como tablas y descriptores.
 
-La extensión consiste en la creación de la clase ``service\_elementaries\_relocation\_descriptor'', que hereda de \texttt{Descriptor} como se muestra en \cref{opencastermodif}.
+La extensión consiste en la creación de la clase ``service\_elementaries\_relocation\_descriptor'', que hereda de \texttt{Descriptor}, como se muestra en \cref{fig:opencastermodif}.
 
 El \emph{Elementaries Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Definiendo el método \texttt{bytes}, la clase luego se empaqueta en la estructura sintáctica definida anteriormente.
 
-TODO: Sería interesante proveer una tabla en opencaster, que pidiendo service id, grupo multicast, y puerto, te devuelva una pmt en opencaster con esas caracteristicas.
+Posteriormente se provee un ejemplo de utilización de esta clase, en el \cref{lst:pmtopencaster}.
 
-
-\subsection{Extensión del flujo de transporte del Canal 23}
+\subsection{Extensión del flujo de transporte de Canal 23}
 
 Utilizaremos como base el flujo de transporte con los tres servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública'' emitido por la frecuencia 527MHz. En el ejemplo se revisa cómo se incluyen dos servicios cuyos flujos elementales se emiten por un grupo multicast.
 
 Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``TV La Plata''.
 
-Repasando la lista anterior, repasamos los pasos de construcción:
+A continuación se revisan los pasos de construcción de un flujo de transporte, aplicado al ejemplo:
 
 \begin{enumerate}
-	\item El primer paso es crear una entrada en la \sdt\ que indique los nombres de los servicios y que son servicios de TV digital. Para esto, la \sdt\ debe hacer referencia al \emph{service\_id}. La única limitación que existe para elegir este número es que no haya sido ocupado por algún otro servicio en el mismo flujo de transporte o ser 0. Los \emph{service\_id} ya utilizados en el TS son 59201, 59224 y 59202.
+	\item \label{itm:itemex1}El primer paso es crear una entrada en la \sdt\ que indique los nombres de los servicios y que son servicios de TV digital. Para esto, la \sdt\ debe hacer referencia al \emph{service\_id}. La única limitación que existe para elegir este número es que no haya sido ocupado por algún otro servicio en el mismo flujo de transporte o ser 0. Los \emph{service\_id} ya utilizados en el TS son 59201, 59224 y 59202.
 		\subitem Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La Plata''.
+
 	\item A continuación se debe incluir una entrada a la \pat\ para cada servicio. Habiendo ya definido los \emph{service\_id}, sólo queda definir \pid s para cada \pmt. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado. Se incluye una lista en el apéndice [TODO: Apéndice].
 		\subitem Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
 	\item Como son dos los servicios a agregar al flujo de transporte, es necesario crear dos \pmt. Una por cada uno. 
@@ -149,7 +138,6 @@ Repasando la lista anterior, repasamos los pasos de construcción:
 	\item Finalmente, sólo resta insertar las \pmt\ al flujo de transporte. Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
 	\item Para poner en funcionamiento el sistema se debe modular el flujo de transporte en radiofrecuencia, emitir los flujos elementales por los grupos multicast y puertos adecuados, y consumir todo desde un software de recepción. A continuación se presenta \emph{Mara}, diseñado con este objetivo. 
 \end{enumerate}
-
 
 %----------------------------------------------------------------------------------------------------------
 TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
@@ -159,20 +147,22 @@ TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Mu
 
 \subsection{Introducción del \emph{Elementaries Relocation Descriptor}}
 
-Haciendo uso de OpenCaster se pueden construir las \pmt\ que luego se incluyen en el flujo de transporte final. En [TODO: Apéndice] se incluye en \emph{script} utilizado completo. A continación se muestra la construcción de las \pmt\ y el descriptor incluido a través de OpenCaster.
+Haciendo uso de OpenCaster se pueden construir las \pmt\ que luego se incluyen en el flujo de transporte final. En [TODO: Apéndice] se incluye en \emph{script} utilizado completo. El fragmento a continuación se limita a la construcción de las \pmt\ y el descriptor incluido a través de OpenCaster.
 
-\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_gen.py}
+\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_gen.py}\label{lst:pmtopencaster}
+
+El producto de la ejecución del \emph{script} completo son las tablas necesarias: \sdt, \pat\ y \pmt. Él único paso restante es reemplazarlas en el flujo a modificar. Salvo por las \pmt\ que deben ser insertadas de modo que, en su emisión, aparezcan en un periodo de 200 milisegundos.
 
 \section{Software de recepción: Mara}
 
-El siguiente paso en el sistema es construir un software de recepción que sea capaz de capturar al flujo de transporte extendido y reaccionar acordemente. Esto es:
+El siguiente paso es construir un prototipo de software de recepción que sea capaz de capturar el flujo de transporte extendido y reaccionar acordemente. Esto es:
 
 \begin{itemize}
 	\item Construir la lista de servicios disponibles.
 	\item Identificar aquellos que posean el \emph{Elementaries Relocation Descriptor} asociado.
 	\item Asociar el servicio sintonizado por el usuario a los flujos elementales apropiados:
 	\begin{itemize}
-		\item Si la \pmt\ del servicio no posee el descriptor agregado, el receptor se debe comportar de manera tradicional
+		\item Si la \pmt\ del servicio no posee el descriptor agregado, el receptor se debe comportar de manera corriente.
 		\item Si la \pmt\ sí posee el descriptor asociado, entonces debe unirse al grupo multicast indicado en el mismo y capturar los flujos elementales desde ese medio.
 	\end{itemize}
 \end{itemize}
@@ -181,7 +171,7 @@ Notando que la mayoría de los comportamientos del software de recepción se manti
 
 \subsection{Construcción de Mara}
 
-Los pasos de modificación del reproductor \emph{Wari} son:
+Los pasos de modificación del reproductor \emph{Wari} se dividen en tres partes:
 
 \begin{enumerate}
 	\item El sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos.
@@ -208,7 +198,7 @@ Los pasos de modificación del reproductor \emph{Wari} son:
 \end{center}
 \end{figure}
 
-El diagrama de clases UML explica parte de la relación estática entre las clases que realizan el \emph{parsing} de descriptores en \emph{Wari}. TODO: Acá tengo que explicar bien por qué teta puse este diagrama. Hay que entender que el desarrollo se divide en tres partes y que cada diagrama apunta a una parte: Parseo, modelado y reproducción.
+El diagrama de clases UML explica parte de la relación estática entre las clases que realizan el \emph{parsing} de descriptores en \emph{Wari}. El proceso de SCAN es disparado desde la clase \texttt{Tuner}. Para el control del dispositivo sintonizador, ésta hace uso de la clase \texttt{Provider}. A partir de los flujos obtenidos se construyen las instancias de \texttt{Service}, que son gestionadas por por el \texttt{ServiceProvider}.
 
 \begin{figure}[H]
 \begin{center}
@@ -274,7 +264,9 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 	\end{center}
 \end{figure}
 
-El servicio de televisión digital cuenta con varias partes. El diagrama de clases en la \cref{fig:classdiagramservices} incluye únicamente las partes relacionadas con la sintonización de servicios. En la parte superior de la jerarquía de abstracción se halla la clase \texttt{Tuner}, que dispara el cambio de canal. Los pasos de ejecución responden al procedimiento indicado en [TODO: Introducción técnica, parte que indica lo que tiene que hacer un reproductor ante un cambio de canal].
+El diagrama de clases en la \cref{fig:classdiagramservices} incluye únicamente las clases del sistema relacionadas con la sintonización de servicios de televisión digital. En la parte superior de la jerarquía de abstracción se halla la clase \texttt{Tuner}.
+
+En Wari, cuando el usuario solicita el cambio de canal, el control llega evntualmente e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
 
 \begin{figure}[H]
 \begin{center}
@@ -282,18 +274,17 @@ El servicio de televisión digital cuenta con varias partes. El diagrama de clase
 \resizebox{\linewidth}{!}{
 \input{diagrams/play_sequence_diagram_wari}
 }
-\caption{Diagrama de secuencia de infraestructura de reproducción en Wari}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Wari\label{fig:playsecwari}}
 \end{center}
 \end{figure}
 
+%Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
 
+Para reproducir un servicio, de acuerdo a la \cref{fig:playsecwari}, es necesario \emph{recolectar los flujos elementales}. A nivel recepción, esto implica obtener todos los paquetes que corresponden a un conjunto dado de flujos elementales. Por ejemplo, todos los paquetes de audio y video asociados a un servicio.
 
+Recolectar los flujos elementales implica solicitar al dispositivo de sintonización que filtre los paquetes de acuerdo a su \pid. No obstante, esto corresponde sólamente cuando es necesario demultiplexar servicios de un flujo e interviene un dispositivo sintonizador. En el caso de recepción de un flujo por IP, este paso puede omitirse.
 
-Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
-
-Hay que mencionar que coleccionar los streams implica poner filtros para que se agarren los pid correspondientes a los elementary streams posta.
-
-Si se encuentra que es un servicio relocado, entonces en la URL se manda una dirección IP en vez del URL inventado.
+A partir de los \pid\ filtrado, las clases de demultiplexación construyen un URL de reproducción. Cuando se halla el \emph{Elementaries Relocation Descriptor}, esta URL debe ser reemplzada por la obtenida desde el descriptor.
 
 \begin{figure}[H]
 \begin{center}
@@ -306,6 +297,8 @@ Si se encuentra que es un servicio relocado, entonces en la URL se manda una dir
 \end{figure}
 
 \section{Emisión multicast de los flujos elementales por IP}
+
+TODO: Completar sección y acordar grado de relevancia con Fede.
 
 La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe protección ante pérdida de paquetes.
 

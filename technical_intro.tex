@@ -4,21 +4,26 @@
 \fi
 \chapter{Introducción técnica}
 
-La televisión digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50. El término \textbf{Televisión digital} define a la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
+La Televisión Digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50.
+
+El término \textbf{Televisión digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera.
+
+Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
 Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
-\item Exhibe una mejor calidad de sonido e imagen.
-\item Permite contenidos en alta definición.
-\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora. Además permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.
-\item Permite que se integren y complementen los contenidos con Internet.
-\item Permite nuevos servicios asociados a la interactividad y otros como la guía electrónica de programación, ejecución de aplicaciones, \etc.
-\item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
-\item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, GPS con sintonizador, \etc.
-\item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}.
+	\item Exhibe una mejor calidad de sonido e imagen.
+	\item Permite contenidos en alta definición.
+	\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora.
+	\item Permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.
+	\item Permite que se integren y complementen los contenidos con Internet. Por ejemplo, referenciando recursos que se encuentran en la web.
+	\item Permite brindar servicios complementarios, como aplicaciones interactivas y guía electrónica de programación.
+	\item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
+	\item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, o GPS's con sintonizador.
+	\item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}. Esto es, que un mismo servicio se reproduzca con una resolución en un televisor, y con una menor en un dispositivo pequeño.
 \end{enumerate}
 
-El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son:
+El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son (TODO: Incluir referencia de esto! Fak):
 \begin{itemize}
 \item Terrestre: Emite la señal través del espectro de radiofrecuencia de la atmósfera terrestre.
 \item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra. 
@@ -46,12 +51,13 @@ La última categoría, IPTV, generalmente hace uso de redes privadas que emplean l
 La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
 
 \begin{figure}[h!]
+	\begin{center}
 	\includegraphics[width=12cm]{imgs/cable_flujo_mpeg.png}
 	\caption{Diagrama de composición de un flujo de transporte} 
-	\centering 
+	\end{center}
 \end{figure}
 
-La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Con esquemas de compresión MPEG-4 AVC, se consiguen promedios de unos 3 Mbps para un video SD y 13 Mbps para HD. [TODO: Glosario de siglas]
+La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos.[TODO: Glosario de siglas]
 
 Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos es $11,7$Mbps, $2,0$Mbps y $0,3$Mbps, respectivamente. Lo cual suma un total de $14$ Mbps. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
 
@@ -152,10 +158,11 @@ Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El
 
 Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Con este identificador, el receptor puede filtrar los paquetes. Tanto de datos como de video y audio.
 
-\begin{figure}[h!]
+\begin{figure}[H]
+	\begin{center}
 	\includegraphics[width=14cm]{imgs/ts_packet.png}
 	\caption{Estructura de un paquete de flujo de transporte} 
-	\centering 
+	\end{center}
 \end{figure}
 
 
@@ -244,7 +251,7 @@ Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitac
 
 Un ejemplo de descriptor es el \emph{service descriptor} con \emph{descriptor tag} 72 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
 
-\subsection{Decodificación de tablas en flujos de transporte}
+\subsection{Decodificación de tablas en flujos de transporte}\label{sec:tunesteps}
 
 A continuación se explica el proceso de construcción de lista de servicios y sintonización en términos de las tablas involucradas:
 

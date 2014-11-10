@@ -9,9 +9,9 @@
 \attribute{type:ServiceType}
 \attribute{\_elements:vector<ElementaryInfo>}
 \attribute{\_networkId:int}
-\attribute{relocatedService:bool}
-\attribute{multicast\_group:string}
-\attribute{multicast\_port:int}
+\attribute{\textbf{relocatedService:bool}}
+\attribute{\textbf{multicast\_group:string}}
+\attribute{\textbf{multicast\_port:int}}
 
 \operation{process(PMT):void}
 \operation{process(SDT):void}
@@ -21,14 +21,14 @@
 
 
 
-\begin{class}[text width=7.5cm]{ElementariesRelocationDescriptor}{10, -2.175}
+\begin{class}[text width=7.5cm]{ElementariesRelocationDescriptor}{13, -2.175}
 	\attribute{multicast\_group:string}
 	\attribute{multicast\_port:int}
 \end{class}
 
 
-\draw[umlcd style dashed line,->] (Service.east) -- (ElementariesRelocationDescriptor.west);
-
+\draw[umlcd style dashed line,->](Service.east) --(ElementariesRelocationDescriptor.west) ;
+\draw[objectline,-] (5.5,-2.75) node{$<<uses>>$};
 %TODO: Aca falta el nodo que diga <<uses>> --node[above , sloped , black]{$<<$uses$>>$}
 %umlcd style dashed line,->
 \end{tikzpicture}

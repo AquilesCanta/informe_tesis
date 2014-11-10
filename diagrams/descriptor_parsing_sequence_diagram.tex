@@ -14,7 +14,7 @@
 %------------------------------------------
 	\begin{call}{main}{startScan()}{tuner}{}
 		\begin{sdblock}{Ciclo de SCAN}{Iteración sobre las N frecuencias disponibles}
-			\begin{call}{tuner}{setNetwork()}{provider}{}
+			\begin{call}{tuner}{setNetwork(ID=1..N)}{provider}{}
 			\end{call}
 			\begin{callself}{tuner}{onLockChanged()}{}
 				\begin{call}{tuner}{start()}{servprov}{}
@@ -34,9 +34,4 @@
 			\end{callself}
 		\end{sdblock}
 	\end{call}
-
-	\begin{call}{main}{startService(ID$=$1..N)}{tuner}{}
-	\end{call}
-	
-	
 \end{sequencediagram}

@@ -12,7 +12,7 @@
 \operation{setNetwork(int):void}
 \end{class}
 
-\begin{class}[text width=4cm]{Service}{8, 10}
+\begin{class}[text width=7cm]{Service}{8, 10}
 \attribute{name:String}
 \attribute{type:ServiceType}
 \attribute{\_elements:vector<ElementaryInfo>}
@@ -49,9 +49,9 @@
 % Asociaciones
 %-----------------------------------------------------------
 
-\composition{ServiceManager}{\_services}{1..*}{Service}
+\composition{ServiceManager}{}{1..*}{Service}
 
-\draw[objectline,->] (Tuner.south) -- ++(0,-3) -- (Provider.east);
+\draw[objectline,->] (Tuner.south) -- ++(0,-3.375) -- (Provider.east);
 \draw[objectline,->] (Tuner) -- (ServiceProvider);
 \draw[objectline,->] (ServiceProvider) -- (Provider);
 
