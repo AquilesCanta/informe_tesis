@@ -11,13 +11,14 @@
 	Facultad de Informática\\
 	Universidad Nacional de La Plata }
 
+
+
 \begin{document}
 
 \frontmatter
 \includepdf[pages={1}]{portada.pdf}
 % \maketitle
 \tableofcontents
-
 \mainmatter
 \include{intro}
 \include{technical_intro}
@@ -27,8 +28,8 @@
 
 \appendix
 
-\renewcommand\refname{}
 \bibliographystyle{plain}
-\bibliography{bibliography} 
+%\bibliography{thebibliography} 
+\include{thebibliography} 
 
 \end{document}

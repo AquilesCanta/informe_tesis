@@ -23,7 +23,7 @@ Las ventajas de la televisión digital por sobre la analógica son numerosas:
 	\item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}. Esto es, que un mismo servicio se reproduzca con una resolución en un televisor, y con una menor en un dispositivo pequeño.
 \end{enumerate}
 
-El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son (TODO: Incluir referencia de esto! Fak):
+El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son (ver \cite{liendo}):
 \begin{itemize}
 \item Terrestre: Emite la señal través del espectro de radiofrecuencia de la atmósfera terrestre.
 \item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra. 
@@ -31,7 +31,9 @@ El término televisión digital define a cualquier formato de difusión de programa
 \item IPTV: Consiste en la distribución de programación y servicios mediante redes que utilizan la \emph{suite} de protocolos IP.
 \end{itemize}
 
-Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. Son considerados servicios públicos y se encuentran rigurosamente legislados y regulados en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
+%TODO: Podemos agregar la categoría WebTV (OTT). Y explicar en qué se diferencia de IPTV, en el alcance de este informe.
+
+Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. La televisión digital terrestre y satelital se encuentran rigurosamente legisladas y reguladas en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
 
 \begin{itemize}
 \item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} es una una adaptación de este estándar ha sido adoptado en gran parte de sudamérica.
@@ -40,7 +42,7 @@ Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utili
 \item \emph{Digital Terrestrial Multimedia Broadcasting (DTMB)}: Estándar adoptado en la República Popular China, incluyendo Hong Kong y Macao.
 \end{itemize} 
 
-La última categoría, IPTV, generalmente hace uso de redes privadas que emplean la infraestructura de planteles telefónicos, tendidos eléctricos (BPL, \emph{broadband over power lines}), cable coaxial o fibra óptica. Los proveedores de servicios suelen proveer un \emph{set top box} o receptor junto con la conexión. Al ser redes privadas, el formato de la distribución de contenidos no está regulada. 
+La última categoría, IPTV, generalmente hace uso de redes privadas que emplean la infraestructura de planteles telefónicos, tendidos eléctricos (BPL, \emph{broadband over power lines}), cable coaxial o fibra óptica. Los proveedores de servicios suelen proveer un \emph{set top box} o receptor junto con la conexión. Al ser redes privadas, el formato de la distribución de contenidos no está regulada.
 
 \section{ISDB-Tb}
 
@@ -59,7 +61,31 @@ La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de 
 
 La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos.[TODO: Glosario de siglas]
 
-Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos es $11,7$Mbps, $2,0$Mbps y $0,3$Mbps, respectivamente. Lo cual suma un total de $14$ Mbps. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
+Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
+
+\begin{table}[H]
+\begin{center}
+\resizebox{\linewidth}{!}{
+	\begin{tabular}{| l | c | c | c |}
+	\hline 
+	Nombre del servicio & Tipo de video & Bitrate promedio utilizado & Porcentaje del bitrate del flujo utilizado\\
+	\hline 
+	TV Pública HD & \emph{High Definition Video} & 11,7 Mbps & 67,7\% \\
+	\hline
+	TV Pública & \emph{Low Definition Video} & 0,3 Mbps & 1,9\% \\
+	\hline
+	Tecnópolis & \emph{Standard Definition Video} & 2,0 Mpbs & 11,7\% \\
+	\hline
+	\hline
+	\textbf{Total:} & --- & 14 Mbps & 81,3\% \\
+	\hline 
+	\end{tabular}
+}
+\caption{Utilización de bitrate en ejemplo de Canal 23\label{tab:avgbitrates}}
+\end{center}
+\end{table}
+
+Se puede observar que resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate, siendo que, como se ha dicho, el mismo es constante en la emisión por radiofrecuencia. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
 
 Cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
 
