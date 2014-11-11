@@ -36,7 +36,7 @@ El término televisión digital define a cualquier formato de difusión de programa
 Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. La televisión digital terrestre y satelital se encuentran rigurosamente legisladas y reguladas en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
 
 \begin{itemize}
-\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} es una una adaptación de este estándar ha sido adoptado en gran parte de sudamérica.
+\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} (también denomiado ISDB-Tb) es una una adaptación de este estándar ha sido aplicado en gran parte de sudamérica. 
 \item \emph{Digital Video Broadcasting-Terrestrial (DVB-T)}: Estándar adoptado en Europa, Australia y Nueva Zelanda. 
 \item \emph{Advanced Television System Committee (ATSC)}: Estándar adoptado en Estados Unidos, Canadá, México, Corea del Sur, República Dominicana y Honduras.
 \item \emph{Digital Terrestrial Multimedia Broadcasting (DTMB)}: Estándar adoptado en la República Popular China, incluyendo Hong Kong y Macao.
@@ -50,16 +50,23 @@ La última categoría, IPTV, generalmente hace uso de redes privadas que emplean l
 
 \subsection{Modulación y bitrate disponible}
 
-La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz por los que viaja un flujo multiplexado de servicios. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
+La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz (denominados \emph{bandas UHF}, ver más en TODO: Apéndice) por los que viaja un flujo multiplexado de servicios, que denominaremos ``flujo de transporte''. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=8cm]{imgs/canal_fisico.png}
+	\caption{Diagrama esquemático de un flujo de transporte} 
+	\end{center}
+\end{figure}
+
+La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Cada servicio está compuesto a su vez por flujos más pequeños que llevan audio, video u otras componentes.
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[width=12cm]{imgs/cable_flujo_mpeg.png}
-	\caption{Diagrama de composición de un flujo de transporte} 
+	\caption{Composición de un flujo de transporte} 
 	\end{center}
 \end{figure}
-
-La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos.[TODO: Glosario de siglas]
 
 Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
 
@@ -68,7 +75,7 @@ Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 
 \resizebox{\linewidth}{!}{
 	\begin{tabular}{| l | c | c | c |}
 	\hline 
-	Nombre del servicio & Tipo de video & Bitrate promedio utilizado & Porcentaje del bitrate del flujo utilizado\\
+	\textbf{Nombre del servicio} & \textbf{Tipo de video} & \textbf{Bitrate promedio utilizado} & \textbf{Porcentaje del bitrate del flujo utilizado}\\
 	\hline 
 	TV Pública HD & \emph{High Definition Video} & 11,7 Mbps & 67,7\% \\
 	\hline
@@ -85,9 +92,9 @@ Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 
 \end{center}
 \end{table}
 
-Se puede observar que resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate, siendo que, como se ha dicho, el mismo es constante en la emisión por radiofrecuencia. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
+Se puede observar que resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate siendo que, como se ha dicho, el mismo es constante en la emisión por radiofrecuencia. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
 
-Cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
+Pero como en este caso, cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
 
 Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agregar un servicio LD sin riesgo de que falte bitrate. No obstante, es importante tener en mente que las magnitudes presentes son calculadas por promedio. En el caso del servicio HD, el video alcanza los $24$ Mbps, por momentos. Por la variabilidad del bitrate de los contenidos multimedia, es necesario que la suma de los bitrate promedio sea inferior al bitrate total si se busca una calidad estable en los servicios. 
 
@@ -142,7 +149,7 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 
 \section{MPEG Transport stream}
  
- El formato de los datos mencionado previamente está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Esto se debe a que el flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
+ El formato de los datos que viajan en las emisiones ISDB-Tb, está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Esto se debe a que el flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
 
 [TODO:  MPEG-2 ISO/IEC standard 13818-1 or ITU-T Rec. H.222.0]
 
@@ -150,22 +157,26 @@ La capacidad de transmisión de cada canal físico de radiofrecuencia permite la i
 
 Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios servicios en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos, puesto que se intercalan paquetes de cada uno.
 
-\subsection{Análisis de la estructura general del sistema \textbf{MPEG-TS}}
+\subsection{Estructura del sistema \textbf{MPEG-TS}}
 
 Para analizar la estructura del sistema \textbf{MPEG-TS}, ampliaremos sobre el ejemplo anterior del canal 23. A continuación se detallan los pasos que deber seguir un dispositivo de recepción para brindar los servicios al usuario:
 
 \begin{enumerate}
-\item Cada canal físico ISDB-T transporta un flujo de transporte independiente. El receptor debe comenzar su funcionamiento con un ``SCAN'', que consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema.
+\item Cada canal físico ISDB-Tb transporta un flujo de transporte independiente. Antes de comenzar a funcionar normalmente, un receptor debe realizar un ``SCAN''. Esto consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema.
 
-En el ejemplo, el SCAN habrá recorrido la frecuencia 527MHz, memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica'').
+En el ejemplo, el SCAN habrá recorrido el Canal 23 (frecuencia 527MHz), memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica'').
 
 \item De acuerdo a lo obtenido en el paso anterior, se debe construir la lista de servicios, que queda disponible para que el usuario pueda seleccionar cualquiera independientemente del servicio sintonizado en ese momento. También se incluye en este paso información de la guía electrónica de programación, si la hubiera.
 
 En el ejemplo, los tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521Mhz).
 
+La información obtenida y construida hasta aquí suele ser persistida, dado que el proceso de SCAN puede demorar algún tiempo. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir estos pasos.
+
 \hrulefill
 
-\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz). Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
+\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz).
+
+Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
 
 El proceso de cambiar de canal físico, implica demodular la nueva señal y sincronizarse con la emisión, para distinguir el comienzo de cada paquete e interpretar correctamente la información.
 
@@ -207,29 +218,19 @@ Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del 
 
 \subsection{Tablas}
 
-A excepción del 5, los pasos que realiza el receptor requieren de información por parte del emisor, fuera del contenido multimedia propiamente dicho. Por ejemplo, para construir la lista de servicios. Para esto, se utilizan las \textbf{tablas}. Las tablas son una definición sintáctica para entregar información al receptor.
+En el proceso de SCAN y de sintonización de servicios, el receptor requiere información por parte del emisor, fuera del contenido multimedia propiamente dicho. Por ejemplo, para construir la lista de servicios. Para esto, se utilizan las \textbf{tablas} provistas por el formato \textbf{MPEG-TS}. Las tablas son una definición sintáctica para entregar información al receptor.
 
 Los paquetes tienen tamaño de 188 bytes y disponen de aún menos para enviar contenidos. Las tablas, por ejemplo, pueden exceder este tamaño. Por ello viajan en un formato denominado ``secciones'' de longitud variable, que se dividen entre tantos paquetes como sean necesarios. El receptor debe recostruir las secciones para obtener las tablas que contiene. 
 
-El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un rol específico. A su vez, ISDB-T extiende esta lista con algunas tablas. Una lista completa de las tablas de formato \textbf{ISDB-T} se incluye en [TODO: Agregar apéndice].
+El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un rol específico. A su vez, ISDB-Tb extiende esta lista con algunas tablas. Una lista completa de las tablas de formato \textbf{ISDB-Tb} se incluye en [TODO: Agregar apéndice].
 
-\subsubsection{\emph{Service description table} (\sdt)}
-
-La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc\\
-
-
-\begin{table}[H]
+\begin{figure}[H]
 \begin{center}
-\begin{tabular}{ l | c | c }
-\emph{service\_id} & Nombre del servicio & Tipo del servicio \\
-\hline 
-59201 & TV Pública HD & Televisión \\
-59202 & Tecnópolis & Televisión \\
-59224 & TV Pública & (Data Service) Televisión Móvil \\
-\end{tabular}
-\caption{Contenidos de la SDT emitida por Canal 23}
+\includegraphics[width=12cm]{imgs/canal_23_tables.png}
+\caption{Esquema general de tablas en el ejemplo de Canal 23}
 \end{center}
-\end{table}
+\end{figure}
+
 
 \subsubsection{\emph{Program allocation table} (\pat)}
 
@@ -265,6 +266,24 @@ Tipo de flujo & PID del flujo \\
 \end{center}
 \end{table}
 
+\subsubsection{\emph{Service description table} (\sdt)}
+
+La \sdt\ describe con más detalle que otras los programas transportados por un \emph{ts}. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc\\
+
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{ l | c | c }
+\emph{service\_id} & Nombre del servicio & Tipo del servicio \\
+\hline 
+59201 & TV Pública HD & Televisión \\
+59202 & Tecnópolis & Televisión \\
+59224 & TV Pública & (Data Service) Televisión Móvil \\
+\end{tabular}
+\caption{Contenidos de la SDT emitida por Canal 23}
+\end{center}
+\end{table}
+
 \subsubsection{\emph{Network Information Table} (\nit)}
 
 La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestre. Contiene información obligatoria sobre la organización física de la red de transmisión que la emite, pero también de forma opcional puede enviar información de otras redes.
@@ -273,7 +292,7 @@ La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestr
 
 Dentro de las tablas, parte de la información viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado numéricamente de forma unívoca por un \emph{descriptor tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
 
-Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-T se provee en [TODO: Apéndice de descriptores].
+Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-Tb se provee en [TODO: Apéndice de descriptores].
 
 Un ejemplo de descriptor es el \emph{service descriptor} con \emph{descriptor tag} 72 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
 
@@ -302,14 +321,6 @@ A continuación se explica el proceso de construcción de lista de servicios y sin
 
 \end{enumerate}
 
-A continuación se presenta un esquema final del flujo de transporte:
-
-\begin{figure}[H]
-\begin{center}
-\includegraphics[width=12cm]{imgs/canal_23_tables.png}
-\caption{Esquema general de tablas en el ejemplo de Canal 23}
-\end{center}
-\end{figure}
 
 
 % \subsection{\emph{Packetized elementary streams}}
@@ -338,83 +349,86 @@ La utilización de la API requiere crear un \emph{script} que genere las estructu
 
 Una vez se poseen todas las componentes del flujo, las mismas se pueden multiplexar a través de la herramienta provista en el proyecto. Con esta herramienta se puede determinar el \emph{bitrate} final del \emph{ts}. Es necesario tener en cuenta el \emph{bitrate} de los flujos elementales contenidos para evitar que la distribución de la carga final sea errónea.
 
-\section{Decodificación}
+\section{Recepción y decodificación}
 
-La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21]. Siendo un estándar abierto, existen varias implementaciones. \textbf{Lifia} lleva adelante el desarrollo del proyecto \emph{Kuntur} que agrupa librerías y aplicaciones relacionadas con la televisión digital.
+La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21].
 
-Kuntur incluye varios reproductores de televisión digital que siguen el estándar. \emph{Wari} es uno de los reproductores de Kuntur que fue ideado para utilizarse en computadoras personales. Al igual que el resto de los reproductores de Kuntur, Wari utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto, para la captura y decodificación del formato de flujo de transporte.
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=15cm]{imgs/decoder.png}
+\caption{Modelo de un receptor ISDB-Tb}
+\end{center}
+\end{figure}
 
-\subsection{Obtención de servicios}
 
-La lectura de los servicios de un \emph{ts} se hace de forma independiente respecto del medio del cual se obtiene. A fin de comprender cualquier tipo de modificación de la librería \textbf{mpeg-parser}, es necesario ver el proceso de obtención y reproducción de servicios:
+% Siendo un estándar abierto, existen varias implementaciones. \textbf{Lifia} lleva adelante el desarrollo del reproductor de televisión digital \textbf{Wari}.
 
-\begin{enumerate}
-\item Se sintoniza el canal físico por el que viaja el \emph{ts} que lleva el servicio.
-\item Se filtra la \pat\ y se obtiene de la misma el \pid\ con el que viaja la \pmt\ asociada al servicio.
-\item Se filtra la \pmt\ del servicio y se extraen los \pid\ de los flujos elementales, sean audio y video.
-\item Los \pid\ de los flujos elementales se entregan a la librería \emph{Canvas}.
-\end{enumerate}
+% \emph{Wari} es un reproductores de Kuntur que fue ideado para utilizarse en computadoras personales. Al igual que el resto de los reproductores de Kuntur, Wari utiliza la librería \textbf{mpeg-parser}, también incluida en el proyecto, para la captura y decodificación del formato de flujo de transporte.
 
-\subsection{Reproducción}
+% \subsection{Obtención de servicios}
 
-La entrega de los flujos al reproductor se realiza a través de una URL que incluye los \pid\ de los flujos elementales componentes del servicio a entregar. Una característica a notar de la librería \emph{Canvas} que interpreta la URL es la naturaleza polimórfica del parámetro, dado que interpreta esquemas (o protocolos) diversos. \eg:
+% La lectura de los servicios de un \emph{ts} se hace de forma independiente respecto del medio del cual se obtiene. A fin de comprender cualquier tipo de modificación de la librería \textbf{mpeg-parser}, es necesario ver el proceso de obtención y reproducción de servicios:
 
-\begin{itemize}
-\item srvdtv://audioPID=4000,audioType=3,pcrPID=3000,videoPID=3000,videoType=2
-\item udp://@127.0.0.1:4000
-\end{itemize}
+% \begin{enumerate}
+% \item Se sintoniza el canal físico por el que viaja el \emph{ts} que lleva el servicio.
+% \item Se filtra la \pat\ y se obtiene de la misma el \pid\ con el que viaja la \pmt\ asociada al servicio.
+% \item Se filtra la \pmt\ del servicio y se extraen los \pid\ de los flujos elementales, sean audio y video.
+% \item Los \pid\ de los flujos elementales se entregan a la librería \emph{Canvas}.
+% \end{enumerate}
 
-El primero corresponde a un \emph{ts} consumido desde un dispositivo de sintonización de radiofrecuencia. El segundo a un socket alocado localmente asignado al puerto 4000. Es interesante notar que tal URL no debe estar necesariamente ligada un socket local.
+% \subsection{Reproducción}
 
-\section{Descripción de clases}
+% La entrega de los flujos al reproductor se realiza a través de una URL que incluye los \pid\ de los flujos elementales componentes del servicio a entregar. Una característica a notar de la librería \emph{Canvas} que interpreta la URL es la naturaleza polimórfica del parámetro, dado que interpreta esquemas (o protocolos) diversos. \eg:
 
-\includegraphics[width=12cm]{imgs/classes.png}
+% \begin{itemize}
+% \item srvdtv://audioPID=4000,audioType=3,pcrPID=3000,videoPID=3000,videoType=2
+% \item udp://@127.0.0.1:4000
+% \end{itemize}
 
-A continuación se presentan descripciones de las clases más relevantes de la librería \textbf{mpeg-parser} en términos de identificación y entrega de servicios. El enfoque es descendente. Esto es, las primeras clases son las más cercanas a conceptos ya presentadas y, a partir de ellas, se reduce el nivel de abstracción.
+% El primero corresponde a un \emph{ts} consumido desde un dispositivo de sintonización de radiofrecuencia. El segundo a un socket alocado localmente asignado al puerto 4000. Es interesante notar que tal URL no debe estar necesariamente ligada un socket local.
 
-\subsection{\texttt{Tuner}}
+% \section{Descripción de clases}
 
-Esta clase(podría traducirse como \texttt{Sintonizador}), provee interfaz para escanear y sintonizar servicios, y es accedida directamente desde las librerías que utilizan \textbf{mpeg-parser}. Para realizar estas tareas hace uso de la jerarquía compuesta por \texttt{ServiceProvider} y su superclase \texttt{ServiceManager}.
+% \includegraphics[width=12cm]{imgs/classes.png}
 
-\subsection{\texttt{ServiceProvider}}
+% A continuación se presentan descripciones de las clases más relevantes de la librería \textbf{mpeg-parser} en términos de identificación y entrega de servicios. El enfoque es descendente. Esto es, las primeras clases son las más cercanas a conceptos ya presentadas y, a partir de ellas, se reduce el nivel de abstracción.
 
-Permite comenzar el proceso de \emph{scanning} de servicios. Al detectar un servicio, crea el modelo del mismo, asociando un \emph{listener} sobre el flujo de transporte para los elementos del \emph{ts} relacionados a los servicios como lo son su \pmt, la \sdt, la \nit\ y sus respectivos flujos elementales. Estos últimos sólo al momento de su reproducción. Este modelo es reflejado por la clase \texttt{Service}. 
+% \subsection{\texttt{Tuner}}
 
-\texttt{Service provider} es una especialización de \texttt{ServiceManager}, pero actualmente no existe otra utilidad para la clase más genérica, por ello no se realiza una diferenciación explícita de las responsabilidades de cada una. 
+% Esta clase(podría traducirse como \texttt{Sintonizador}), provee interfaz para escanear y sintonizar servicios, y es accedida directamente desde las librerías que utilizan \textbf{mpeg-parser}. Para realizar estas tareas hace uso de la jerarquía compuesta por \texttt{ServiceProvider} y su superclase \texttt{ServiceManager}.
 
-\subsection{\texttt{Service}}
+% \subsection{\texttt{ServiceProvider}}
 
-Modela un servicio de alguno de los \emph{ts} capturados por la librería. Entre otras responsabilidades, procesa las tablas y descriptores encontrados en una tabla, modificándose acordemente. Lleva información sobre los flujos elementales componentes que resulta necesaria para la sintonización del servicio.
+% Permite comenzar el proceso de \emph{scanning} de servicios. Al detectar un servicio, crea el modelo del mismo, asociando un \emph{listener} sobre el flujo de transporte para los elementos del \emph{ts} relacionados a los servicios como lo son su \pmt, la \sdt, la \nit\ y sus respectivos flujos elementales. Estos últimos sólo al momento de su reproducción. Este modelo es reflejado por la clase \texttt{Service}. 
 
-\subsection{Tablas: \texttt{PAT}, \texttt{PMT}, \texttt{SDT}}
+% \texttt{Service provider} es una especialización de \texttt{ServiceManager}, pero actualmente no existe otra utilidad para la clase más genérica, por ello no se realiza una diferenciación explícita de las responsabilidades de cada una. 
 
-Cada tabla del estándar posee un modelo que la refleja en la librería e incluye toda la información que pudiera viajar por estos medios. De esta manera, un servicio adquiere su nombre a través del procesamiento de una instancia de la clase que corresponde a la \sdt.
+% \subsection{\texttt{Service}}
 
-\subsection{\texttt{Descriptors}}
+% Modela un servicio de alguno de los \emph{ts} capturados por la librería. Entre otras responsabilidades, procesa las tablas y descriptores encontrados en una tabla, modificándose acordemente. Lleva información sobre los flujos elementales componentes que resulta necesaria para la sintonización del servicio.
 
-Esta clase modela un \emph{loop} de descriptores. Cada descriptor posee a su vez una representación a través de un registro \texttt{struct}, sin comportamiento. El servicio utiliza la información que obtenga del descriptor de la forma que corresponda. Es importante remarcar que una clase descriptors se modela con un arreglo de \emph{bytes}, de modo que el salto de abstracción se debe realizar de alguna manera. De este proceso se encargan los \emph{descriptor parsers}.
+% \subsection{Tablas: \texttt{PAT}, \texttt{PMT}, \texttt{SDT}}
 
-\subsection{Macro: \texttt{DESC\_PARSE}, \emph{descriptor tag} y función asociada}
+% Cada tabla del estándar posee un modelo que la refleja en la librería e incluye toda la información que pudiera viajar por estos medios. De esta manera, un servicio adquiere su nombre a través del procesamiento de una instancia de la clase que corresponde a la \sdt.
 
-Los servicios usan el \texttt{DESC\_PARSE} para encontrar descriptores en un \emph{loop} de descriptores. Para esto, se debe iterar una función de \emph{parsing} a lo largo de todo el arreglo. A cada paso, en el proceso de iteración, se invoca la función de \emph{parsing} asociada al \emph{descriptor tag} encontrado. La asociación se realiza a nivel de compilación por \emph{matching} de nombres descriptor/función.
+% \subsection{\texttt{Descriptors}}
 
-La función de \emph{parsing} entonces recibe un arreglo de \emph{bytes} con un \emph{offset} que permite encontrar el comienzo de su descriptor dentro del \emph{loop}. A partir de ahí utiliza el formato para extraer los datos que transporta.
+% Esta clase modela un \emph{loop} de descriptores. Cada descriptor posee a su vez una representación a través de un registro \texttt{struct}, sin comportamiento. El servicio utiliza la información que obtenga del descriptor de la forma que corresponda. Es importante remarcar que una clase descriptors se modela con un arreglo de \emph{bytes}, de modo que el salto de abstracción se debe realizar de alguna manera. De este proceso se encargan los \emph{descriptor parsers}.
 
-\subsection{\texttt{Filter} y \texttt{Demuxer}}
+% \subsection{Macro: \texttt{DESC\_PARSE}, \emph{descriptor tag} y función asociada}
 
-Como ya se sabe, los descriptores se encuentran en tablas. Pero para obtener las tablas es necesario antes construir la sección en la que se ubica la tabla. Entonces, si se buscan los descriptores de la \sdt, antes debe obtener suficientes paquetes con \pid\ 17(el correspondiente a la tabla) como para reconstruir la sección y luego, a partir de la misma, obtener la información que contiene, verificando ausencia de errores.
+% Los servicios usan el \texttt{DESC\_PARSE} para encontrar descriptores en un \emph{loop} de descriptores. Para esto, se debe iterar una función de \emph{parsing} a lo largo de todo el arreglo. A cada paso, en el proceso de iteración, se invoca la función de \emph{parsing} asociada al \emph{descriptor tag} encontrado. La asociación se realiza a nivel de compilación por \emph{matching} de nombres descriptor/función.
 
-De la tarea de filtrar paquetes con cierto \pid\ se encarga la clase \texttt{Filter}. De la segunda tarea se encargan las instancias de la clase \texttt{Demuxer}.
+% La función de \emph{parsing} entonces recibe un arreglo de \emph{bytes} con un \emph{offset} que permite encontrar el comienzo de su descriptor dentro del \emph{loop}. A partir de ahí utiliza el formato para extraer los datos que transporta.
+
+% \subsection{\texttt{Filter} y \texttt{Demuxer}}
+
+% Como ya se sabe, los descriptores se encuentran en tablas. Pero para obtener las tablas es necesario antes construir la sección en la que se ubica la tabla. Entonces, si se buscan los descriptores de la \sdt, antes debe obtener suficientes paquetes con \pid\ 17(el correspondiente a la tabla) como para reconstruir la sección y luego, a partir de la misma, obtener la información que contiene, verificando ausencia de errores.
+
+% De la tarea de filtrar paquetes con cierto \pid\ se encarga la clase \texttt{Filter}. De la segunda tarea se encargan las instancias de la clase \texttt{Demuxer}.
 
 \section{IPTV, \emph{Internet protocol television}}
 
-Se denomina de esta manera a cualquier contenido televisivo cuya entrega se realice a través de una red IP. Existen tres variantes de este tipo de servicios:
-
-\begin{itemize}
-\item \textbf{Televisión en vivo}: Entrega de manera simultánea a un grupo de receptores un servicio que se está emitiendo en el momento. Presenta la posibilidad de ser implementado a través de un esquema \emph{multicast}.
-\item \textbf{Televisión en diferido}: Reproducción de un servicio que fue emitido previamente con una limitación predefinida de diferencia temporal.
-\item \textbf{\emph{Video on demand}}: Entrega de un servicio elegido de un catálogo en cualquier momento. La única implementación posible es a través de \emph{unicast}.
-\end{itemize}
 
 
 \ifx\all\undefined
