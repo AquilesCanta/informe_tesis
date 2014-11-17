@@ -109,7 +109,15 @@ Elemento                   			& Significado del contenido 	& Contenido real(Deci
 
 \subsection{Construcción de un flujo de transporte de referencia}
 
-Para la descripción de la construcción de un flujo de referencia para el sistema de transmisión, se parte de un flujo de transporte ISDB-T válido. Es decir, se explicará el agregado de servicios a un flujo de tranporte existente. Se utilizará como ejemplo el ejemplo de canal 23 del capítulo de introducción técnica.
+Para la descripción de la construcción de un flujo de referencia para el sistema de transmisión, se parte de un flujo de transporte ISDB-T válido. Es decir, se explicará el agregado de servicios a un flujo de tranporte existente. Se utilizará como ejemplo el ejemplo de canal 23 del capítulo de introducción técnica. La \cref{fig:extended23} presenta un esquema del flujo de transporte resultante esperado.
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=14cm]{imgs/canal_23_extended_tables.png}
+	\caption{Esquema del flujo de transporte de Canal 23 extendido\label{fig:extended23}} 
+	\end{center}
+\end{figure}
+
 
 Los pasos de extensión se resumen a continuación. Este procedimiento se debe repetir por cada servicio que se quiera agregar al flujo de transporte. A considerar: El contenido de un flujo de transporte es en su mayoría binario (a excepción de la \sdt\ que tiene algunas entradas textuales). Por esto, es prácticamente necesario hacer uso de alguna herramienta en la creación de componentes del flujo. Posteriormente, se explica cómo se puede utilizar OpenCaster para este fin.
 
