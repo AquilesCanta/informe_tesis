@@ -341,7 +341,7 @@ El proceso final de señalización y multiplexación de servicios debe seguir estri
 
 \subsection{OpenCaster}
 
-OpenCaster es un proyecto de código abierto que incluye muchas de las herramientas necesarias para la construcción de flujos de transporte de acuerdo al formato \textbf{MPEG-TS}. Éstas van desde la creación de paquetes, secciones y tablas hasta la multiplexación del \emph{ts}. No posee utilidades para la emisión.
+OpenCaster es un proyecto de código abierto (bajo licencia GPL\cite{gpl}) que incluye muchas de las herramientas necesarias para la construcción de flujos de transporte de acuerdo al formato \textbf{MPEG-TS}. Éstas van desde la creación de paquetes, secciones y tablas hasta la multiplexación del \emph{ts}. No posee utilidades para la emisión.
 
 El proyecto OpenCaster provee una API para \emph{Python} desde la cual se pueden ensamblar tablas aprovechando las características de programación orientada a objetos que provee el lenguaje. Una vez construido un modelo de la tabla, el mismo se serializa a un arreglo de \emph{bytes} con el formato \textbf{MPEG-TS}. Esta API provee una librería de elementos que incluye tablas y descriptores, junto con los campos asociados a cada una.
 
@@ -353,17 +353,45 @@ Una vez se poseen todas las componentes del flujo, las mismas se pueden multiple
 
 La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21].
 
-El proceso de recepción, decodificación y reproducción de los servicios de un flujo de transporte es extenso y complejo. Para analizarlo, se usará como base el reproductor \emph{Wari}. 
+El proceso de recepción, decodificación y reproducción de los servicios de un flujo de transporte es extenso y complejo. 
 
-\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para utilizarse en computadoras personales. Es actualmente desarrollado y mantenido por Lifia[TODO: ¿Insertar cita o algo?], aunque es de código abierto.
+TODO: Separar wari de esta parte, ponerlo como subsección.
+
+Para analizarlo, se usará como base el reproductor \emph{Wari}. 
+
+\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}.
+
+La máquina de estados de la \cref{fig:player_state_machine} presenta los posibles estados de un reproductor de televisión digital.
+
+ \begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=17cm]{imgs/player_state_machine.png}
+	\caption{Máquina de estados de un reproductor de TV digital\label{fig:player_state_machine}} 
+	\end{center}
+\end{figure}
+
+\emph{Wari} sigue un formato similar al de la \cref{fig:player_state_machine}. Sin embargo, nótese que un reproductor de televisión digital es un sistema de tiempo real en, al menos, dos puntos distintos[TODO: Nota al pie? Digo al menos porque las aplicaciones introducen, un tercer frente, al igual que closed caption, etc, etc]. 
+
+Por un lado, el flujo de transporte es una fuente constante de paquetes que se acumulan en un \emph{buffer}. Si el sistema no llega a consumir suficientes paquetes en un intervalo de tiempo determinado, esto puede incurrir en un \emph{overflow}, lo cual significa que existe pérdida, y esto a su vez se traduce en una degradación del servicio. Esto responde a la definición de \emph{soft real time}\cite{realtime}.
+
+Por el otro lado, la presentación de los cuadros del video debe responder a las exigencias de un sistema multimedia. La omisión de cuadros, si ocurre con suficiente periodicidad, también implica una degradación de la calidad.
+
+Por esto, los reproductores de televisión digital como \emph{Wari} suelen ser sistemas \emph{multithreaded}, con la complejidad que esto conlleva. A fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo. En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. [TODO: Pero la documentación última es el código, suerte con eso!].
+
+\subsection{Reproductor de Televisión Digital Wari}
 
 
-% \begin{figure}[H]
-% \begin{center}
-% \includegraphics[width=15cm]{imgs/decoder.png}
-% \caption{Modelo de un receptor ISDB-Tb}
-% \end{center}
-% \end{figure}
+
+
+
+
+
+
+
+
+
+
+
 
 
 % \subsection{Obtención de servicios}
