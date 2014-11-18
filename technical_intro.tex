@@ -351,50 +351,119 @@ Una vez se poseen todas las componentes del flujo, las mismas se pueden multiple
 
 \section{Recepción y decodificación}
 
-La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21].
+La especificación técnica que debe cumplir un receptor de televisión digital, de acuerdo al estándar ISDB-Tb se define en [ARIB STD-B21 TODO Introducir cita]. 
 
-El proceso de recepción, decodificación y reproducción de los servicios de un flujo de transporte es extenso y complejo. 
+El proceso de recepción, decodificación y reproducción de los servicios de un flujo de transporte es complejo:
+\begin{itemize}
+	\item La mayoría de los eventos de recepción y reproducción son asincrónicos.
+	\begin{itemize}
+		\item Para ejemplificar, la lectura de tablas implica esperar que lleguen al receptor todos los paquetes necesarios para construir la sección por la que viaja. Salvo por las limitaciones de tiempo que impone la norma sobre los tiempos de emisión de la misma, no hay forma de predecir el momento en que esto ocurre.
+	\end{itemize}
+	\item Es un sistema que debe responder correctamente a las exigencias de un sistema \emph{soft real time}\cite{realtime}.
+	\begin{itemize}
+		\item Por un lado, el flujo de transporte es una fuente constante de paquetes que se acumulan en un \emph{buffer}. Si el sistema no llega a consumir suficientes paquetes en un intervalo de tiempo determinado, esto puede incurrir en un \emph{overflow}, lo cual significa que existe pérdida, y esto a su vez se traduce en una degradación del servicio.
+		\item Por el otro lado, la presentación de los cuadros del video debe responder a las exigencias de un sistema multimedia. La omisión de cuadros, si ocurre con suficiente periodicidad, también implica una degradación de la calidad.
+	\end{itemize}
+\end{itemize}
 
-TODO: Separar wari de esta parte, ponerlo como subsección.
+Éstas características hacen que los receptores sean sistemas \emph{multithreaded}. La máquina de estados de la \cref{fig:player_state_machine} presenta los posibles estados de un reproductor de televisión digital básico. 
 
-Para analizarlo, se usará como base el reproductor \emph{Wari}. 
-
-\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}.
-
-La máquina de estados de la \cref{fig:player_state_machine} presenta los posibles estados de un reproductor de televisión digital.
-
- \begin{figure}[h!]
+ \begin{figure}[H]
 	\begin{center}
 	\includegraphics[width=17cm]{imgs/player_state_machine.png}
 	\caption{Máquina de estados de un reproductor de TV digital\label{fig:player_state_machine}} 
 	\end{center}
 \end{figure}
 
-\emph{Wari} sigue un formato similar al de la \cref{fig:player_state_machine}. Sin embargo, nótese que un reproductor de televisión digital es un sistema de tiempo real en, al menos, dos puntos distintos[TODO: Nota al pie? Digo al menos porque las aplicaciones introducen, un tercer frente, al igual que closed caption, etc, etc]. 
-
-Por un lado, el flujo de transporte es una fuente constante de paquetes que se acumulan en un \emph{buffer}. Si el sistema no llega a consumir suficientes paquetes en un intervalo de tiempo determinado, esto puede incurrir en un \emph{overflow}, lo cual significa que existe pérdida, y esto a su vez se traduce en una degradación del servicio. Esto responde a la definición de \emph{soft real time}\cite{realtime}.
-
-Por el otro lado, la presentación de los cuadros del video debe responder a las exigencias de un sistema multimedia. La omisión de cuadros, si ocurre con suficiente periodicidad, también implica una degradación de la calidad.
-
-Por esto, los reproductores de televisión digital como \emph{Wari} suelen ser sistemas \emph{multithreaded}, con la complejidad que esto conlleva. A fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo. En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. [TODO: Pero la documentación última es el código, suerte con eso!].
+Algunos de los estados del diagrama requieren explicación. Pero la misma se realizará sobre un reproductor real.
 
 \subsection{Reproductor de Televisión Digital Wari}
 
+\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}.
+
+\emph{Wari} sigue un formato similar al de la \cref{fig:player_state_machine}. Está desarrollado mayoritariamente en C++ y es un sistema \emph{multithreaded}. Con el único fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo.
+
+De hecho, Wari utiliza un \emph{dispatcher} de tareas a través del cual los hilos se asignan invocaciones de funciones que deben ser realizadas cuando el control está disponible. Para la notificación de finalización de estas tareas (como podría ser la lectura satisfactoria de una tabla), se puede utilizar este mismo mecanismo o invocación de funciones \emph{callback}. 
+
+En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. Para más información, el se puede consultar el sitio de descarga de código fuente y manuales de Wari.
+
+\subsection{Construcción de lista de servicios}
+
+Contruir la lista de servicios consiste en identificar todos los servicios que aparecen en todos los flujos de transporte disponibles para el sistema receptor. En el caso común, recorrer las \sdt\ de todos los flujos de transporte sería suficiente, dado que esta indica los nombres y tipos de los servicios. No obstante, Wari realiza un proceso algo diferente explicado en la \cref{fig:descparse_wari}.
+
+\begin{figure}[H]
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/descriptor_parsing_sequence_diagram}
+}
+\caption{Diagrama de Secuencia de parseo de descriptores en Wari\label{fig:descparse_wari}}
+\end{center}
+\end{figure}
+
+La solicitud del usuario de un SCAN lleva eventualmente a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles.
+
+Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. 
+
+Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}.
+
+\begin{figure}[H]
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/descriptor_parsing_class_diagram}
+}
+
+\caption{Diagrama de Clases de parseo de descriptores en Wari\label{fig:class_scan_diag}}
+\end{center}
+\end{figure}
+
+
+
+
+\subsection{Recolección de flujos elementales}
+
+%%%
+%%% Complete
+%%%
+
+El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
+
+Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
+
+\begin{figure}[H]
+	\begin{center}
+
+	\resizebox{\linewidth}{!}{
+	\input{diagrams/play_class_diagram}
+	}
+	\caption{Diagrama de clases de infraestructura de reproducción en Wari\label{fig:classdiagramservices}}
+	\end{center}
+\end{figure}
+
+El diagrama de clases en la \cref{fig:classdiagramservices} incluye únicamente las clases del sistema relacionadas con la sintonización de servicios de televisión digital. En la parte superior de la jerarquía de abstracción se halla la clase \texttt{Tuner}.
+
+En Wari, cuando el usuario solicita el cambio de canal, el control llega evntualmente e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
+
+\begin{figure}[H]
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/play_sequence_diagram_wari}
+}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Wari\label{fig:playsecwari}}
+\end{center}
+\end{figure}
+
+%Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
+
+Para reproducir un servicio, de acuerdo a la \cref{fig:playsecwari}, es necesario \emph{recolectar los flujos elementales}. A nivel recepción, esto implica obtener todos los paquetes que corresponden a un conjunto dado de flujos elementales. Por ejemplo, todos los paquetes de audio y video asociados a un servicio.
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-% \subsection{Obtención de servicios}
+% \{Obtención de servicios}
 
 % La lectura de los servicios de un \emph{ts} se hace de forma independiente respecto del medio del cual se obtiene. A fin de comprender cualquier tipo de modificación de la librería \textbf{mpeg-parser}, es necesario ver el proceso de obtención y reproducción de servicios:
 
