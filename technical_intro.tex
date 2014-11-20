@@ -193,7 +193,7 @@ El proceso de cambiar de canal físico, implica demodular la nueva señal y sincro
 
 Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Entonces, cuando el receptor sintoniza un canal de radiofrecuencia dado, debe utilizar este campo para encontrar el comienzo de los paquetes.
 
-Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Con este identificador, el receptor puede filtrar los paquetes. Tanto de datos como de video y audio.
+Otro campo del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Con este identificador, el receptor puede filtrar los paquetes. Tanto de datos como de video y audio. Para información más detallada relacionada con la estructura de los paquetes del flujo de transporte ver [TODO: Apéndice].
 
 \begin{figure}[H]
 	\begin{center}
