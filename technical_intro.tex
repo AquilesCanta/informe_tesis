@@ -227,7 +227,7 @@ El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=12cm]{imgs/canal_23_tables.png}
-\caption{Esquema general de tablas en el ejemplo de Canal 23}
+\caption{Esquema general de tablas en el ejemplo de Canal 23\label{fig:esquema_servicios_c23}}
 \end{center}
 \end{figure}
 
@@ -397,15 +397,19 @@ Contruir la lista de servicios consiste en identificar todos los servicios que a
 \resizebox{\linewidth}{!}{
 \input{diagrams/descriptor_parsing_sequence_diagram}
 }
-\caption{Diagrama de Secuencia de parseo de descriptores en Wari\label{fig:descparse_wari}}
+\caption{Diagrama de Secuencia de construcción de lista de servicios en Wari\label{fig:descparse_wari}}
 \end{center}
 \end{figure}
 
 La solicitud del usuario de un SCAN lleva eventualmente a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles.
 
-Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. 
+Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. Parte del procesamiento de las tablas, como se indica en la \cref{fig:descparse_wari}, implica procesar también los descriptores que incluye la tabla.
 
-Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}.
+Para obtener las tablas \sdt, \pat, y \pmt, es necesario antes construir las secciones por las que viajan. A su vez, las secciones requieren de los paquetes sobre los que viajan. Los paquetes se asocian a las tablas a través del \pid. Cada tabla tiene un \pid\ asignado. 
+
+Para obtener los paquetes de un \pid\ dado, el sistema utiliza los \emph{demuxers}. Los \emph{demuxers} son \emph{listeners} que se ubican sobre el flujo de transporte que esperan un paquete con un \pid\ dado. De modo que cuando el \texttt{ServiceProvider} desea construir la lista de servicios, le pide al \texttt{Provider} que cree un \emph{demuxer} para cada tabla que necesitan, a través del método \texttt{startFilter(aDemuxer)}\footnote{El método se llama \texttt{startFilter} en lugar de \texttt{startDemuxer} porque la componente que conecta el \emph{demuxer} con el flujo de transporte se llama \texttt{filter}.}. 
+
+Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}. 
 
 \begin{figure}[H]
 \begin{center}
@@ -418,32 +422,26 @@ Un diagrama de la relación estática entre las clases del sistema se presenta en 
 \end{center}
 \end{figure}
 
+Descripción de la responsabilidad de las clases:
+\begin{itemize}
+	\item \texttt{Tuner} coordina el proceso de SCAN desde el tope de la jerarquía de abstracción. La clase \texttt{Tuner} responde a todos los requerimientos del \emph{Zapper}\footnote{Se denomina \emph{Zapper} a un dispositivo utilizado para sintonizar servicios en un televisor.} que utiliza el usuario. 
+	\item \texttt{ServiceProvider} junto con \texttt{ServiceManager} gestionan los servicios(que se modelan a través de la clase \texttt{Service}), durante todo su ciclo de vida. Es esta clase la que posee la lista de servicios propiamente dicha.
+	\item \texttt{Provider} encapsula y abstrae las operaciones de \emph{hardware} del dispositivo de sintonización subyacente. También gestiona los \emph{demuxers}. 
+	\item Cada instancia de \texttt{Service}, finalmente, modela un servicio que viene por alguno de los flujos de transporte disponible. Guarda información como \emph{service\_id} nombre y tipo.  
+\end{itemize}
 
 
-
-\subsection{Recolección de flujos elementales}
+\subsection{Recolección y reproducción de flujos elementales}
 
 %%%
 %%% Complete
 %%%
 
-El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
+El proceso de recolección de flujos consiste en la reconstrucción del flujo elemental original que se deconstruye en la multiplexación del flujo de transporte. Antes de comentzar la recolección, el receptor debe conocer los \pid\ de todos los flujos elementales requeridos para reproducir enteramente el servicio. Por ejemplo, en el caso de ``TV Pública HD'', se deben obtener del flujo de transporte todos los paquetes de \pid\ 289 y 290, que corresponden al video HD y al primero de los audios, respectivamente, como se indica en la \cref{fig:esquema_servicios_c23}.
 
-Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
+El proceso de reproducción de flujos elementales, por el contrario, comienza una vez se dispone de los flujos elementales reconstruidos. Consiste en decodificarlos y obtener las imagenes o el audio que componen al servicio. En Wari, este proceso es realizado por algún reproductor existente. Sin embargo, el reproductor debe tener forma de acceder a estos flujos elementales.
 
-\begin{figure}[H]
-	\begin{center}
-
-	\resizebox{\linewidth}{!}{
-	\input{diagrams/play_class_diagram}
-	}
-	\caption{Diagrama de clases de infraestructura de reproducción en Wari\label{fig:classdiagramservices}}
-	\end{center}
-\end{figure}
-
-El diagrama de clases en la \cref{fig:classdiagramservices} incluye únicamente las clases del sistema relacionadas con la sintonización de servicios de televisión digital. En la parte superior de la jerarquía de abstracción se halla la clase \texttt{Tuner}.
-
-En Wari, cuando el usuario solicita el cambio de canal, el control llega evntualmente e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
+La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. El proceso de decodificación escapa al objetivo de este informe.[TODO: ¿Apéndice?]
 
 \begin{figure}[H]
 \begin{center}
@@ -457,7 +455,29 @@ En Wari, cuando el usuario solicita el cambio de canal, el control llega evntual
 
 %Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
 
-Para reproducir un servicio, de acuerdo a la \cref{fig:playsecwari}, es necesario \emph{recolectar los flujos elementales}. A nivel recepción, esto implica obtener todos los paquetes que corresponden a un conjunto dado de flujos elementales. Por ejemplo, todos los paquetes de audio y video asociados a un servicio.
+TODO: El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
+
+TODO: Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
+
+La \cref{fig:classdiagramservices} muestra un diagrama de clases de la infraestructura relacionada con la recolección de flujos elementales. 
+
+\begin{figure}[H]
+	\begin{center}
+
+	\resizebox{\linewidth}{!}{
+	\input{diagrams/play_class_diagram}
+	}
+	\caption{Diagrama de clases de infraestructura de reproducción en Wari\label{fig:classdiagramservices}}
+	\end{center}
+\end{figure}
+
+Las clases involucradas son:
+\begin{itemize}
+	\item Algo algo
+	\item otra cosa Como miera hace el player para poner los demuxers. Averiguar
+\end{itemize}
+
+En Wari, cuando el usuario solicita el cambio de canal, el control llega evntualmente e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
 
 
 

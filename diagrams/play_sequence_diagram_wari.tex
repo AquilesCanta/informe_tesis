@@ -9,6 +9,7 @@
 \newinst{service}{:Service}
 \newinst{playerext}{:PlayerExtension}
 \newinst{player}{:AvPlayer}
+\newinst{provider}{:Provider}
 
 %------------------------------------------
 % Secuencia
@@ -28,6 +29,10 @@
 					\begin{call}{playerext}{elements()}{service}{ElementaryInfo}
 					\end{call}
 					\begin{call}{playerext}{collectStreams(ElementaryInfo)}{player}{}
+						\begin{sdblock}{Loop}{[Por cada flujo elemental]}
+							\begin{call}{player}{startFilter(newDemuxer)}{provider}{}
+							\end{call}
+						\end{sdblock}
 					\end{call}
 					\begin{call}{playerext}{start()}{player}{}
 						\begin{call}{player}{makeURL()}{playerext}{}

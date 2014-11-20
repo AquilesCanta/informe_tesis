@@ -18,6 +18,12 @@
 			\end{call}
 			\begin{callself}{tuner}{onLockChanged()}{}
 				\begin{call}{tuner}{start()}{servprov}{}
+					\begin{call}{servprov}{startFilter(SDTDemuxer)}{provider}{}
+					\end{call}
+					\begin{call}{servprov}{startFilter(PATDemuxer)}{provider}{}
+					\end{call}
+					\begin{call}{servprov}{startFilter(PMTDemuxer)}{provider}{}
+					\end{call}
 					\begin{call}{servprov}{process(SDT)}{service}{}
 						\begin{callself}{service}{process(Descriptors)}{}
 						\end{callself}
