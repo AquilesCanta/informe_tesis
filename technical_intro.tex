@@ -6,15 +6,13 @@
 
 La Televisión Digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50.
 
-El término \textbf{Televisión digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera.
-
-Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
+El término \textbf{Televisión digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
 Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
 	\item Exhibe una mejor calidad de sonido e imagen.
 	\item Permite contenidos en alta definición.
-	\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora.
+	\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora\footnote{En la televisión analógica existe una correspondencia unívoca entre los canales de radiofrecuencia y los servicios provistos por la emisora. Es decir, en cada canal viaja un único servicio. Por eso, en la televisión analógica se suele referir a los servicios como canales. El término correcto, sin embargo, es \emph{servicio}. Canal hace referencia a una división en el espectro de radiofrecuencia.}.
 	\item Permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.
 	\item Permite que se integren y complementen los contenidos con Internet. Por ejemplo, referenciando recursos que se encuentran en la web.
 	\item Permite brindar servicios complementarios, como aplicaciones interactivas y guía electrónica de programación.
@@ -23,34 +21,41 @@ Las ventajas de la televisión digital por sobre la analógica son numerosas:
 	\item Permite que un contenido audivisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}. Esto es, que un mismo servicio se reproduzca con una resolución en un televisor, y con una menor en un dispositivo pequeño.
 \end{enumerate}
 
-El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} como medio de codificación de la información esencial y que puede ser canalizado por distintos medios y distintos protocolos. Los principales medios utilizados son (ver \cite{liendo}):
+El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} para codificar la información. Puede ser canalizada por distintos medios y viajar con distintos formatos. Los principales tipos de televisión digital son (ver \cite{liendo}):
 \begin{itemize}
-\item Terrestre: Emite la señal través del espectro de radiofrecuencia de la atmósfera terrestre.
-\item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra. 
+\item Terrestre: Emite la señal a través del espectro de radiofrecuencia de la atmósfera terrestre sobre las bandas UHF\footnote{\emph{Ultra High Frequency}: designación del \emph{Iternational Telecommunication Union} para las frecuencias que oscilan entre los 300MHz y 3GHz}.
+\item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra utilizando SHF\footnote{\emph{Super High Frequency}: designación del \emph{Iternational Telecommunication Union} para las frecuencias que oscilan entre los 3GHz y 30GHz}. 
 \item Cable: Utilizan la señal propagada por redes de cable coaxial o fibra óptica.
-\item IPTV: Consiste en la distribución de programación y servicios mediante redes que utilizan la \emph{suite} de protocolos IP.
+\item \emph{Internet Protocol Television}(IPTV): El término ha adquirido varias definiciones con el crecimiento de las tecnologías. En este marco utilizaremos la definición provista por la \emph{Internation Telecommunication Union}\cite{ituiptv}:
+
+	IPTV define a la entrega de servicios como televisión/video/audio/texto/imágenes/datos sobre redes basadas en IP manejadas para proveer el nivel requerido de calidad de servicio y experiencia, seguridad, interactividad y confiabilidad.
+% IPTV is defined as multimedia services such as television/video/audio/text/graphics/data delivered over IP based networks managed to provide the required level of quality of service and experience, security, interactivity and reliability.
+
+\item \emph{Over the Top}(OTT): Consiste en la transmisión de televisión por internet. A diferencia de IPTV, al no utilizar una red manejada, no presenta garantías de calidad de servicio.
 \end{itemize}
 
 %TODO: Podemos agregar la categoría WebTV (OTT). Y explicar en qué se diferencia de IPTV, en el alcance de este informe.
 
-Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en formato \emph{broadcast}. La televisión digital terrestre y satelital se encuentran rigurosamente legisladas y reguladas en todos los países del mundo. Teniendo en mente particularmente el caso de la televisión digital terrestre (\textbf{TDT}), hay cuatro estándares ampliamente adoptados en el mundo:
+Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utilizan el espectro radioeléctrico en emisión \emph{broadcast}. La televisión digital terrestre y satelital se encuentran rigurosamente legisladas y reguladas en todos los países del mundo\cite{liendotodospaisesdelmundo}. En el caso particular de la televisión digital terrestre, hay cuatro estándares ampliamente adoptados en el mundo:
 
 \begin{itemize}
-\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} (también denomiado ISDB-Tb) es una una adaptación de este estándar ha sido aplicado en gran parte de sudamérica. 
+\item \emph{Terrestrial Integrated Services Digital Broadcasting (ISDB-T)}: Adoptado en Japón y las islas Filipinas. \textbf{ISDB-T International} (también denomiado \textbf{ISDB-Tb)} es una una adaptación de este estándar ha sido aplicado en gran parte de sudamérica. 
 \item \emph{Digital Video Broadcasting-Terrestrial (DVB-T)}: Estándar adoptado en Europa, Australia y Nueva Zelanda. 
 \item \emph{Advanced Television System Committee (ATSC)}: Estándar adoptado en Estados Unidos, Canadá, México, Corea del Sur, República Dominicana y Honduras.
 \item \emph{Digital Terrestrial Multimedia Broadcasting (DTMB)}: Estándar adoptado en la República Popular China, incluyendo Hong Kong y Macao.
 \end{itemize} 
 
-La última categoría, IPTV, generalmente hace uso de redes privadas que emplean la infraestructura de planteles telefónicos, tendidos eléctricos (BPL, \emph{broadband over power lines}), cable coaxial o fibra óptica. Los proveedores de servicios suelen proveer un \emph{set top box} o receptor junto con la conexión. Al ser redes privadas, el formato de la distribución de contenidos no está regulada.
-
 \section{ISDB-Tb}
 
-\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina.
+\textbf{ISDB-Tb} es un estándar de transmisión de televisión digital terrestre de origen japonés con modificaciones brasileñas. Es el adoptado en Argentina y utilizado en la Televisión Digial Abierta (TDA\cite{tda}).
+
+La televisión terrestre envía información a través del espectro de radiofrecuencia de la atmósfera que oscila entre los 300Mhz y los 3GHz. Al ser éste un fenómeno físico intrínsecamente analógico, la información digital que se desea transmitir se codifica por medio de variaciones de la señal. Estas variaciones se denominan \textbf{modulación}. ISDB-Tb permite utilizar varios parámetros de modulación distintos.
+
+Por sobre la codificación de la información digital, la norma define una forma de organización de los bytes. Ésta organización compone lo que se denomina \emph{formato contenedor}. En el caso de ISDB-Tb, el formato contenedor de la transmisión es el \textbf{Flujo de Transporte MPEG} (\emph{MPEG Transport Stream}), definido en MPEG-2 ISO/IEC standard 13818.
 
 \subsection{Modulación y bitrate disponible}
 
-La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de contenido. La señal se divide en canales físicos de 6 MHz (denominados \emph{bandas UHF}, ver más en TODO: Apéndice) por los que viaja un flujo multiplexado de servicios, que denominaremos ``flujo de transporte''. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps[TODO: agregar cita a Liendo] que debe distribuirse entre los contenidos a transmitir.
+En la norma ISDB-Tb, el espectro de radiofrecuencia se divide en canales físicos de 6 MHz (denominados \emph{bandas UHF}, ver más en TODO: Apéndice) por los que viaja un flujo multiplexado de servicios, que denominaremos ``flujo de transporte''. Cada uno de estos canales físicos dispone de un \emph{bitrate} constante definido por los parámetros de modulación de la señal. La capacidad máxima de transmisión del sistema \textbf{ISDB-Tb} es de unos 23 Mbps\cite{liendo} que debe distribuirse entre los contenidos a transmitir.
 
 \begin{figure}[h!]
 	\begin{center}
@@ -59,12 +64,12 @@ La TV terrestre aprovecha el espectro de radiofrecuencia para la transmisión de 
 	\end{center}
 \end{figure}
 
-La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios ofrecidos. Dependiendo ulteriormente del ancho de banda requerido por los mismos. Cada servicio está compuesto a su vez por flujos más pequeños que llevan audio, video u otras componentes.
+La limitación de bitrate de los canales físicos establece una cota superior para el número se servicios que puede transportar, dependiendo ulteriormente del ancho de banda requerido por los mismos. Cada servicio está compuesto a su vez por flujos más pequeños que llevan audio, video u otras componentes.
 
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[width=12cm]{imgs/cable_flujo_mpeg.png}
-	\caption{Composición de un flujo de transporte} 
+	\caption{Composición de servicios en un flujo de transporte} 
 	\end{center}
 \end{figure}
 
@@ -92,7 +97,7 @@ Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 
 \end{center}
 \end{table}
 
-Se puede observar que resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate siendo que, como se ha dicho, el mismo es constante en la emisión por radiofrecuencia. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mpbs restantes son utilizados para \emph{closed caption}, guía electrónica de programación y datos adicionales.
+En la \cref{tab:avgbitrates} resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate siendo que, como se ha dicho, el mismo es constante en la norma ISDB-Tb. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mbps (específicamente $0,5$ Mpbs) restantes son utilizados para \emph{closed caption}, guía electrónica de programación, y datos.
 
 Pero como en este caso, cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con contenidos sin más finalidad que completar el bitrate disponible.
 
@@ -147,33 +152,38 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 % +---------------+---------------+---------------+---------------+
 
 
-\section{MPEG Transport stream}
+\subsection{MPEG Transport stream}
  
- El formato de los datos que viajan en las emisiones ISDB-Tb, está definido por el estándar \textbf{MPEG-2 Transport Stream} o \emph{flujo de transporte}, o simplemente \textbf{MPEG-TS}. Esto se debe a que el flujo de transporte MPEG está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
+ El formato contenedor de los datos que viajan en las emisiones ISDB-Tb, está definido por el estándar \textbf{MPEG-2 Transport Stream} o simplemente \emph{flujo de transporte}. El flujo de transporte MPEG posee características que lo hacen ideal para la televisión terrestre. 
 
-[TODO:  MPEG-2 ISO/IEC standard 13818-1 or ITU-T Rec. H.222.0]
+\begin{itemize}
+	\item Está diseñado para ambientes de transmisión o persistencia no confiables, es decir, con presencia de errores. En el caso de ISDB-Tb, este medio son los canales físicos de radiofrecuencia.
+	\item El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables e independientes. Esto permite aprovechar al máximo la capacidad de transmisión de los canales de radiofrecuencia. Incluye mecanismos para la identificación y presentación de estos servicios.
+	\item Especifica mecanismos para la sincronización de flujos de audio y video.
+	\item Es un formato extensible para adecuarse a los medios sobre los que se utiliza.
+\end{itemize}
 
-La capacidad de transmisión de cada canal físico de radiofrecuencia permite la inclusión de varios servicios. El flujo de transporte MPEG permite la multiplexación se servicios con bitrates variables independientes e incluye mecanismos para la identificación y presentación de estos servicios. Se puede pensar en cada canal físico como un flujo constante de bits. Para organizar este sistema, el flujo de transporte MPEG agrupa los bits en paquetes de 188 bytes. 
+La modulación de la señal, permite pensar en cada canal físico como un flujo constante de bits. Para organizarlo, el flujo de transporte MPEG agrupa los bits en paquetes de 188 bytes cada uno. Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios servicios en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos, puesto que se intercalan paquetes de cada uno.
 
-Los paquetes de longitud fija poseen la característica de simplificar la inclusión de campos para la detección y corrección de errores. A su vez, permite transportar varios servicios en una misma línea de tiempo, sin la necesidad de contar con una referencia de reloj común a todos ellos, puesto que se intercalan paquetes de cada uno.
+\subsection{Consumo de emisión \textbf{ISDB-Tb}}
 
-\subsection{Estructura del sistema \textbf{MPEG-TS}}
+Los receptores de señal ISDB-Tb tienen dos tareas básicas. La primera tarea es entregar al usuario la lista de servicios disponibles. La segunda es reproducir aquel servicio que el usuario elija. Ambas necesitan la información provista a través del formato contenedor, el flujo de transporte MPEG. Para el análisis de los pasos, se usará como base el ejemplo de Canal 23.
 
-Para analizar la estructura del sistema \textbf{MPEG-TS}, ampliaremos sobre el ejemplo anterior del canal 23. A continuación se detallan los pasos que deber seguir un dispositivo de recepción para brindar los servicios al usuario:
+\subsubsection{Construcción de la lista de servicios}
 
-\begin{enumerate}
-\item Cada canal físico ISDB-Tb transporta un flujo de transporte independiente. Antes de comenzar a funcionar normalmente, un receptor debe realizar un ``SCAN''. Esto consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema.
+A diferencia de la televisión analógica, en televisión digital cada canal contiene más de un servicio, de forma general. Si se desea conocer los servicios que viajan por un canal, es necesario sintonizar ese canal e identificar los servicios a través de la información que contiene el flujo de transporte.
 
-En el ejemplo, el SCAN habrá recorrido el Canal 23 (frecuencia 527MHz), memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica'').
+Cada canal físico ISDB-Tb transporta un flujo de transporte independiente. Antes de comenzar a funcionar normalmente, un receptor debe construir la lista de servicios, proceso que se conoce con el nombre de ``SCAN''. Esto consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema. A partir de esta información, el receptor puede conocer los nombres de los servicios y su tipo. A su vez, recordará en qué canal se encuentra cada uno, para su posterior sintonización.
 
-\item De acuerdo a lo obtenido en el paso anterior, se debe construir la lista de servicios, que queda disponible para que el usuario pueda seleccionar cualquiera independientemente del servicio sintonizado en ese momento. También se incluye en este paso información de la guía electrónica de programación, si la hubiera.
-
-En el ejemplo, los tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521Mhz).
+En el ejemplo, el SCAN debe recorrer el Canal 23 (frecuencia 527MHz), memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica''). Estos tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521Mhz).
 
 La información obtenida y construida hasta aquí suele ser persistida, dado que el proceso de SCAN puede demorar algún tiempo. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir estos pasos.
 
-\hrulefill
+\subsubsection{Sintonización de servicios}
 
+Este paso depende de la lista de servicios. ......
+
+\begin{enumerate}
 \item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. Esto se debe a que el primero viene por el canal 23 (Frecuencia 527MHz) y el segundo por el canal físico 22 (Frecuencia 521MHz).
 
 Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
@@ -189,7 +199,7 @@ El proceso de cambiar de canal físico, implica demodular la nueva señal y sincro
 
 \end{enumerate}
 
-\subsubsection{Estructura de los paquetes \textbf{MPEG-TS}}
+\subsection{Estructura de los paquetes \textbf{MPEG-TS}}
 
 Cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}. El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Entonces, cuando el receptor sintoniza un canal de radiofrecuencia dado, debe utilizar este campo para encontrar el comienzo de los paquetes.
 
