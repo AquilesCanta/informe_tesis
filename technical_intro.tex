@@ -351,14 +351,13 @@ OpenCaster es un proyecto de código abierto (bajo licencia GPL\cite{gpl}) que in
 
 OpenCaster provee una API para \emph{Python} desde la cual se pueden ensamblar tablas aprovechando \emph{hotspots} dispuestos en las clases que modelan tablas y descriptores. Una vez construido una instancia de una tabla, el mismo se serializa a un arreglo de \emph{bytes} con el formato \textbf{MPEG-TS}. Esta API provee una librería de elementos que incluye tablas y descriptores, junto con los campos asociados a cada una.
 
+\subsubsection{Generación de Tablas}
+
 La utilización de la API requiere crear un \emph{script} que genere las estructuras buscadas. Desde el mismo se importan las clases provistas, se instancian y luego, el comportamiento heredado permite serializarlas y empaquetarlas. El producto de la ejecución del \emph{script} son secciones ya divididas en paquetes listas para ser multiplexadas al flujo de transporte.
 
+\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_example.py}\label{lst:exampleopencaster}
 
-
-
-
-
-
+\subsubsection{Multiplexación del flujo de transporte}
 
 Una vez se poseen todas las componentes del flujo, las mismas se pueden multiplexar a través de una herramienta provista en el proyecto llamada \texttt{tscbrmuxer}. Con esta herramienta se puede determinar el \emph{bitrate} final del \emph{ts}. Es necesario tener en cuenta el \emph{bitrate} de los flujos elementales contenidos para evitar que la distribución de la carga final sea errónea.
 
@@ -378,7 +377,7 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
 	\end{itemize}
 \end{itemize}
 
-Éstas características hacen que los receptores sean sistemas \emph{multithreaded}.
+Éstas características hacen que los receptores sean sistemas \emph{multithreaded}. Esto se puede ver reflejado en la \cref{fig:flux_diagram_play} y la \cref{fig:flux_diagram_scan} que representan el proceso común de reproducción y SCAN de un reproductor. Estos pueden variar dependiendo de la implementación.
 
 %
 %
@@ -399,29 +398,35 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
 
 % La máquina de estados de la \cref{fig:player_state_machine} presenta los posibles estados de un reproductor de televisión digital básico. 
 
- \begin{figure}[H]
+ \begin{figure}
 	\begin{center}
-	\includegraphics[height=17cm]{imgs/play_seq_diagram.png}
-	\caption{Máquina de estados de un reproductor de TV digital\label{fig:player_state_machine}} 
+	\includegraphics[height=19cm]{imgs/play_seq_diagram.png}
+	\caption{Diagrama de flujo de reproducción\label{fig:flux_diagram_play}} 
 	\end{center}
 \end{figure}
 
+ \begin{figure}
+	\begin{center}
+	\includegraphics[height=13cm]{imgs/scan_seq_diag.png}
+	\caption{Diagrama de flujo de reproducción\label{fig:flux_diagram_scan}} 
+	\end{center}
+\end{figure}
 
 \subsection{Reproductor de Televisión Digital Wari}
 
 \emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}.
 
-\emph{Wari} sigue un formato similar al de la \cref{fig:player_state_machine}. Está desarrollado mayoritariamente en C++ y es un sistema \emph{multithreaded}. Con el único fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo.
+Está desarrollado mayoritariamente en C++ y es un sistema \emph{multithreaded}. Con el único fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo.
 
-De hecho, Wari utiliza un \emph{dispatcher} de tareas a través del cual los hilos se asignan invocaciones de funciones que deben ser realizadas cuando el control está disponible. Para la notificación de finalización de estas tareas (como podría ser la lectura satisfactoria de una tabla), se puede utilizar este mismo mecanismo o invocación de funciones \emph{callback}. 
+En realidad, Wari utiliza un \emph{dispatcher} de tareas a través del cual los hilos se asignan invocaciones de funciones que deben ser realizadas cuando el control está disponible. Para la notificación de finalización de estas tareas (como podría ser la lectura satisfactoria de una tabla), se puede utilizar este mismo mecanismo o invocación de funciones \emph{callback}.
 
 En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. Para más información, el se puede consultar el sitio de descarga de código fuente y manuales de Wari.
 
-\subsection{Construcción de lista de servicios}
+\subsection{Construcción de lista de servicios en Wari}
 
-Contruir la lista de servicios consiste en identificar todos los servicios que aparecen en todos los flujos de transporte disponibles para el sistema receptor. En el caso común, recorrer las \sdt\ de todos los flujos de transporte sería suficiente, dado que esta indica los nombres y tipos de los servicios. No obstante, Wari realiza un proceso algo diferente explicado en la \cref{fig:descparse_wari}.
+Contruir la lista de servicios consiste en identificar todos los servicios que aparecen en todos los flujos de transporte disponibles para el sistema receptor. En el caso común, recorrer las \sdt\ de todos los flujos de transporte sería suficiente, dado que esta indica los nombres y tipos de los servicios. No obstante, Wari realiza un proceso algo diferente explicado en la \cref{fig:descparse_wari}, donde intervienen la \pat\ y \pmt.
 
-\begin{figure}[H]
+\begin{figure}[]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -431,9 +436,9 @@ Contruir la lista de servicios consiste en identificar todos los servicios que a
 \end{center}
 \end{figure}
 
-La solicitud del usuario de un SCAN lleva eventualmente a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles.
+La solicitud del usuario de un SCAN lleva a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles.
 
-Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. Parte del procesamiento de las tablas, como se indica en la \cref{fig:descparse_wari}, implica procesar también los descriptores que incluye la tabla.
+Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan al \texttt{Provider}, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. Parte del procesamiento de las tablas, como se indica en la \cref{fig:descparse_wari}, implica procesar también los descriptores que incluye la tabla.
 
 Para obtener las tablas \sdt, \pat, y \pmt, es necesario antes construir las secciones por las que viajan. A su vez, las secciones requieren de los paquetes sobre los que viajan. Los paquetes se asocian a las tablas a través del \pid. Cada tabla tiene un \pid\ asignado. 
 
@@ -441,7 +446,7 @@ Para obtener los paquetes de un \pid\ dado, el sistema utiliza los \emph{demuxer
 
 Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}. 
 
-\begin{figure}[H]
+\begin{figure}[]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -469,11 +474,11 @@ Descripción de la responsabilidad de las clases:
 
 El proceso de recolección de flujos consiste en la reconstrucción del flujo elemental original que se deconstruye en la multiplexación del flujo de transporte. Antes de comentzar la recolección, el receptor debe conocer los \pid\ de todos los flujos elementales requeridos para reproducir enteramente el servicio. Por ejemplo, en el caso de ``TV Pública HD'', se deben obtener del flujo de transporte todos los paquetes de \pid\ 289 y 290, que corresponden al video HD y al primero de los audios, respectivamente, como se indica en la \cref{fig:esquema_servicios_c23}.
 
-El proceso de reproducción de flujos elementales, por el contrario, comienza una vez se dispone de los flujos elementales reconstruidos. Consiste en decodificarlos y obtener las imagenes o el audio que componen al servicio. En Wari, este proceso es realizado por algún reproductor existente. Sin embargo, el reproductor debe tener forma de acceder a estos flujos elementales.
+El proceso de reproducción de flujos elementales, por el contrario, comienza una vez se dispone de los flujos elementales reconstruidos, luego que se ha realizado un \emph{buffering} de suficientes paquetes. Consiste en decodificarlos y obtener las imagenes y el audio que componen al servicio. En Wari, este proceso es realizado por algún reproductor existente. Sin embargo, el reproductor debe tener forma de acceder a estos flujos elementales.
 
 La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. El proceso de decodificación escapa al objetivo de este informe.[TODO: ¿Apéndice?]
 
-\begin{figure}[H]
+\begin{figure}[]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -485,13 +490,11 @@ La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recol
 
 %Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
 
-TODO: El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
 
-TODO: Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
 
 La \cref{fig:classdiagramservices} muestra un diagrama de clases de la infraestructura relacionada con la recolección de flujos elementales. 
 
-\begin{figure}[H]
+\begin{figure}[]
 	\begin{center}
 
 	\resizebox{\linewidth}{!}{
@@ -501,17 +504,24 @@ La \cref{fig:classdiagramservices} muestra un diagrama de clases de la infraestr
 	\end{center}
 \end{figure}
 
-Las clases involucradas son:
+Las clases representadas en la \cref{fig:classdiagramservices} son:
 \begin{itemize}
-	\item Algo algo
-	\item otra cosa Como miera hace el player para poner los demuxers. Averiguar
+	\item PlayerExtension
+	\item Player
+	\item AvPlayer
+	\item ServiceManager
+	\item ServiceProvider
+	\item Tuner
+	\item Service
 \end{itemize}
 
-En Wari, cuando el usuario solicita el cambio de canal, el control llega evntualmente e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
+En Wari, cuando el usuario solicita el cambio de canal, el control llega e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
 
+TODO: Explicación de recolección de flujos. Descripciones de clases del diagrama, intervención de URL en la reproducción a través de VLC u otro reproductor.
 
+TODO: El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
 
-
+TODO: Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
 
 % \{Obtención de servicios}
 
@@ -577,7 +587,15 @@ En Wari, cuando el usuario solicita el cambio de canal, el control llega evntual
 
 \section{IPTV, \emph{Internet protocol television}}
 
+TODO: Cuánto hay que explicar de esta sección?
 
+Multicast?
+
+TS Over IP?
+
+Routing Multicast?
+
+Va a quedar una sección del tamaño de la subsección de OpenCaster
 
 \ifx\all\undefined
 \end{document}

@@ -4,7 +4,7 @@
 %  Clases
 %-----------------------------------------------------------
 
-\begin{class}[text width=5cm]{Provider}{0,0}
+\begin{class}[text width=6.5cm]{Provider}{0,0}
 \attribute{\_demuxers : vector<Demuxer>}
 % virtual operation
 \operation{startFilter(Demuxer*):void}
@@ -12,7 +12,7 @@
 \operation{setNetwork(int):void}
 \end{class}
 
-\begin{class}[text width=7cm]{Service}{8, 10}
+\begin{class}[text width=7cm]{Service}{10, 10}
 \attribute{name:String}
 \attribute{type:ServiceType}
 \attribute{\_elements:vector<ElementaryInfo>}
@@ -29,14 +29,14 @@
 \operation{findService(ServiceId):Service*}
 \end{class}
 
-\begin{class}[text width=4.5cm]{ServiceProvider}{0,5}
+\begin{class}[text width=6cm]{ServiceProvider}{0,5}
 \inherit{ServiceManager}
 \operation{updateServices(Table) : void}
 \operation{start():void}
 \attribute{name : attribute type}
 \end{class}
 
-\begin{class}[text width=8cm]{Tuner}{7,5}
+\begin{class}[text width=8cm]{Tuner}{9,5}
 \operation{nextScan():void}
 \operation{startScan():void}
 \operation{startService(network:int,serviceID:int):void}
