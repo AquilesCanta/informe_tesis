@@ -125,18 +125,9 @@ Elemento                   			& Significado del contenido 	& Contenido real(Deci
 
 El flujo de transporte de una señal ISDB-Tb es una sequencia de bits organizada por el formato MPEG-TS. En el caso de la emisión de televisión digital, parte del proceso se realiza en tiempo real, al momento de multiplexar varios servicios que provienen de distintos orígenes, para luego modular la señal a emitir.
 
-En el caso del flujo de transporte de referencia para este desarrollo, el mismo se volcará en un archivo para su persistencia. Los flujos de transporte se persisten representando los paquetes en secuencia, donde cada uno es un fragmento de 188 bytes, que se podría persistir aisladamente, de ser necesario. Así, una tabla que ocupa un único paquete se persiste como un archivo de 188 bytes.
+En el caso del flujo de transporte de referencia para este desarrollo, éste se volcará en un archivo para su persistencia. Los flujos de transporte se persisten representando los paquetes en secuencia, donde cada uno es un fragmento de 188 bytes, que se podría volcar aisladamente, de ser necesario. Así, una tabla que ocupa un único paquete se persiste como un archivo de 188 bytes.
 
-La construcción de un flujo de transporte completo escapa al objetivo de este informe. Para la conformación del flujo de transporte de referencia se utilizará el ejemplo de canal 23, al cual se le incorporarán dos servicios. La \cref{fig:extended23} presenta un esquema del flujo de transporte resultante esperado. Los nombres de los servicios son ``TV Universidad'' y ``TV La Plata''. Estos dos servicios serán emitidos a través de dos grupos multicast distintos.
-
-\begin{figure}
-	\begin{center}
-	\includegraphics[width=14cm]{imgs/cable_flujo_c23_extendido.png}
-	\caption{Esquema del flujo de transporte de Canal 23 extendido\label{fig:extended23}} 
-	\end{center}
-\end{figure}
-
-Para las tablas que deben ser construidas, que reemplazan las existentes, se utilizará OpenCaster. Dado que aún no posee soporte para el \emph{Elementary Streams Relocation Descriptor}, parte del desarrollo necesario es una extensión a la herramienta. La misma se explica a continuación.
+Para las tablas que deben ser construidas, que señalizan los servicios, se utilizará OpenCaster. Dado que aún no posee soporte para el \emph{Elementary Streams Relocation Descriptor}, parte del desarrollo necesario es una extensión al proyecto. La misma se explica a continuación.
 
 %
 % OpenCaster extension
@@ -145,9 +136,9 @@ Para las tablas que deben ser construidas, que reemplazan las existentes, se uti
 
 \subsection{Extensión de OpenCaster}
 
-Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión a OpenCaster. Éste ya cuenta con funcionalidad para representar la mayoría de las entidades del estándar ISDB-Tb. La extensión le permite a la herramienta reconocer el descriptor \emph{Elementary Streams Relocation Descriptor}, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
+Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión a OpenCaster. La versión actual ya cuenta con funcionalidad para representar la mayoría de las entidades del estándar ISDB-Tb. La extensión le permite a la herramienta reconocer el descriptor \emph{Elementary Streams Relocation Descriptor}, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
 
-A continuación, \cref{fig:opencastermodif}, se incluye un diagrama de clases que explica la jerarquía de descriptores de OpenCaster, incluyendo el nuevo descriptor.
+La \cref{fig:opencastermodif} incluye un diagrama de clases que explica la jerarquía de descriptores de OpenCaster, incluyendo el nuevo descriptor.
 
 \begin{figure}[]
 \begin{center}
@@ -166,18 +157,24 @@ El \emph{Elementary Streams Relocation Descriptor} se modela con una clase con d
 
 Posteriormente se proveen ejemplos de utilización de esta clase, en el \cref{lst:pmtopencaster}.
 
-
 \subsection{Extensión del flujo de transporte de Canal 23}
 
-Se usará como base el flujo de transporte con los tres servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública'' emitido por el Canal 23 (frecuencia 527Mhz). En el ejemplo se revisa cómo se incluyen dos servicios cuyos flujos elementales se emiten por un grupo multicast.
+La construcción de un flujo de transporte completo escapa al objetivo de este informe [TODO: Apéndice o referencia a Liendo]. Para la conformación del flujo de transporte de referencia se utilizará el ejemplo de canal 23, al cual se le incorporarán dos servicios. La \cref{fig:extended23} presenta un esquema del flujo de transporte resultante esperado.
 
-Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``TV La Plata''.
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=14cm]{imgs/canal_23_extended_tables.png}
+	\caption{Esquema del flujo de transporte de Canal 23 extendido\label{fig:extended23}} 
+	\end{center}
+\end{figure}
 
-TODO: Explicar que crear un flujo de transporte es crear un archivo que contenga todos los paquetes ubicados secuencialmente. Eso luego puede ser modulado por software y hardware indicados. En el caso de una emisión real, la mayoría de las tareas se realiza en tiempo de ejecución. Pero en el caso de el ts de referencia, esta tarea se llevará a cabo con OpenCaster. Proyecto al que se le realizó una modificación para dar soporte al descriptor.
+El flujo de transporte base posee tres servicios servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública''. A éstos se le añadirán dos, cuyos flujos elementales serán emitidos a través de dos grupos multicast distintos.
+
+Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``TV La Plata''. Los pasos de adición de los servicios se explican a continuación.
 
 \subsubsection{Adición de servicios a \sdt}
 
-El primer paso es crear una entrada en la \sdt\ que indique:
+Por cada servicio que se busca agregar a un flujo de transporte, es necesario agregar un \emph{service\_descriptor} a la \sdt. Éste descriptor posee la siguiente información:
 
 	\begin{enumerate}
 		\item \emph{service\_id} del servicio.
@@ -185,68 +182,49 @@ El primer paso es crear una entrada en la \sdt\ que indique:
 		\item Tipo del servicio (en general, 1, correspondiente a televisión digital).
 	\end{enumerate}
 
-Los nombres de los servicios que contendrá la nueva \sdt\ son ``TV Pública HD'', ``Tecnópolis'', ``TV Pública'', ``TV Universidad'', y ``TV La Plata''. Los primeros tres son aquellos que ya poseía. Los últimos dos son aquellos que extienden la lista.
+Los nombres de los servicios que contendrá la nueva \sdt\ son ``TV Pública HD'', ``Tecnópolis'', ``TV Pública'', ``TV Universidad'', y ``TV La Plata''. Los primeros tres pertenecen aquellos servicios que ya se encontraban en el flujo de transpore. Los últimos dos son aquellos que extienden la lista a través del \emph{Elementary Streams Relocation Descriptor}.
 
 Los tipos de servicio se conservan en los servicios anteriores, mientras que los agregados son servicios de TV digital, a los cuales les corresponde el tipo 1.
 
-La única limitación que existe para elegir este número es que no haya sido ocupado por algún otro servicio en el mismo flujo de transporte o ser 0. Los \emph{service\_id} ya utilizados en el TS son 59201, 59224 y 59202.
+Finalmente, la información se debe asignar a un \emph{service\_id}. Los servicios que ya se encontraban conservan los que tenían, que son 59201, 59224 y 59202. En el caso de los nuevos servicios es necesario asignarles uno. La única limitación que existe para elegir este número es que no haya sido ocupado por algún otro servicio en el mismo flujo de transporte o ser 0.
 
-Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La Plata''.
+Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La Plata''. El \cref{lst:sdtopencaster} contiene el script \emph{Python} utilizado en la creación de la \sdt\ del flujo de transporte de referencia.
 
-\lstinputlisting[language=Python,caption={Creación de SDT en OpenCaster}]{src_code/sdt_gen.py}\label{lst:pmtopencaster}
+\lstinputlisting[language=Python,caption={Creación de SDT en OpenCaster}]{src_code/sdt_gen.py}\label{lst:sdtopencaster}
 
 \subsubsection{Adición de servicios a la \pat}
 
- A continuación se debe incluir una entrada a la \pat\ para cada servicio. Habiendo ya definido los \emph{service\_id}, sólo queda definir \pid s para cada \pmt. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado. Se incluye una lista en el apéndice [TODO: Apéndice].
+La \pat\ es asigna PID's a las \pmt\ de los servicios del flujo de transporte. Habiendo ya definido los \emph{service\_id}, sólo resta definir los \pid s. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado o utilizado por alguna otra componente del flujo. Se incluye una lista en el apéndice [TODO: Apéndice de los pids reservados].
 
- Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
+Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
 
+\lstinputlisting[language=Python,caption={Creación de PAT en OpenCaster}]{src_code/pat_gen.py}\label{lst:patopencaster}
 
 \subsubsection{Inserción de \pmt's nuevas}
 
-Como son dos los servicios a agregar al flujo de transporte, es necesario crear dos \pmt. Una por cada uno. 
+Como son dos los servicios a agregar al flujo de transporte, es necesario crear dos \pmt. Una por cada uno. Las \pmt\ de los servicios que ya existen se conservarán intactos. 
 
-Ya se definieron sus \pid\ y sus \emph{service\_id}. El único elemento restante es el \emph{Elementary Streams Relocation Descriptor}, que a su vez debe incluir grupo multicast y puerto por los que se emiten los flujos elementales. Asignaremos el grupo 239.1.1.1 a ``TV Universidad'' y 239.1.1.2 a ``TV La Plata''. Ambos por puerto 1000.
+Ya se definieron los \pid\ y \emph{service\_id} de los servicios nuevos. El único elemento restante es el \emph{Elementary Streams Relocation Descriptor} (siendo que el \emph{loop} de flujos elementales se mantiene vacío). Éste, a su vez, debe incluir grupo multicast y puerto por los que se emiten los flujos elementales. El uso del nuevo descriptor se puede observar en las líneas 5 y 17 del \cref{lst:pmtopencaster}.
 
-\lstinputlisting[language=Python,caption={Creación de SDT en OpenCaster}]{src_code/pat_gen.py}\label{lst:pmtopencaster}
+Asignaremos el grupo 239.1.1.1 a ``TV Universidad'' y 239.1.1.2 a ``TV La Plata''. Ambos por puerto 1000.
 
-Crear una entrada en la \pat. La entrada debe incluir:
-	\begin{enumerate}
-		\item \emph{service\_id} del servicio
-		\item \pid\ de la PMT que se le agregará al flujo de transporte
-	\end{enumerate}
+\lstinputlisting[language=Python,caption={Creación de PMT's en OpenCaster}]{src_code/pmt_gen.py}\label{lst:pmtopencaster}
 
-Finalmente, sólo resta insertar las \pmt\ al flujo de transporte. Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
+\subsubsection{Multiplexación}
 
-Crear una \pmt\ correspondiente al servicio a agregar. Los elementos que incluye la \pmt\ son:
-	\begin{enumerate}
-		\item \emph{service\_id} del servicio
-		\item El \emph{Elementary Streams Relocation Descriptor} con grupo multicast y puerto por los que se emiten los flujos elementales.
-		\subitem Es importante notar que en el flujo de transporte que se emiten los servicios no viajan flujos elementales para el servicio que corresponde a la \pmt. De este modo, a diferencia de una \pmt\ común, la tabla no incluirá elementos en la lista de flujos elementales.
-	\end{enumerate} 
-Insertar la \pmt\ al flujo de transporte. Siendo que la \pmt\ debe hallarse en un período de 200 milisegundos, es necesario conocer el bitrate de emisión. 
+Finalmente, sólo resta multiplexar el nuevo flujo de transporte. Una posibilidad es extraer todos los servicios del flujo de transporte y remultiplexarlo, intercalando las nuevas tablas en el intervalo adecuado. Sin embargo existe una solución más simple.
 
-\subsection{Inserción del \emph{Elementary Streams Relocation Descriptor}}
+Las tablas generadas con los script incluidos poseen la característica de ocupar un único paquete. Por eso, es posible reemplazaar las antiguas \sdt\ y \pat\ por las nuevas, generadas con OpenCaster. La \pmt\ por otro lado, introduce un inconveniente. Las dos nuevas \pmt\ no se encuentran en el flujo de transporte original, e insertarlas en el medio, implica desplazar todos los paquetes siguientes una posición cada vez que se inserta. Esto incurre en una modificación del bitrate y la consecuente degradación de los servicios.
 
-Haciendo uso de OpenCaster se pueden construir las \pmt\ que luego se incluyen en el flujo de transporte final. En [TODO: Apéndice] se incluye en \emph{script} utilizado completo. El fragmento a continuación se limita a la construcción de las \pmt\ y el descriptor incluido a través de OpenCaster.
+Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos, reemplazándolos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
 
-\lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_gen.py}\label{lst:pmtopencaster}
+Para realizar estas tareas se utilizará la librería \emph{ts\_util}\cite{tsutil} desarrollada específicamente para este trabajo. Incluye varias herramientas. En la multiplexación intervienen \texttt{packet\_replacer}(reemplaza los paquetes de un flujo de transporte de un PID definido por otro) y \texttt{packet\_inserter}(inserta un paquete en un flujo de transporte en el lugar de un paquete nulo, a fin de que aparezca en un período dado).
 
-El producto de la ejecución del \emph{script} completo son las tablas necesarias: \sdt, \pat\ y \pmt. Él único paso restante es reemplazarlas en el flujo a modificar. Salvo por las \pmt\ que deben ser insertadas de modo que, en su emisión, aparezcan en un periodo de 200 milisegundos.
+\lstinputlisting[language=bash,caption={Multiplexación a través de \emph{ts\_util}}]{src_code/mux.sh}\label{lst:tsutilmux}
 
+El \cref{lst:tsutilmux} incluye las líneas utilizadas en la multiplexación final del flujo de transporte de referencia. La línea ...
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% MODULACION
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Para poner en funcionamiento el sistema se debe modular el flujo de transporte en radiofrecuencia, emitir los flujos elementales por los grupos multicast y puertos adecuados, y consumir todo desde un software de recepción. A continuación se introduce \emph{Mara}, una moodificación de \emph{Wari} que es capaz de utilizar el \emph{Service Elementaries Relocation Descriptor}. 
-
-%----------------------------------------------------------------------------------------------------------
-TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
-TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
-TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
-%----------------------------------------------------------------------------------------------------------
+TODO: detallar el proceso de multiplexación y poner unos listings que expliquen cómo se reemplazan e insertan las tablas con tsutil, etc.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -259,12 +237,22 @@ TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Mu
 
 TODO: Completar sección y acordar grado de relevancia con Fede.
 
+Algunas de las características principales del formato MPEG-TS incluyen:
+
+\begin{itemize}
+	\item Multiplexación de servicios.
+	\item Tolerancia a pérdidas y fallos de transmisión.
+	\item Mecanismos de sincronización de audio y video.
+	\item Formato extensible.
+	\item Mecanismos de sincronización de comienzo de paquetes.
+\end{itemize}
+
 La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe protección ante pérdida de paquetes.
 
 El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces resulta adecuado para estas características de transmisión. Sin embargo, existen algunas diferencias con el uso que se le da en televisión digital terrestre:
 
 \begin{itemize}
-	\item El bitrate de emisión de una red IP no es necesariamente constante, de modo que los paquetes nulos incurren en un desperdicio de ancho de banda.
+	\item El bitrate de emisión de una red IP no es estrictamente constante, de modo que los paquetes nulos incurren en un desperdicio de ancho de banda.
 	\item Por el mismo motivo, los paquetes no se envian en un flujo constante, si no que pueden ser enviados en ráfagas. 
 	\item En el caso de la televisión digital terrestre, cada canal tiene un bitrate independiente y se busca aprovechar cada uno al máximo. En el caso de la transmisión multicast, las vías de transmisión (los grupos multicast) comparten la infraestructura. De modo que la multiplexación de servicios no tiene razón de ser.
 \end{itemize}
@@ -282,6 +270,20 @@ El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces r
 
 
 \section{Recepción del sistema integrado}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% MODULACION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Para poner en funcionamiento el sistema se debe modular el flujo de transporte en radiofrecuencia, emitir los flujos elementales por los grupos multicast y puertos adecuados, y consumir todo desde un software de recepción. A continuación se introduce \emph{Mara}, una modificación de \emph{Wari} que es capaz de utilizar el \emph{Service Elementaries Relocation Descriptor}. 
+
+%----------------------------------------------------------------------------------------------------------
+TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
+TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
+TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
+%----------------------------------------------------------------------------------------------------------
+
 
 El siguiente paso es construir un prototipo de software de recepción que sea capaz de capturar el flujo de transporte extendido y reaccionar acordemente. Esto es:
 
