@@ -235,18 +235,6 @@ TODO: detallar el proceso de multiplexación y poner unos listings que expliquen 
 
 \section{Emisión multicast de los flujos elementales por IP}
 
-TODO: Completar sección y acordar grado de relevancia con Fede.
-
-Algunas de las características principales del formato MPEG-TS incluyen:
-
-\begin{itemize}
-	\item Multiplexación de servicios.
-	\item Tolerancia a pérdidas y fallos de transmisión.
-	\item Mecanismos de sincronización de audio y video.
-	\item Formato extensible.
-	\item Mecanismos de sincronización de comienzo de paquetes.
-\end{itemize}
-
 La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe protección ante pérdida de paquetes.
 
 El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces resulta adecuado para estas características de transmisión. Sin embargo, existen algunas diferencias con el uso que se le da en televisión digital terrestre:
@@ -254,13 +242,19 @@ El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces r
 \begin{itemize}
 	\item El bitrate de emisión de una red IP no es estrictamente constante, de modo que los paquetes nulos incurren en un desperdicio de ancho de banda.
 	\item Por el mismo motivo, los paquetes no se envian en un flujo constante, si no que pueden ser enviados en ráfagas. 
-	\item En el caso de la televisión digital terrestre, cada canal tiene un bitrate independiente y se busca aprovechar cada uno al máximo. En el caso de la transmisión multicast, las vías de transmisión (los grupos multicast) comparten la infraestructura. De modo que la multiplexación de servicios no tiene razón de ser.
+	\item En el caso de la televisión digital terrestre, cada canal tiene un bitrate independiente y se busca aprovechar cada uno al máximo. En el caso de la transmisión multicast, cada servicio se puede enviar un un grupo distinto, para ahorrar el ancho de banda utilizado por cada usuario. Por esto, la multiplexación de servicios no tiene razón de ser.
 \end{itemize}
 
-\ifx\all\undefined
-\end{document}
-\fi
+La \cref{fig:servicepointingwithts} presenta un esquema similar a la \cref{fig:servicepointing}, con el agregado de emitir los flujos elementales en formato MPEG-TS.   
 
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=13cm]{imgs/cable_flujo_c23e_ts.png}
+		\caption{Diagrama de un flujo de transporte con señalización a dos servicios, emitidos con formato de flujo de transporte.\label{fig:servicepointingwithts}}
+	\end{center}
+\end{figure}
+
+Existe un gran número de herramientas para la realizar la emisión de los flujos elementales. En este trabajo se ha utilizado la herramienta \texttt{packet\_streamer}, también incluída en el proyecto \emph{ts\_util}\cite{tsutil}, desarrollado con él propósito de asistir en el desarrollo del prototipo de sistema descripto en este informe.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -268,21 +262,30 @@ El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces r
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \section{Recepción del sistema integrado}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MODULACION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Para poner en funcionamiento el sistema se debe modular el flujo de transporte en radiofrecuencia, emitir los flujos elementales por los grupos multicast y puertos adecuados, y consumir todo desde un software de recepción. A continuación se introduce \emph{Mara}, una modificación de \emph{Wari} que es capaz de utilizar el \emph{Service Elementaries Relocation Descriptor}. 
+\begin{itemize}
+	\item Una señal ISDB-Tb extendida modulada sobre el espectro radioeléctrico. La infraestructura de hardware y software requerida para esta tarea no cambia respecto a una emisión ISDB-Tb común.
+	\item Emisión de flujos elementales de los servicios a través de un grupo multicast en una red IP manejada.
+	\item Un software capaz de recibir la señal ISDB-Tb, y capturar los flujos elementales cuando el usuario sintoniza un servicio que lo requiere.
+\end{itemize}
+
+La última componente del sistema concierne a la recepción. A continuación se introduce \emph{Mara}, una modificación de \emph{Wari} que es capaz de consumir el \emph{Service Elementaries Relocation Descriptor} y entregar la lista extendida completa de servicios de un flujo de transporte con el descriptor. 
 
 %----------------------------------------------------------------------------------------------------------
 TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
 TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
 TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
 %----------------------------------------------------------------------------------------------------------
+
+El desarrollo de Mara se ubica sobre Wari aprovechando la absoluta mayoría de funcionalidades que no sufren cambios respecto a ISDB-Tb tradicional. Específicamente, Mara se comporta de manera idéntica a Wari cuando consume un flujo de transporte regular.
+
+
+
 
 
 El siguiente paso es construir un prototipo de software de recepción que sea capaz de capturar el flujo de transporte extendido y reaccionar acordemente. Esto es:
@@ -297,25 +300,60 @@ El siguiente paso es construir un prototipo de software de recepción que sea cap
 	\end{itemize}
 \end{itemize}
 
-Notando que la mayoría de los comportamientos del software de recepción se mantienen igual a uno tradicional, los cambios se aplicarán a un reproductor existente: \emph{Wari}. Llamaremos \emph{Mara} al nuevo reproductor, resultante de la extensión introducida.
+La \cref{fig:maraflowdiag} presenta un diagrama de flujo para la reproducción de servicios con la inclusión de la nueva funcionalidad.
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[height=\textheight]{imgs/play_flow_diagram_mara.png}
+		\caption{Diagrama de flujo modificado para la recepción del \emph{Elementary Streams Relocation Descriptor}.\label{fig:maraflowdiag}}
+	\end{center}
+\end{figure}
+
 
 \subsection{Construcción de Mara}
 
-Los pasos de modificación del reproductor \emph{Wari} se dividen en tres partes:
+Las modificaciones a realizar sobre el reproductor \emph{Wari} se agrupan en tres responsabilidades distintas:
 
 \begin{enumerate}
-	\item El sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos.
-	\item En concordancia con los contenidos del descriptor, se debe modificar el modelo/estdo del sistema.
-	\item Finalmente, cuando el usuario sintoniza un servicio, el contenido audiovisual de la reproducción debe ser adquirido del medio correcto. 
+	\item \textbf{Modificación del modelo de servicios}: Para empezar, Mara debe se capaz de modelar los servicios cuyos flujos elementales llegan desde una red IP. Para esto, se debe extender la lista de atributos de la clase \texttt{Service} de Wari.
+	\item \textbf{Parsing del descriptor}: El sistema debe ser capaz de capturar el descriptor, identificarlo y obtener sus contenidos. Estos contenidos, luego, deben verse reflejados en el estado del sistema, sobre las modificaciones del ítem anterior.
+	\item \textbf{Reproducción}: Finalmente, cuando el usuario sintoniza un servicio, el contenido audiovisual de la reproducción debe ser adquirido del medio correcto, usando la información guardada en el model de la clase \texttt{service}. 
 \end{enumerate}
 
+%--------------------------------------------------------------------------------
+% Modificación del modelo
+%--------------------------------------------------------------------------------
+
+\subsubsection{Modificación del modelo}
+
+El diagrama de clases presentado en la \cref{fig:classdiagramservices} presenta el modelo de los servicios de Wari, a través de la clase \texttt{Service}. Es necesario agregar 3 atributos para representar de manera simple la característica de los servicios de poseer flujos elementales fuera del flujo de transporte. Esto se refleja en la \cref{fig:classdiagramserviceext}. 
+
+\begin{figure}[H]
+	\begin{center}
+
+		\resizebox{\linewidth}{!}{
+		\input{diagrams/mara_service_class}
+		}
+		\caption{Modelo del servicio en Mara\label{fig:classdiagramserviceext}}
+		
+	\end{center}
+\end{figure}
+
+En la figura se resaltan las tres nuevas variables de instancia de la clase.
+
+\begin{itemize}
+	\item \texttt{\_isRelocatedService}: Valor \emph{booleano}\footnote{Tipo que posee únicamente dos valores posibles que intentan denotar los valores lógicos de verdad y falsedad, generalmente denominados \emph{verdadero}(o \emph{true}) y \emph{falso}(o \emph{false}).} que establece si los flujos elementales del servicio deben obtenerse desde una red IP o no.
+	\item \texttt{\_multicastRelocatedGroup}: Dirección IP que identifica el grupo multicast de la emisión de flujos elementales pertenecientes al servicio.
+	\item \texttt{\_multicastRelocatedPort}: Puerto destino de los datagramas UDP por los que viajan los paquetes TS\footnote{Denominación común a los paquetes de un flujo de transporte.} que transportan las partes de los flujos elementales.
+\end{itemize}
+
+TODO: Agregar getters y setters y emprolijarlo a la mierda.
 
 %--------------------------------------------------------------------------------
 % Parsing del descriptor
 %--------------------------------------------------------------------------------
 
-
-
+\subsubsection{Parsing del descriptor}
 
 En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cambios en Wari:
 
@@ -325,7 +363,8 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 	\item El servicio debe ser modificado acordemente, modificando su estado a partir del registro que representa al descriptor.
 \end{itemize}
 
-\begin{figure}[]
+
+\begin{figure}[h]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -335,23 +374,18 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 \end{center}
 \end{figure}
 
+TODO: Dividirlo en secciones e incluir listings para cada parte.
 
-%--------------------------------------------------------------------------------
-% Modificación del modelo
-%--------------------------------------------------------------------------------
 
-\subsection{Modificación del modelo}
+\lstinputlisting[language=C++,caption={Captura de \emph{Elementary Streams Relocation Descriptor} en Mara}]{src_code/desc_capture.cpp}\label{lst:desccapture}
 
-\begin{figure}[]
-	\begin{center}
+Y acá a bajo el parser.
 
-		\resizebox{\linewidth}{!}{
-		\input{diagrams/mara_service_class}
-		}
-		\caption{Modelo del servicio en Mara}
-		
-	\end{center}
-\end{figure}
+\lstinputlisting[language=C++,caption={\emph{Parsing} de \emph{Elementary Streams Relocation Descriptor} en Mara}]{src_code/desc_parse.cpp}\label{lst:descparse}
+
+
+Y listo. Nada más.
+
 
 
 
@@ -359,12 +393,14 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 % Modificación de la reproducción
 %--------------------------------------------------------------------------------
 
+\subsubsection{Reproducción}
+
 
 Recolectar los flujos elementales implica solicitar al dispositivo de sintonización que filtre los paquetes de acuerdo a su \pid. No obstante, esto corresponde sólamente cuando es necesario demultiplexar servicios de un flujo e interviene un dispositivo sintonizador. En el caso de recepción de un flujo por IP, este paso puede omitirse.
 
 A partir de los \pid\ filtrado, las clases de demultiplexación construyen un URL de reproducción. Cuando se halla el \emph{Elementary Streams Relocation Descriptor}, esta URL debe ser reemplzada por la obtenida desde el descriptor.
 
-\begin{figure}[]
+\begin{figure}[h]
 \begin{center}
 
 \resizebox{\linewidth}{!}{
@@ -373,3 +409,11 @@ A partir de los \pid\ filtrado, las clases de demultiplexación construyen un URL
 \caption{Diagrama de secuencia de infraestructura de reproducción en Mara, para servicio con \emph{Elementary Streams Relocation Descriptor}}
 \end{center}
 \end{figure}
+
+\lstinputlisting[language=C++,caption={Construcción de URL de reproducción en Mara}]{src_code/mara_play.cpp}\label{lst:maraplay}
+
+
+\ifx\all\undefined
+\end{document}
+\fi
+
