@@ -248,7 +248,7 @@ El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces r
 
 La \cref{fig:servicepointingwithts} presenta un esquema similar a la \cref{fig:servicepointing}, con el agregado de emitir los flujos elementales en formato MPEG-TS.   
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[width=13cm]{imgs/cable_flujo_c23e_ts.png}
 		\caption{Diagrama de un flujo de transporte con señalización a dos servicios, emitidos con formato de flujo de transporte.\label{fig:servicepointingwithts}}
@@ -263,7 +263,7 @@ Si los paquetes del flujo de transporte se enviaran al ritmo máximo que permitie
 
 La función $f$ incluida a continuación define la cantidad de paquetes que deben haber sido enviados hasta el instante $t$. $$f(t) = \frac{t * b}{1504} + v \bdiv 188 $$ Donde $t$ es un instante en segundos. $b$ es el \emph{bitrate}($bits/segundo$) original del flujo de transporte a emitir. $1504$ es la cantidad de bits en un paquete. $v$ es la máxima unidad de transmisión de la red en bytes. Y $188$ es el tamaño de un paquete de flujo de transporte en bytes.
 
-La evaluación de $f$ retorna una cantidad de paquetes que deben haber ser enviados para un instante $t$, contando paquetes nulos. La emisión debe ignorarlos, pero llenar la ventana tanto como sea posible. El \cref{lst:pseudostreamer} incluye un pseudocódigo que hace uso de $f$ para explicar el procedimiento de emisión de paquetes, respetando el \emph{bitrate} e ignorando paquetes nulos.
+La evaluación de $f$ retorna una cantidad de paquetes que deben haber ser enviados para un instante $t$, contando paquetes nulos. La emisión debe ignorarlos, pero llenar la ventana tanto como sea posible. El \cref{lst:pseudostreamer} incluye un pseudocódigo que hace uso de $f$ para explicar el procedimiento de emisión de paquetes, respetando el \emph{bitrate} e ignorando paquetes nulos. Además realiza una lectura circular, al terminar el archivo, la emisión comienza nuevamente.
 
 \lstinputlisting[language=Pascal,caption={Pseudo código de emisión IP},label={lst:pseudostreamer}]{src_code/pseudo_streamer.txt}
 
@@ -289,8 +289,6 @@ Las componentes necesarias para probar el sistema son:
 La última componente del sistema concierne a la recepción. A continuación se introduce \emph{Mara}, una modificación de \emph{Wari} que es capaz de consumir el \emph{Service Elementaries Relocation Descriptor} y entregar la lista extendida completa de servicios de un flujo de transporte con el descriptor. 
 
 %----------------------------------------------------------------------------------------------------------
-TODO: Al final podemos poner una captura de pantalla de los servicios resultantes.
-TODO: Acá podemos poner un paso a paso de los servicios que incluye el transport stream de la frecuencia 527. 
 TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
 %----------------------------------------------------------------------------------------------------------
 
@@ -378,7 +376,7 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 	\end{center}
 \end{figure}
 
-El \cref{lst:desccapture} es utilizado en Mara para obtener una instancia del \emph{Service Elementaries Relocation Descriptor} a partir del flujo de transporte sintonizado. [TODO: Arrglar el pedazo de codigo para que las variables coincidan con los diagramas (y ulteriormente con el codigo).] El macro \texttt{DESC\_PARSE( descriptors, elementaries_relocation, d)} genera la invocación del \emph{parser} del descriptor, incluido en el \cref{lst:descparse}.
+El \cref{lst:desccapture} es utilizado en Mara para obtener una instancia del \emph{Service Elementaries Relocation Descriptor} a partir del flujo de transporte sintonizado. [TODO: Arrglar el pedazo de codigo para que las variables coincidan con los diagramas (y ulteriormente con el codigo).] El macro \texttt{DESC\_PARSE(descriptors, elementaries\_relocation, d)} genera la invocación del \emph{parser} del descriptor, incluido en el \cref{lst:descparse}.
 
 \lstinputlisting[language=C++,caption={Captura de \emph{Elementary Streams Relocation Descriptor} en Mara},label={lst:desccapture}]{src_code/desc_capture.cpp}
 
@@ -407,6 +405,17 @@ A partir de los \pid\ filtrados, las clases de demultiplexación construyen un UR
 \end{figure}
 
 \lstinputlisting[language=C++,caption={Construcción de URL de reproducción en Mara},label={lst:maraplay}]{src_code/mara_play.cpp}
+
+Finalmente, la \cref{fig:marascreenshot} es una captura de pantalla de Mara en funcionamiento (TODO: No lo es aun, debe cambiarse por la verdadera. Esta es del ts viejo. También hay que cambiar el caption por mara en lugar de wari). En la imagen se pueden ver los servicios ``TV Universidad'' y ``TV La Plata'' conformando la lista de servicios disponible. El servicio sintonizado es ``TV Universidad'', que está siendo consumido desde multicast.
+
+\begin{figure}[H]
+\begin{center}
+
+\includegraphics[width=13cm]{imgs/screenshot_mara.png}
+
+\caption{Captura de pantalla de Mara consumiendo el flujo de transporte de referencia\label{fig:marascreenshot}}
+\end{center}
+\end{figure}
 
 
 \ifx\all\undefined
