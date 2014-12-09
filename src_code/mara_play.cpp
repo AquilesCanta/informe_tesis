@@ -1,6 +1,8 @@
-void MakeURL(Service *serv){
-	cout << "Something, something" << "I'm smart" << endl;
-	URL = URL + 1;
-	otherURL = "Oh yeah.";
-	return "Much cool, much URL";
+if (extension()->currentlyPlaying->isRelocated){
+	_url = std::string("udp://@") + extension()->currentlyPlaying->multicastGroup + std::string(":") +
+	   boost::lexical_cast<std::string>(extension()->currentlyPlaying->multicastPort);
+}else{
+	util::Url url;
+	extension()->makeURL( "srvdtv", &url );
+	_url = url.id();
 }

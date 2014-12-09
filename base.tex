@@ -13,7 +13,15 @@
 % \usepackage[toc]{glossaries} %xindy
 % \makeglossaries
 %----------------------------
+\usepackage{amsmath}
 
+\makeatletter
+\newcommand*{\bdiv}{%
+  \nonscript\mskip-\medmuskip\mkern5mu%
+  \mathbin{\operator@font div}\penalty900\mkern5mu%
+  \nonscript\mskip-\medmuskip
+}
+\makeatother
 
 \usepackage[]{geometry}
 \usepackage{tikz}
@@ -93,6 +101,12 @@
 %   tabsize=2,                       % sets default tabsize to 2 spaces
 %   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 % }
+
+\crefname{lstlisting}{fragmento}{fragmentos}
+\Crefname{lstlisting}{Fragmento}{Fragmentos}
+\renewcommand\lstlistingname{Fragmento}
+\renewcommand\lstlistlistingname{Fragmentos}
+\def\lstlistingautorefname{Frag.}
 
 \usepackage{pdfpages}
 %----------------------------

@@ -40,23 +40,23 @@ En su estado actual, la norma ISDB-Tb no permite una señalizar servicios que se 
 
 Las extensiones deben introducirse al formato flujo de transporte. El objetivo es posibilitar la indicación al receptor de la existencia de un servicio cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast, identificada por una IP de grupo y un puerto.
 
-En el caso normal, para que un receptor reconozca un servicio y lo incluya a su lista de servicios disponibles, debe encontrar una entrada correspondiente en la \sdt. Luego, para sintonizarlo, debe filtrar una \pat\ para luego filtrar la \pmt, que le indica la forma de encontrar los flujos elementales. En el \emph{loop} de flujos elementales, se incluyen aquellos que deben ser obtenidos desde el mismo flujo de transporte. Siendo que estos no se incluyen, este \emph{loop} viajará vacío.
+En el caso normal, para que un receptor reconozca un servicio y lo incluya a su lista de servicios disponibles, debe encontrar una entrada correspondiente en la \sdt. Luego, para sintonizarlo, debe filtrar una \pat\ para luego filtrar la \pmt, que le indica la forma de encontrar los flujos elementales. En el \emph{loop} de flujos elementales, se incluyen aquellos que deben ser obtenidos desde el mismo flujo de transporte. Siendo que estos no se incluyen, este \emph{loop} \textbf{viajará vacío}.
 
 En este punto es imposible indicar que los mismos vienen por un medio distinto que el flujo de transporte. La extensión tiene por objetivo permitir que la \pmt\ indique al receptor la búsqueda de flujos elementales en un grupo multicast.
 
-La extensión no debería modificar la estructura propia de la tabla, porque podría implicar que un receptor estándar no sería capaz de interpretar los contenidos, independientemente de la ubicación de los flujos elementales. En consecuencia, la extensión de incorporarse en forma de descriptor.
+La extensión no modificará la estructura propia de la tabla, ni sintáctitca ni semánticamente, porque podría implicar que un receptor estándar no sería capaz de interpretar los contenidos, independientemente de la ubicación de los flujos elementales. En consecuencia, la extensión se incorporará en forma de descriptor.
 
 \subsection{\emph{Elementary streams relocation descriptor}}
 
-Siguiendo el segundo de los principios de diseño \textbf{SOLID}(\emph{Open/Closed Principle})\cite{openclosed}, es útil para el desarrollo evitar modificar el formato MPEG-TS tanto como sea posible, sino extenderlo. Entonces, se busca agregar los comportamientos por medio de entidades nuevas en lugar de modificar las existentes.
+Siguiendo el segundo de los principios de diseño \textbf{SOLID}(\emph{Open/Closed Principle})\cite{openclosed}, el desarrollo busca evitar modificar el formato MPEG-TS tanto como sea posible. En cambio, intenta extenderlo. Se busca agregar los comportamientos por medio de entidades nuevas en lugar de modificar las existentes.
 
-Para señalizar nuevos servicios cuyos flujos elementales se deben obtener desde una red IP, definiremos un nuevo descriptor de acuerdo al formato \textbf{MPEG-TS}. Lo llamaremos \emph{Elementary Streams Relocation Descriptor}. 
+Para señalizar nuevos servicios cuyos flujos elementales se deben obtener desde una red IP, se define un nuevo descriptor en concordancia con el formato \textbf{MPEG-TS}. De nombre \emph{Elementary Streams Relocation Descriptor}. 
 
-Éste descriptor sólo puede hallarse (de forma opcional) en la \pmt\ e implica que el servicio correspondiente a la tabla posee las características mencionadas. Esto es, sus flujos elementales se emiten por multicast.
+\emph{Elementary Streams Relocation Descriptor} sólo podrá hallarse (de forma opcional) en la \pmt\ e implica que el servicio correspondiente a la tabla posee las características mencionadas. Es decir, sus flujos elementales se emiten por multicast.
 
-El \emph{Elementary Streams Relocation Descriptor} tiene asignado el \emph{descriptor\_tag} 170. No existe, actualmente, un descriptor en el formato MPEG-TS con el mismo nombre o \emph{descriptor\_tag} o semántica similar.
+El \emph{Elementary Streams Relocation Descriptor} tendrá asignado el \emph{descriptor\_tag} 170 (0xAA en hexadecimal). No existe, actualmente, un descriptor en la norma ISDB-Tb con el mismo nombre o igual \emph{descriptor\_tag} o semántica similar.
 
-Para que el receptor sea capaz de obtener los flujos elementales, es necesario identificar el grupo multicast y el puerto por el que se envían los flujos. Para esto, es necesario proveer a través del descriptor esta información.
+Para que el receptor sea capaz de obtener los flujos elementales, es necesario identificar el grupo multicast y el puerto por el que se envían los flujos. Para esto, es necesario proveer a través del descriptor esta información. Y para ello, es menester definir su estructura sintáctica.
 
 La \cref{tab:descsyntax} define la sintaxis del descriptor:
 
@@ -81,13 +81,13 @@ La \cref{tab:descsyntax} define la sintaxis del descriptor:
 
 Descripción de los elementos:
 \begin{itemize}
-\item \emph{descriptor\_tag}: Elemento requerido por la definición sintáctica de los descriptores. Lleva el valor 170 para identificar al \emph{Elementary Streams Relocation Descriptor} en el \emph{descriptor loop}.
-\item \emph{descriptor\_length}: Elementor requerido por la definición sintáctica de los descriptores. El \emph{Elementary Streams Relocation Descriptor} tiene una longitud fija de 8 bytes. De modo que este campo siempre lleva el valor 6 (no incluye los primeros dos campos del descriptor).
+\item \emph{descriptor\_tag}: Elemento requerido por la definición sintáctica de los descriptores MPEG-TS. Lleva el valor 170 para identificar al \emph{Elementary Streams Relocation Descriptor} en el \emph{descriptor loop}.
+\item \emph{descriptor\_length}: Elemento requerido por la definición sintáctica de los descriptores. El \emph{Elementary Streams Relocation Descriptor} tiene una longitud fija de 8 bytes. De modo que este campo siempre lleva el valor 6 (no incluye los primeros dos campos del descriptor).
 \item \textbf{Grupo Multicast}: Grupo Multicast al que se debe unir el receptor para capturar los flujos elementales del servicio al que está asociada la PMT en la que viaja este descriptor. El rango de valores se debe a que las direcciones IP asignadas a los grupos multicast se hallan en el rango 224.0.0.0 -- 239.255.255.255. Estas direcciones IP codificadas en \emph{big-endian} (el byte más significativo en la menor dirección de memoria) resultan en esos valores.
-\item \textbf{Puerto}: El puerto al cual se realiza la emisión. Son dos bytes codificados en \emph{big-endian}. Cabe notar que el valor 0 representa un número de puerto inválido.
+\item \textbf{Puerto}: El puerto destino con el que viajan los datagramas sobre la red. Son dos bytes codificados en \emph{big-endian}. Cabe notar que el valor 0 representa un número de puerto inválido.
 \end{itemize}
 
-A modo de ejemplo, si se desea indicar que los flujos elementales de un servicio viajan por el grupo multicast 239.1.1.1 y puerto 10000, se debe incluir el siguiente \emph{Elementary Streams Relocation Descriptor} en la \pmt\ del servicio. Nótese que el descriptor tiene una longitud fija de 8 bytes, contando campos obligatorios de \emph{descriptor\_tag} y longitud.
+A modo de ejemplo, si se desea indicar que los flujos elementales de un servicio viajan por el grupo multicast 239.1.1.1 y puerto 10000, se debe incluir el siguiente \emph{Elementary Streams Relocation Descriptor} en la \pmt\ del servicio. Nótese que el descriptor tiene una longitud fija de 8 bytes, contando campos obligatorios de \emph{descriptor\_tag} y \emph{descriptor\_length}.
 
 
 \begin{table}[H]
@@ -121,13 +121,15 @@ Elemento                   			& Significado del contenido 	& Contenido real(Deci
 \end{center}
 \end{table}
 
+En conclusión, la extensión diseñada consiste en un descriptor que agrega semántica a la norma ISDB-Tb. Para indicar que un servicio posee sus flujos elementales emitidos por una red IP, alcanza con insertar el \emph{Elementary Streams Relocation Descriptor} al \emph{loop} de descritpores de su \pmt.
+
 \section{Flujo de transporte de referencia}
 
-El flujo de transporte de una señal ISDB-Tb es una sequencia de bits organizada por el formato MPEG-TS. En el caso de la emisión de televisión digital, parte del proceso se realiza en tiempo real, al momento de multiplexar varios servicios que provienen de distintos orígenes, para luego modular la señal a emitir.
+El flujo de transporte de una señal ISDB-Tb es una sequencia de bits organizada por el formato MPEG-TS. En el caso de la emisión de televisión digital, parte del proceso se realiza en tiempo real, al momento de multiplexar varios servicios que provienen de distintos orígenes, para luego modular la señal a emitir por el espectro radioeléctrico.
 
-En el caso del flujo de transporte de referencia para este desarrollo, éste se volcará en un archivo para su persistencia. Los flujos de transporte se persisten representando los paquetes en secuencia, donde cada uno es un fragmento de 188 bytes, que se podría volcar aisladamente, de ser necesario. Así, una tabla que ocupa un único paquete se persiste como un archivo de 188 bytes.
+En el caso del flujo de transporte de referencia para este desarrollo, éste se volcará en un archivo para su persistencia. Los flujos de transporte se persisten representando los paquetes en secuencia, donde cada uno es un fragmento de 188 bytes, que se podría persistir aisladamente, de ser necesario. Así, una tabla que ocupa un único paquete se persiste como un archivo de 188 bytes.
 
-Para las tablas que deben ser construidas, que señalizan los servicios, se utilizará OpenCaster. Dado que aún no posee soporte para el \emph{Elementary Streams Relocation Descriptor}, parte del desarrollo necesario es una extensión al proyecto. La misma se explica a continuación.
+Esta sección se divide en dos partes. En la primera se expone la extensión realizada a OpenCaster, requerida representar el \emph{Elementary Streams Relocation Descriptor}. En la segunda se desarrolla paso a paso la creación del flujo de transporte de referencia, junto con lo requerido para la construcción de otros flujos de transporte.
 
 %
 % OpenCaster extension
@@ -136,7 +138,7 @@ Para las tablas que deben ser construidas, que señalizan los servicios, se utili
 
 \subsection{Extensión de OpenCaster}
 
-Para facilitar la construcción de las estructuras de MPEG-TS, se realizó una extensión a OpenCaster. La versión actual ya cuenta con funcionalidad para representar la mayoría de las entidades del estándar ISDB-Tb. La extensión le permite a la herramienta reconocer el descriptor \emph{Elementary Streams Relocation Descriptor}, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
+Para facilitar la construcción de las estructuras de MPEG-TS, se introduce una extensión a OpenCaster. La versión actual ya cuenta con funcionalidad para representar la mayoría de las entidades de la norma ISDB-Tb. La extensión le permite a la herramienta reconocer el descriptor \emph{Elementary Streams Relocation Descriptor}, como si fuera parte del estándar, para así incluirla en la \pmt, de igual manera que con cualquier otro descriptor.
 
 La \cref{fig:opencastermodif} incluye un diagrama de clases que explica la jerarquía de descriptores de OpenCaster, incluyendo el nuevo descriptor.
 
@@ -149,17 +151,17 @@ La \cref{fig:opencastermodif} incluye un diagrama de clases que explica la jerar
 \end{center}
 \end{figure}
 
-OpenCaster presenta una jerarquía de clases para modelar las entidades \textbf{MPEG-TS} que se incluyen en un flujo de transporte. El formato reserva lugar para la extensíón por parte de privados. Al igual que otros estándares, ISDB-T introduce algunas entidades al formato \textbf{MPEG-TS}, como tablas y descriptores.
+OpenCaster presenta una jerarquía de clases para modelar las entidades \textbf{MPEG-TS} que se incluyen en un flujo de transporte. El formato reserva lugar para la extensíón por parte de entidades externas. Al igual que otros estándares, ISDB-T introduce algunas estructuras al formato \textbf{MPEG-TS}, como tablas y descriptores.
 
 La extensión consiste en la creación de la clase ``service\_elementaries\_relocation\_descriptor'', que hereda de \texttt{Descriptor}, como se muestra en \cref{fig:opencastermodif}.
 
-El \emph{Elementary Streams Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Definiendo el método \texttt{bytes}, la clase luego se empaqueta en la estructura sintáctica definida anteriormente.
+El \emph{Elementary Streams Relocation Descriptor} se modela con una clase con dos variables de instancia. Una asociada al grupo multicast y la segunda asociada al puerto. Sobreescribiendo el método \texttt{bytes}, que hereda de la clase \texttt{Descriptor}, las instancias se empaquetan en la estructura sintáctica definida en la primer sección.
 
 Posteriormente se proveen ejemplos de utilización de esta clase, en el \cref{lst:pmtopencaster}.
 
 \subsection{Extensión del flujo de transporte de Canal 23}
 
-La construcción de un flujo de transporte completo escapa al objetivo de este informe [TODO: Apéndice o referencia a Liendo]. Para la conformación del flujo de transporte de referencia se utilizará el ejemplo de canal 23, al cual se le incorporarán dos servicios. La \cref{fig:extended23} presenta un esquema del flujo de transporte resultante esperado.
+A fin de evitar construir un flujo de transporte completo, se continuará sobre el ejemplo de canal 23, al cual se le incorporarán dos servicios. La \cref{fig:extended23} presenta un esquema del flujo de transporte resultante esperado.
 
 \begin{figure}[h]
 	\begin{center}
@@ -168,7 +170,7 @@ La construcción de un flujo de transporte completo escapa al objetivo de este in
 	\end{center}
 \end{figure}
 
-El flujo de transporte base posee tres servicios servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública''. A éstos se le añadirán dos, cuyos flujos elementales serán emitidos a través de dos grupos multicast distintos.
+El flujo de transporte base, ya conocido, posee tres servicios servicios: ``TV Pública HD'', ``Tecnópolis'' y ``TV Pública''. A éstos se le añadirán dos, cuyos flujos elementales serán emitidos a través de dos grupos multicast distintos. 
 
 Para empezar es importante definir cuáles son los nuevos servicios que se van a agregar. A fines ilustrativos, llamaremos a estos servicios ``TV Universidad'' y ``TV La Plata''. Los pasos de adición de los servicios se explican a continuación.
 
@@ -179,10 +181,10 @@ Por cada servicio que se busca agregar a un flujo de transporte, es necesario ag
 	\begin{enumerate}
 		\item \emph{service\_id} del servicio.
 		\item Nombre del servicio.
-		\item Tipo del servicio (en general, 1, correspondiente a televisión digital).
+		\item Tipo del servicio (en general 1, correspondiente a televisión digital).
 	\end{enumerate}
 
-Los nombres de los servicios que contendrá la nueva \sdt\ son ``TV Pública HD'', ``Tecnópolis'', ``TV Pública'', ``TV Universidad'', y ``TV La Plata''. Los primeros tres pertenecen aquellos servicios que ya se encontraban en el flujo de transpore. Los últimos dos son aquellos que extienden la lista a través del \emph{Elementary Streams Relocation Descriptor}.
+Los nombres de los servicios que contendrá la nueva \sdt\ son ``TV Pública HD'', ``Tecnópolis'', ``TV Pública'', ``TV Universidad'', y ``TV La Plata''. Los primeros tres pertenecen aquellos servicios que ya se encontraban en el flujo de transporte (y no se exponen en \cref{lst:sdtopencaster}. Los últimos dos son aquellos que extienden la lista a través del \emph{Elementary Streams Relocation Descriptor}.
 
 Los tipos de servicio se conservan en los servicios anteriores, mientras que los agregados son servicios de TV digital, a los cuales les corresponde el tipo 1.
 
@@ -190,7 +192,7 @@ Finalmente, la información se debe asignar a un \emph{service\_id}. Los servicio
 
 Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La Plata''. El \cref{lst:sdtopencaster} contiene el script \emph{Python} utilizado en la creación de la \sdt\ del flujo de transporte de referencia.
 
-\lstinputlisting[language=Python,caption={Creación de SDT en OpenCaster}]{src_code/sdt_gen.py}\label{lst:sdtopencaster}
+\lstinputlisting[language=Python,caption={Creación de SDT en OpenCaster},label={lst:sdtopencaster}]{src_code/sdt_gen.py}
 
 \subsubsection{Adición de servicios a la \pat}
 
@@ -198,7 +200,7 @@ La \pat\ es asigna PID's a las \pmt\ de los servicios del flujo de transporte. H
 
 Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
 
-\lstinputlisting[language=Python,caption={Creación de PAT en OpenCaster}]{src_code/pat_gen.py}\label{lst:patopencaster}
+\lstinputlisting[language=Python,caption={Creación de PAT en OpenCaster},label={lst:patopencaster}]{src_code/pat_gen.py}
 
 \subsubsection{Inserción de \pmt's nuevas}
 
@@ -208,23 +210,22 @@ Ya se definieron los \pid\ y \emph{service\_id} de los servicios nuevos. El únic
 
 Asignaremos el grupo 239.1.1.1 a ``TV Universidad'' y 239.1.1.2 a ``TV La Plata''. Ambos por puerto 1000.
 
-\lstinputlisting[language=Python,caption={Creación de PMT's en OpenCaster}]{src_code/pmt_gen.py}\label{lst:pmtopencaster}
+\lstinputlisting[language=Python,caption={Creación de PMT's en OpenCaster},label={lst:pmtopencaster}]{src_code/pmt_gen.py}
 
 \subsubsection{Multiplexación}
 
-Finalmente, sólo resta multiplexar el nuevo flujo de transporte. Una posibilidad es extraer todos los servicios del flujo de transporte y remultiplexarlo, intercalando las nuevas tablas en el intervalo adecuado. Sin embargo existe una solución más simple.
+Finalmente, sólo resta multiplexar el nuevo flujo de transporte. Una posibilidad es extraer todos los servicios del flujo de transporte y remultiplexarlo, intercalando las nuevas tablas en el intervalo adecuado. Este complejo proceso es necesario cuando los servicios poseen un \emph{bitrate} necesario no despreciable. Sin embargo existe una solución más simple.
 
-Las tablas generadas con los script incluidos poseen la característica de ocupar un único paquete. Por eso, es posible reemplazaar las antiguas \sdt\ y \pat\ por las nuevas, generadas con OpenCaster. La \pmt\ por otro lado, introduce un inconveniente. Las dos nuevas \pmt\ no se encuentran en el flujo de transporte original, e insertarlas en el medio, implica desplazar todos los paquetes siguientes una posición cada vez que se inserta. Esto incurre en una modificación del bitrate y la consecuente degradación de los servicios.
+Las tablas generadas con los script incluidos poseen la característica de ocupar un único paquete. Por eso, es posible reemplazaar las antiguas \sdt\ y \pat\ por las nuevas, generadas con OpenCaster. La \pmt\ por otro lado, introduce un inconveniente. Las dos nuevas \pmt\ (de los servicios ``TV Universidad'' y ``TV La Plata'') no se encuentran en el flujo de transporte original, e insertarlas en el medio, implica desplazar todos los paquetes siguientes una posición cada vez que se inserta. Esto incurre en una modificación del bitrate y la consecuente degradación de los servicios.
 
 Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos, reemplazándolos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
 
 Para realizar estas tareas se utilizará la librería \emph{ts\_util}\cite{tsutil} desarrollada específicamente para este trabajo. Incluye varias herramientas. En la multiplexación intervienen \texttt{packet\_replacer}(reemplaza los paquetes de un flujo de transporte de un PID definido por otro) y \texttt{packet\_inserter}(inserta un paquete en un flujo de transporte en el lugar de un paquete nulo, a fin de que aparezca en un período dado).
 
-\lstinputlisting[language=bash,caption={Multiplexación a través de \emph{ts\_util}}]{src_code/mux.sh}\label{lst:tsutilmux}
+\lstinputlisting[language=bash,caption={Multiplexación a través de \emph{ts\_util}},label={lst:tsutilmux}]{src_code/mux.sh}
 
-El \cref{lst:tsutilmux} incluye las líneas utilizadas en la multiplexación final del flujo de transporte de referencia. La línea ...
+El \cref{lst:tsutilmux} incluye las líneas utilizadas en la multiplexación final del flujo de transporte de referencia. La utilización de las herramientas se explica en detalle en [TODO: Apéndice]
 
-TODO: detallar el proceso de multiplexación y poner unos listings que expliquen cómo se reemplazan e insertan las tablas con tsutil, etc.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -235,7 +236,7 @@ TODO: detallar el proceso de multiplexación y poner unos listings que expliquen 
 
 \section{Emisión multicast de los flujos elementales por IP}
 
-La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe protección ante pérdida de paquetes.
+La emisión por multicast IP consiste en el envío de datagramas a múltiples receptores sin la necesidad para el emisor de eviar más de una copia. Siendo que los envíos se realizan sobre el protocolo UDP, no existe \emph{a priori} protección ante pérdida de paquetes.
 
 El formato MPEG-TS fue diseñado para entornos con pérdidas y errores, entonces resulta adecuado para estas características de transmisión. Sin embargo, existen algunas diferencias con el uso que se le da en televisión digital terrestre:
 
@@ -256,6 +257,16 @@ La \cref{fig:servicepointingwithts} presenta un esquema similar a la \cref{fig:s
 
 Existe un gran número de herramientas para la realizar la emisión de los flujos elementales. En este trabajo se ha utilizado la herramienta \texttt{packet\_streamer}, también incluída en el proyecto \emph{ts\_util}\cite{tsutil}, desarrollado con él propósito de asistir en el desarrollo del prototipo de sistema descripto en este informe.
 
+Los flujos de transporte emitidos a través de redes IP cargarán un único servicio con un único flujo elemental de audio y un único flujo elemental de video. Además, no contendrán paquetes nulos, por razones ya expuestas. Sin embargo, es necesario emular un \emph{bitrate} constante en la implementación del software de emisión.
+
+Si los paquetes del flujo de transporte se enviaran al ritmo máximo que permitiera la infraestructura, el receptor eventualmente sufriría un \emph{overflow}. Además, es deseable aprovechar la máxima unidad de transmisión permitida por la red (tamaño máximo permitido de un datagrama, ejemplo: 1500 \emph{bytes} en \emph{Ethernet}), para minimizar el \emph{overhead} generado por el proceso de \emph{routing} y los \emph{headers} de los datagramas. 
+
+La función $f$ incluida a continuación define la cantidad de paquetes que deben haber sido enviados hasta el instante $t$. $$f(t) = \frac{t * b}{1504} + v \bdiv 188 $$ Donde $t$ es un instante en segundos. $b$ es el \emph{bitrate}($bits/segundo$) original del flujo de transporte a emitir. $1504$ es la cantidad de bits en un paquete. $v$ es la máxima unidad de transmisión de la red en bytes. Y $188$ es el tamaño de un paquete de flujo de transporte en bytes.
+
+La evaluación de $f$ retorna una cantidad de paquetes que deben haber ser enviados para un instante $t$, contando paquetes nulos. La emisión debe ignorarlos, pero llenar la ventana tanto como sea posible. El \cref{lst:pseudostreamer} incluye un pseudocódigo que hace uso de $f$ para explicar el procedimiento de emisión de paquetes, respetando el \emph{bitrate} e ignorando paquetes nulos.
+
+\lstinputlisting[language=Pascal,caption={Pseudo código de emisión IP},label={lst:pseudostreamer}]{src_code/pseudo_streamer.txt}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % Recepción
@@ -267,9 +278,10 @@ Existe un gran número de herramientas para la realizar la emisión de los flujos 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MODULACION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Las componentes necesarias para probar el sistema son:
 
 \begin{itemize}
-	\item Una señal ISDB-Tb extendida modulada sobre el espectro radioeléctrico. La infraestructura de hardware y software requerida para esta tarea no cambia respecto a una emisión ISDB-Tb común.
+	\item Una señal ISDB-Tb extendida modulada sobre el espectro radioeléctrico. La infraestructura de hardware y software requerida para esta tarea no cambia respecto a una emisión ISDB-Tb común. Sólo cambia el flujo de transporte a emitir.
 	\item Emisión de flujos elementales de los servicios a través de un grupo multicast en una red IP manejada.
 	\item Un software capaz de recibir la señal ISDB-Tb, y capturar los flujos elementales cuando el usuario sintoniza un servicio que lo requiere.
 \end{itemize}
@@ -284,11 +296,9 @@ TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Mu
 
 El desarrollo de Mara se ubica sobre Wari aprovechando la absoluta mayoría de funcionalidades que no sufren cambios respecto a ISDB-Tb tradicional. Específicamente, Mara se comporta de manera idéntica a Wari cuando consume un flujo de transporte regular.
 
+Si Wari recibiera un flujo de transporte que incluye el \emph{Service Elementaries Relocation Descriptor}, sería capaz de construir la lista de servicios, pero no sería capaz de reproducir los flujos elementales.
 
-
-
-
-El siguiente paso es construir un prototipo de software de recepción que sea capaz de capturar el flujo de transporte extendido y reaccionar acordemente. Esto es:
+El siguiente paso es construir un prototipo de software de recepción que sea capaz de capturar el flujo de transporte extendido y reproducirlo. Esto es:
 
 \begin{itemize}
 	\item Construir la lista de servicios disponibles.
@@ -302,7 +312,7 @@ El siguiente paso es construir un prototipo de software de recepción que sea cap
 
 La \cref{fig:maraflowdiag} presenta un diagrama de flujo para la reproducción de servicios con la inclusión de la nueva funcionalidad.
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\begin{center}
 		\includegraphics[height=\textheight]{imgs/play_flow_diagram_mara.png}
 		\caption{Diagrama de flujo modificado para la recepción del \emph{Elementary Streams Relocation Descriptor}.\label{fig:maraflowdiag}}
@@ -334,7 +344,7 @@ El diagrama de clases presentado en la \cref{fig:classdiagramservices} presenta 
 		\resizebox{\linewidth}{!}{
 		\input{diagrams/mara_service_class}
 		}
-		\caption{Modelo del servicio en Mara\label{fig:classdiagramserviceext}}
+		\caption{Modelo del servicio en Mara\label{fig:classdiagramserviceext}\label{fig:maraservicemodel}}
 		
 	\end{center}
 \end{figure}
@@ -347,8 +357,6 @@ En la figura se resaltan las tres nuevas variables de instancia de la clase.
 	\item \texttt{\_multicastRelocatedPort}: Puerto destino de los datagramas UDP por los que viajan los paquetes TS\footnote{Denominación común a los paquetes de un flujo de transporte.} que transportan las partes de los flujos elementales.
 \end{itemize}
 
-TODO: Agregar getters y setters y emprolijarlo a la mierda.
-
 %--------------------------------------------------------------------------------
 % Parsing del descriptor
 %--------------------------------------------------------------------------------
@@ -356,38 +364,27 @@ TODO: Agregar getters y setters y emprolijarlo a la mierda.
 \subsubsection{Parsing del descriptor}
 
 En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cambios en Wari:
-
 \begin{itemize}
 	\item Cuando en el \emph{loop} de descriptores se halla el \emph{descriptor\_tag} 170, se debe invocar a la función que interpreta el contenido.
 	\item Este contenido se debe invocar a un modelo en memoria del descriptor, un registro.
 	\item El servicio debe ser modificado acordemente, modificando su estado a partir del registro que representa al descriptor.
 \end{itemize}
-
-
 \begin{figure}[h]
-\begin{center}
-
-\resizebox{\linewidth}{!}{
-\input{diagrams/wari_service_model_modification}
-}
-\caption{Detalle de parsing de descriptores en Mara}
-\end{center}
+	\begin{center}
+		\resizebox{\linewidth}{!}{
+			\input{diagrams/wari_service_model_modification}
+		}
+		\caption{Detalle de parsing de descriptores en Mara}
+	\end{center}
 \end{figure}
 
-TODO: Dividirlo en secciones e incluir listings para cada parte.
+El \cref{lst:desccapture} es utilizado en Mara para obtener una instancia del \emph{Service Elementaries Relocation Descriptor} a partir del flujo de transporte sintonizado. [TODO: Arrglar el pedazo de codigo para que las variables coincidan con los diagramas (y ulteriormente con el codigo).] El macro \texttt{DESC\_PARSE( descriptors, elementaries_relocation, d)} genera la invocación del \emph{parser} del descriptor, incluido en el \cref{lst:descparse}.
 
+\lstinputlisting[language=C++,caption={Captura de \emph{Elementary Streams Relocation Descriptor} en Mara},label={lst:desccapture}]{src_code/desc_capture.cpp}
 
-\lstinputlisting[language=C++,caption={Captura de \emph{Elementary Streams Relocation Descriptor} en Mara}]{src_code/desc_capture.cpp}\label{lst:desccapture}
+El \cref{lst:descparse} incluye el código que interpreta los contenidos binarios del descriptor y realiza las conversiones léxicas necesarias. Construye la instancia del descriptor que posteriormente se utiliza para modificar el modelo del servicio, representado en la \cref{fig:maraservicemodel}.
 
-Y acá a bajo el parser.
-
-\lstinputlisting[language=C++,caption={\emph{Parsing} de \emph{Elementary Streams Relocation Descriptor} en Mara}]{src_code/desc_parse.cpp}\label{lst:descparse}
-
-
-Y listo. Nada más.
-
-
-
+\lstinputlisting[language=C++,caption={\emph{Parsing} de \emph{Elementary Streams Relocation Descriptor} en Mara},label={lst:descparse}]{src_code/desc_parse.cpp}
 
 %--------------------------------------------------------------------------------
 % Modificación de la reproducción
@@ -395,10 +392,9 @@ Y listo. Nada más.
 
 \subsubsection{Reproducción}
 
-
 Recolectar los flujos elementales implica solicitar al dispositivo de sintonización que filtre los paquetes de acuerdo a su \pid. No obstante, esto corresponde sólamente cuando es necesario demultiplexar servicios de un flujo e interviene un dispositivo sintonizador. En el caso de recepción de un flujo por IP, este paso puede omitirse.
 
-A partir de los \pid\ filtrado, las clases de demultiplexación construyen un URL de reproducción. Cuando se halla el \emph{Elementary Streams Relocation Descriptor}, esta URL debe ser reemplzada por la obtenida desde el descriptor.
+A partir de los \pid\ filtrados, las clases de demultiplexación construyen un URL de reproducción. Cuando se halla el \emph{Elementary Streams Relocation Descriptor}, esta URL debe ser reemplzada por la obtenida desde el descriptor, agregando algunos elementos protocolares. La \cref{fig:seqplaymara} explica cómo cambia el diagrama de secuencia en Mara, respecto de wari, mientras que el \cref{lst:maraplay} incluye el código de construcción de la URL de reproducción, a partir de la información del modelo de la clase \texttt{Service}.
 
 \begin{figure}[h]
 \begin{center}
@@ -406,11 +402,11 @@ A partir de los \pid\ filtrado, las clases de demultiplexación construyen un URL
 \resizebox{\linewidth}{!}{
 \input{diagrams/play_sequence_diagram_mara}
 }
-\caption{Diagrama de secuencia de infraestructura de reproducción en Mara, para servicio con \emph{Elementary Streams Relocation Descriptor}}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Mara, para servicio con \emph{Elementary Streams Relocation Descriptor}\label{fig:seqplaymara}}
 \end{center}
 \end{figure}
 
-\lstinputlisting[language=C++,caption={Construcción de URL de reproducción en Mara}]{src_code/mara_play.cpp}\label{lst:maraplay}
+\lstinputlisting[language=C++,caption={Construcción de URL de reproducción en Mara},label={lst:maraplay}]{src_code/mara_play.cpp}
 
 
 \ifx\all\undefined
