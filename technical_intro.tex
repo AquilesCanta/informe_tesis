@@ -476,18 +476,6 @@ El proceso de recolección de flujos consiste en la reconstrucción del flujo elem
 
 El proceso de reproducción de flujos elementales, por el contrario, comienza una vez se dispone de los flujos elementales reconstruidos, luego que se ha realizado un \emph{buffering} de suficientes paquetes. Consiste en decodificarlos y obtener las imagenes y el audio que componen al servicio. En Wari, este proceso es realizado por algún reproductor existente. Sin embargo, el reproductor debe tener forma de acceder a estos flujos elementales.
 
-La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. El proceso de decodificación escapa al objetivo de este informe.[TODO: ¿Apéndice?]
-
-\begin{figure}[]
-\begin{center}
-
-\resizebox{\linewidth}{!}{
-\input{diagrams/play_sequence_diagram_wari}
-}
-\caption{Diagrama de secuencia de infraestructura de reproducción en Wari\label{fig:playsecwari}}
-\end{center}
-\end{figure}
-
 %Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
 
 
@@ -514,13 +502,26 @@ Las clases representadas en la \cref{fig:classdiagramservices} son:
 	\item \texttt{Service}: Clase que modela a los servicios de los flujos de transporte disponibles para el receptor. Almacenan toda la información vinculada a los mismos, como nombre, id, o información de flujos elementales.
 \end{itemize}
 
-En Wari, cuando el usuario solicita el cambio de canal, el control llega e la clase \texttt{Tuner}. A partir de entonces, los pasos de ejecución responden al procedimiento indicado en \cref{sec:tunesteps}.
 
-TODO: Explicación de recolección de flujos. Descripciones de clases del diagrama, intervención de URL en la reproducción a través de VLC u otro reproductor.
+La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. El proceso de decodificación escapa al objetivo de este informe.[TODO: ¿Apéndice?]
 
-TODO: El proceso de recolección de flujos elementales implica solicitar a la clase \texttt{Provider} que filtre los paquetes con PID... TODO.
+\begin{figure}[]
+\begin{center}
 
-TODO: Finalmente indicarle al reproductor de audio y video cómo acceder a los flujos elementales.
+\resizebox{\linewidth}{!}{
+\input{diagrams/play_sequence_diagram_wari}
+}
+\caption{Diagrama de secuencia de infraestructura de reproducción en Wari\label{fig:playsecwari}}
+\end{center}
+\end{figure}
+
+En Wari, cuando el usuario solicita el cambio de canal, el control llega e la clase \texttt{Tuner}. A partir de entonces, el primer paso es buscar la instancia de la clase \texttt{Service} que corresponde al servicio solicitado por el usuario.
+
+Una vez se dispone, se le debe indicar al \texttt{PlayerExtension} que se desea reproducir el servicio. Éste obtiene de la instancia de \texttt{Service} la información asociada a los flujos elementales que se deben reproducir, como los \pid\ de los mismos. Toda esta información es enviada al \texttt{AvPlayer}.
+
+Los \pid\ permiten ubicar filtros sobre los flujos de transporte. El filtro, a su vez, permite recibir todos los paquetes con un \pid\ dado. Es el \texttt{AvPlayer} quien crea los filtros para los flujos elementales del servicio a reproducir. Sin embargo, aún es necesario indicarle al reproductor la forma de reproducirlos. Esto se entrega en una URL. 
+
+La URL de reproducción se construye en el método \texttt{makeURL} de \texttt{PlayerExtension}. Esta URL se guarda en el \texttt{AvPlayer}, para que posteriormente, cuando el proceso de cambio de canal haya terminado, el \emph{main thread} se la solicite y se la envie al reproductor de audio y video.
 
 % \{Obtención de servicios}
 
@@ -586,19 +587,17 @@ TODO: Finalmente indicarle al reproductor de audio y video cómo acceder a los fl
 
 \section{IPTV, \emph{Internet protocol television}}
 
-Adaptando la definición anterior a las necesidades de este trabajo, IPTV es la transmisión de televisión digital sobre una red manejada que utiliza la \emph{suite} de protocolos IP. Las redes manejadas permiten aprovechar la infraestructura para garantizar estándares de calidad.
+Adaptando la definición anterior a las necesidades de este trabajo, IPTV es la transmisión de televisión digital sobre una red manejada que utiliza la \emph{suite} de protocolos IP. Las redes manejadas permiten aprovechar la infraestructura para garantizar estándares de calidad. Además, en el caso de televisión donde el número de receptores suele ser grande y el contenido se distribuye sin modificación, el esquema de transmisión multicast es el ideal.
 
-En el caso de televisión, donde el número de receptores suele ser grande y el contenido se distribuye sin modificación, el esquema de transmisión multicast es el ideal.
+\subsection{Multicasting IP}
 
-\subsection{Multicasting}
+El multicasting IP\cite{multicastip} es un método de envío de datagramas IP a través de una única transmisión, a un grupo de receptores interesados. Es una técnica \emph{uno a muchos} muy utilizada en la entrega de contenidos multimedia en tiempo real, como es el caso de IPTV.
 
-Desarrollar conceptos:
-\begin{enumerate}
-	\item Máxima unidad de transmisión
-	\item Routing multicast
-	\item UDP.
-\end{enumerate}
+El protocolo más común de capa de transporte utilizado para multicast IP es UDP\cite{udp}. UDP no posee protección ante pérdida de paquetes o errores de transmisión, de modo que es necesario contemplar estos problemas en alguna de las capas superiores. 
 
+Para soportar multicasting, los \emph{routers} de una red IP debe dar soporte y permitir su uso a los \emph{host} de la misma. El multicasting IP consiste en un conjunto de \emph{grupos multicast} identificados unívocamente por una dirección IP. En el caso de IP versión 4, las direcciones que identifican grupos multicast van desde \emph{224.0.0.0} hasta \emph{239.255.255.255}.
+
+Cuando un \emph{host} desea comenzar a recibir los paquetes correspondientes a una emisión multicast, debe unirse al grupo multicast por el cual se realiza la emisión. Además, cabe notar que los paquetes UDP poseen un puerto destino, de modo que también es necesario conocer el puerto al que se envian estos paquetes. 
 
 \ifx\all\undefined
 \end{document}
