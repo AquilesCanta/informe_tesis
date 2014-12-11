@@ -5,7 +5,36 @@
  
 \chapter{Evaluación}
 
-% Este capí­tulo plantea pruebas a realizar sobre el prototipo desarrollado, resultados esperados y obtenidos de las mismas.
+Este capítulo expone las pruebas realizadas sobre el sistema desarrollado y evalúa su comportamiento frente a distintas situaciones. El objetivo es encontrar limitaciones y mejores que realiza el diseño sobre el formato común.
+
+\section{Prueba con transport streams}
+
+\begin{itemize}
+	\item Hay que ver qué pasa con el transporte de referencia
+	\item Que pasa con uno con un montón de servicios
+	\item Qué pasa cuando se deja de emitir los flujos elementales a alguno
+	\item 
+\end{itemize}
+
+\section{Lista de servicios extendida}
+
+Acá hay que hablar de la cantidad de servicios que pueden señalizarse en un ts a diferencia de uno común.
+
+Limitación por ancho de banda para pmt, limitación por tamaño de sdt. Limitación por tamaño de pat. Limitaciones extras.
+
+\section{Flujos elementales múltiples}
+
+Hasta ahora es imposible incorporar distintos flujos elementales para un mismo servicio. Pero tampoco tendría sentido. Lo ideal sería mandar cada flujo de transporte en un grupo multicast distinto y que se logre algo similar a object based broadcasting.
+
+\section{EPG y \emph{Closed Caption}}
+
+Tienen que ir siempre por el flujo de transporte.
+
+\section{Averiguar qué onda con el scrambling y el acceso condicional} 
+
+\section{Redes son ambientes inseguros}
+
+\section{Es lo mismo SD o HD para el ts}
 % Un transport stream que refiere a dos servicios diferidos.
 % Dos transport streams que refieren a dos servicios diferentes. Uno cada uno.
 % Un transport stream que refiere a muchos servicios. Digamos 10.
