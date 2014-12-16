@@ -73,7 +73,7 @@ La limitación de bitrate de los canales físicos establece una cota superior para
 	\end{center}
 \end{figure}
 
-Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] de Junio de 2014 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
+Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] del 5 de Junio de 2013 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
 
 \begin{table}[H]
 \begin{center}
@@ -184,17 +184,54 @@ Otro de los campos del prefijo transporta el \emph{packet identifier}(\textbf{PI
 
 Para información más detallada relacionada con la estructura de los paquetes del flujo de transporte ver [TODO: Apéndice].
 
-\subsection{Consumo de emisión \textbf{ISDB-Tb}\label{sec:consumeisdbt}}
+\subsection{Recepción de señal \textbf{ISDB-Tb}\label{sec:consumeisdbt}}
 
-Los receptores de señal ISDB-Tb tienen dos tareas básicas. La primera tarea es entregar al usuario la lista de servicios disponibles. La segunda es reproducir aquel servicio que el usuario elija. Ambas necesitan la información provista a través del formato contenedor, el flujo de transporte MPEG. Para el análisis de los pasos, se usará como base el ejemplo de Canal 23.
+Los receptores de señal ISDB-Tb tienen dos tareas básicas. La primera tarea es entregar al usuario la lista de servicios disponibles. La segunda es reproducir aquel servicio que el usuario elija. Ambas necesitan la información provista a través del formato contenedor, el flujo de transporte MPEG. 
 
 \subsubsection{Construcción de la lista de servicios}
 
 A diferencia de la televisión analógica, en televisión digital cada canal contiene más de un servicio, de forma general. Si se desea conocer los servicios que viajan por un canal, es necesario sintonizar ese canal e identificar los servicios a través de la información que contiene el flujo de transporte.
 
-Cada canal físico ISDB-Tb transporta un flujo de transporte independiente. Antes de comenzar a funcionar normalmente, un receptor debe construir la lista de servicios, proceso que se conoce con el nombre de ``SCAN''. Esto consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema. A partir de esta información, el receptor puede conocer los nombres de los servicios y su tipo. A su vez, recordará en qué canal se encuentra cada uno, para su posterior sintonización.
+La \cref{tab:servicestablec23} presenta una lista de servicios de la plataforma estatal. La primer columna indica el canal físico por el que viaja cada flujo de transporte y la segunda, todos los servicios asociados al mismo.
 
-En el ejemplo, el SCAN debe recorrer el Canal 23 (frecuencia 527MHz), memorizando toda la información que su flujo de transporte provee. Ejemplo de esta información son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') o el nombre del flujo de transporte (``TVPublica''). Estos tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521Mhz).
+\newpage
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}[t]{ | c | c | c | c | }
+			\hline
+			Canal 	& Servicio 		& Logotipo		&		Formato de video\tablefootnote{La letra minúscula que acompaña al formato de video define el tipo de scan utilizado. \emph{i} define entrelazado y \emph{p} define progresivo.} \\
+			\hline\hline
+			\multirow{5}{*}{22 (521MHz)}	& Encuentro 	& \includegraphics[width=1cm]{imgs/logoencuentro.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Paka Paka 	& \includegraphics[width=1cm]{imgs/logopakapaka.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& TaTeTi 		& \includegraphics[width=1cm]{imgs/logotateti.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& INCAA TV 		& \includegraphics[width=1cm]{imgs/logoincaa.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Encuentro LD 	& \includegraphics[width=1cm]{imgs/logoencuentro.png}	& LD (240p, 30Hz) \\\hline\hline
+			\multirow{3}{*}{23 (527MHz)}	& TV Pública HD & \includegraphics[width=1cm]{imgs/logotvpublicahd.png}	& HD (1080i, 50Hz)\\\cline{2-4}
+								& Tecnópolis	& \includegraphics[width=1cm]{imgs/logotecnopolis.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& TV Pública 	& \includegraphics[width=1cm]{imgs/logotvpublica.png}	& LD (240p, 30Hz) \\\hline\hline
+			\multirow{6}{*}{24 (533MHz)}	& DeporTV		& \includegraphics[width=1cm]{imgs/logoencuentro.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Vivra			& \includegraphics[width=1cm]{imgs/logovivra.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Suri TV 		& \includegraphics[width=1cm]{imgs/logosuritv.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Arpeggio 		& \includegraphics[width=1cm]{imgs/logoarpeggio.jpeg}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Viajar 		& \includegraphics[width=1cm]{imgs/logoviajar.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Depor TV LD 	& \includegraphics[width=1cm]{imgs/logodeportv.jpeg}	& LD (240p, 30Hz) \\\hline\hline
+			\multirow{6}{*}{25 (539MHz)}	& CN23 			& \includegraphics[width=1cm]{imgs/logocn23.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& C5N			& \includegraphics[width=1cm]{imgs/logoc5n.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Telesur		& \includegraphics[width=1cm]{imgs/logotelesur.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& 360 TV 		& \includegraphics[width=1cm]{imgs/logo360tv.jpg}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Construir TV	& \includegraphics[width=1cm]{imgs/logoconstruirtv.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& CN 23 LD 	 	& \includegraphics[width=1cm]{imgs/logocn23.png}	& LD (240p, 30Hz) \\\hline
+		\end{tabular}
+		\caption{Lista de servicios de la plataforma nacional de la Televisión Digital Abierta\label{tab:servicestablec23}}
+	\end{center}
+\end{table}
+
+
+Cada canal físico contiene un flujo de transporte independiente, que multiplexa a su vez varios servicios. Un sintonizador puede decodificar un único canal físico en un momento dado. De modo que para indicar al usuario la lista completa de servicios debe memorizarlos previamente. A este proceso se lo conoce como ``SCAN''.
+
+El SCAN consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema. A partir de esta información, el receptor puede conocer los nombres de los servicios y su tipo. A su vez, recordará en qué canal se encuentra cada uno, para su posterior sintonización.
+
+En la \cref{tab:servicestablec23} se incluye la lista de canales de la plataforma estatal. Asumiendo que se desea construir esa lista de servicios, el SCAN consiste en recorrer los canales 22, 23, 24 y 25, memorizando toda la información que provee cada flujo de transporte. Ejemplo de esta información, en términos del Canal 23, son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') y el nombre del flujo de transporte (``TVPublica''). Estos tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521MHz).
 
 El proceso de SCAN puede demorar algunos minutos, dependiendo de la cantidad de frecuencias recorridas. Por eso, la información obtenida y construida hasta aquí suele ser persistida. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir este procedimiento.
 
@@ -408,7 +445,7 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
  \begin{figure}
 	\begin{center}
 	\includegraphics[height=13cm]{imgs/scan_seq_diag.png}
-	\caption{Diagrama de flujo de reproducción\label{fig:flux_diagram_scan}} 
+	\caption{Diagrama de flujo de SCAN\label{fig:flux_diagram_scan}} 
 	\end{center}
 \end{figure}
 
