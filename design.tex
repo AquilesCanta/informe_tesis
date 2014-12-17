@@ -9,14 +9,14 @@ El objetivo de este capítulo es explicar el diseño de un sistema de entrega de t
 
 \begin{itemize}
 	\item \textbf{Señalización de los servicios}: Se denominará \emph{señalización} a la entrega de información sobre los servicios para la construcción de la lista y su reproducción. Esta sección abarcará la extensión de ISDB-Tb necesaria para combinar la norma con IPTV.
-	\item \textbf{Flujo de transporte de referencia}: Creación de un flujo de transporte que exponga las modificaciones diseñadas en la sección anterior para la norma ISDB-Tb.
-	\item \textbf{Emisión multicast de los flujos elementales por IP}: Diseño del método de emisión de IPTV por multicast. Definición del formato contenedor y las características importantes de emisión.
-	\item \textbf{Recepción del sistema integrado}: Diseño y desarrollo de un prototipo de recepción del sistema combinado.
+	\item \textbf{Flujo de transporte de referencia}: Esta sección describe los pasos de construcción de un flujo de transporte que exponga las modificaciones diseñadas en la sección anterior para la norma ISDB-Tb.
+	\item \textbf{Emisión multicast de los flujos elementales por IP}: Diseño del método de emisión de IPTV por multicast. Definición del formato contenedor y los parámetros de emisión.
+	\item \textbf{Recepción de contenidos}: Diseño y desarrollo de un prototipo de recepción del sistema combinado.
 \end{itemize}
 
 \section{Señalización de los servicios}
 
-Combinar los sistemas de transmisión implica definir qué servicios viajan por qué medio e indicar esto a los dispositivos de recepción. Usando la infraestructura que actualmente provee la norma ISDB-Tb, sólo es posible señalizar servicios que se encuentran en el mismo flujo de transporte.
+Para combinar los sistemas de transmisión es necesario definir qué servicios viajan la señal ISDB-Tb tradicional y cuáles a través de la red IP. A su vez, los dispositivos de recepción deben ser capaces de clasificar y obtener los servicios para entregarlos. Usando la infraestructura que actualmente provee la norma ISDB-Tb, sólo es posible señalizar servicios que se encuentran en el mismo flujo de transporte.
 
 Como hipótesis de trabajo, la señalización poseerá las siguientes características:
 
@@ -29,7 +29,7 @@ Como hipótesis de trabajo, la señalización poseerá las siguientes característica
 
 \subsection{Extensión de ISDB-Tb}
 
-En su estado actual, la norma ISDB-Tb no permite una señalizar servicios que se encuentran fuera del flujo de transporte. Por esto, el desarrollo requiere una extensión de la norma. Para realizar una extensión, los datos introducidos se deben adecuar al formato MPEG-TS, con que ISDB-Tb contenidos a los dispositivos de recepción. La \cref{fig:servicepointing} representa esquemáticamente el comportamiento buscado.
+En su estado actual, la norma ISDB-Tb no permite señalizar servicios que se encuentran fuera del flujo de transporte. Por esto, el desarrollo requiere una extensión de la norma. Para realizar una extensión, los datos introducidos se deben adecuar al formato MPEG-TS, con que ISDB-Tb contenidos a los dispositivos de recepción. La \cref{fig:servicepointing} representa esquemáticamente el comportamiento buscado.
 
 \begin{figure}[]
 \begin{center}
@@ -38,7 +38,7 @@ En su estado actual, la norma ISDB-Tb no permite una señalizar servicios que se 
 \end{center}
 \end{figure}
 
-Las extensiones deben introducirse al formato flujo de transporte. El objetivo es posibilitar la indicación al receptor de la existencia de un servicio cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast, identificada por una IP de grupo y un puerto.
+Las extensiones deben introducirse al formato del flujo de transporte. El objetivo es posibilitar la enviar información al receptor para clasificar los servicios. Aquellos cuyos flujos elementales se transmiten de forma tradicional no sufren cambios. Por otro lado, aquellos cuyos flujos elementales deben ser obtenidos por medio de una red IP, en emisión multicast, deben poseer algún tipo de marca. Además, para obtener los contenidos identificada por una IP de grupo y un puerto.
 
 En el caso normal, para que un receptor reconozca un servicio y lo incluya a su lista de servicios disponibles, debe encontrar una entrada correspondiente en la \sdt. Luego, para sintonizarlo, debe filtrar una \pat\ para luego filtrar la \pmt, que le indica la forma de encontrar los flujos elementales. En el \emph{loop} de flujos elementales, se incluyen aquellos que deben ser obtenidos desde el mismo flujo de transporte. Siendo que estos no se incluyen, este \emph{loop} \textbf{viajará vacío}.
 
@@ -273,7 +273,7 @@ La evaluación de $f$ retorna una cantidad de paquetes que deben haber ser enviad
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Recepción del sistema integrado}
+\section{Recepción de contenidos}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MODULACION

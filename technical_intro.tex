@@ -97,54 +97,56 @@ Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 
 \end{center}
 \end{table}
 
-En la \cref{tab:avgbitrates} resta indicar en qué se utiliza un 18,7\%(3.3 Mbps) del bitrate siendo que, como se ha dicho, el mismo es constante en la norma ISDB-Tb. Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mbps (específicamente $0,5$ Mpbs) restantes son utilizados para \emph{closed caption}, guía electrónica de programación, y datos.
+La \cref{tab:avgbitrates} indica el bitrate promedio utilizado por los videos, sumando un total de 14Mbps. Dado que el bitrate disponible total es de 17,3 Mbps, resta indicar en qué se utiliza un 3.3 Mbps(18,7\%) del bitrate siendo que, como se ha dicho, el mismo es constante en la norma ISDB-Tb.
 
-Pero como en este caso, cuando el contenido de un canal físico no llega a cubrir el ancho de banda disponible, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. Este contenido se compone de \emph{paquetes nulos}. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con paquetes nulos. Contenidos sin más finalidad que completar el bitrate disponible.
+Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mbps (específicamente $0,5$ Mpbs) restantes son utilizados para guía electrónica de programación y otros datos.
+
+Cuando el contenido de un flujo de transporte no llega a cubrir el ancho de banda disponible del canal físico, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. Este contenido se compone de \emph{paquetes nulos}. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con paquetes nulos. Contenidos con la finalidad de completar el bitrate disponible.
 
 Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agregar un servicio LD sin riesgo de que falte bitrate. No obstante, es importante tener en mente que las magnitudes presentes son calculadas por promedio. En el caso del servicio HD, el video alcanza los $24$ Mbps, por momentos. Por la variabilidad del bitrate de los contenidos multimedia, es necesario que la suma de los bitrate promedio sea inferior al bitrate total si se busca una calidad estable en los servicios. 
 
 % +---------------+---------------+---------------+---------------+
 % |PID            |Bytes          |Percentage     |Mbps           |
 % +---------------+---------------+---------------+---------------+
-% |0              |280496         |            0.0|            0.0|
+% |0              |280496         |            0.0|            0.0| PAT
 % +---------------+---------------+---------------+---------------+
-% |16             |28012          |            0.0|            0.0|
+% |16             |28012          |            0.0|            0.0| NIT
 % +---------------+---------------+---------------+---------------+
-% |17             |13912          |            0.0|            0.0|
+% |17             |13912          |            0.0|            0.0| SDT
 % +---------------+---------------+---------------+---------------+
-% |18             |2308264        |            0.7|            0.1|
+% |18             |2308264        |            0.7|            0.1| EIT
 % +---------------+---------------+---------------+---------------+
-% |20             |5640           |            0.0|            0.0|
+% |20             |5640           |            0.0|            0.0| TOT
 % +---------------+---------------+---------------+---------------+
-% |36             |28012          |            0.0|            0.0|
+% |36             |28012          |            0.0|            0.0| 
 % +---------------+---------------+---------------+---------------+
 % |39             |41736          |            0.0|            0.0|
 % +---------------+---------------+---------------+---------------+
-% |258            |280496         |            0.0|            0.0|
+% |258            |280496         |            0.0|            0.0| PMT del servicio 59201
 % +---------------+---------------+---------------+---------------+
 % |259            |280496         |            0.0|            0.0| PMT del servicio 59202
 % +---------------+---------------+---------------+---------------+
-% |288            |485416         |            0.1|            0.0| Probablemente PES
+% |288            |485416         |            0.1|            0.0| Lleva el PCR del HD 59201
 % +---------------+---------------+---------------+---------------+
-% |289            |218471416      |           67.7|           11.7| Video HD
+% |289            |218471416      |           67.7|           11.7| Video HD (Servicio 59201)
 % +---------------+---------------+---------------+---------------+
-% |290            |1830932        |            0.5|            0.0| Probablemente PES
+% |290            |1830932        |            0.5|            0.0| Audio del HD (Servicio 59201)
 % +---------------+---------------+---------------+---------------+
-% |291            |4685524        |            1.4|            0.2| Probablemente PES
+% |291            |4685524        |            1.4|            0.2| Audio del HD (Servicio 59201)
 % +---------------+---------------+---------------+---------------+
-% |304            |485416         |            0.1|            0.0| Ni idea, probablemente PES (tiene PCR)
+% |304            |485416         |            0.1|            0.0| Lleva el PCR de SD (Servicio 59202)
 % +---------------+---------------+---------------+---------------+
-% |305            |37562964       |           11.6|            2.0| VIDEO SD, pero igual a los de abajo.
+% |305            |37562964       |           11.6|            2.0| Video SD (Servicio 59202)
 % +---------------+---------------+---------------+---------------+
-% |306            |1874172        |            0.5|            0.1| Ni idea, probablemente PES
+% |306            |1874172        |            0.5|            0.1| Audio SD (Servicio 59202)
 % +---------------+---------------+---------------+---------------+
-% |528            |121448         |            0.0|            0.0| Ni idea, probablemente PES (tiene PCR)
+% |528            |121448         |            0.0|            0.0| PCR del LD (Servicio 59224)
 % +---------------+---------------+---------------+---------------+
-% |529            |6201556        |            1.9|            0.3| Ni idea, probablemente PES
+% |529            |6201556        |            1.9|            0.3| Video LD (Servicio 59224)
 % +---------------+---------------+---------------+---------------+
-% |530            |935488         |            0.2|            0.0| Ni idea, probablemente PES
+% |530            |935488         |            0.2|            0.0| Audio SD (Servicio 59224)
 % +---------------+---------------+---------------+---------------+
-% |532            |42300          |            0.0|            0.0| Es un PES pero no se aún de qué
+% |532            |42300          |            0.0|            0.0| Private Data (QUE ES?) (Servicio 59201 y ld)
 % +---------------+---------------+---------------+---------------+ 
 % |8136           |280496         |            0.0|            0.0| PMT del programa 59224
 % +---------------+---------------+---------------+---------------+
@@ -238,12 +240,12 @@ En la \cref{tab:servicestablec23} se incluye la lista de canales de la plataform
 
 El proceso de SCAN puede demorar algunos minutos, dependiendo de la cantidad de frecuencias recorridas. Por eso, la información obtenida y construida hasta aquí suele ser persistida. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir este procedimiento.
 
-\subsubsection{Uso de tablas en la sintonización de servicios}
+\subsubsection{Sintonización de servicios}
 
 Esta tarea se puede realizar únicamente una vez la lista de servicios está disponible y se debe llevar a cabo cada vez que el usuario solicita un servicio. 
 
 \begin{enumerate}
-\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de frecuencia en el receptor. El primero viene por Canal 23 (Frecuencia 527MHz) y el segundo por Canal 22 (Frecuencia 521MHz).
+\item Si el usuario está mirando ``TV Pública HD'' y decide sintonizar ``Encuentro'', es necesario realizar un salto de canal en el receptor. El primero viene por Canal 23 (Frecuencia 527MHz) y el segundo por Canal 22 (Frecuencia 521MHz).
 
 Si por el contrario el usuario quisiera sintonizar ``Tecnópolis'' en lugar de ``Encuentro'', este paso podría ignorarse, dado que ambos se encuentran en el mismo flujo de transporte, ya sintonizado.
 
@@ -253,7 +255,6 @@ El proceso de cambiar de canal físico, implica demodular la nueva señal y sincro
 
 \item Para finalizar, todo el contenido multimedia debe ser redirigido a los dispositivos de entrega: Televisor, monitor y altavoces, dispositivo móvil, etc.
 \end{enumerate}
-
 
 
 \subsection{Tablas}
@@ -272,7 +273,6 @@ La \cref{fig:esquema_servicios_c23} muestra la relación entre las distintas tabl
 \caption{Esquema general de tablas en el ejemplo de Canal 23\label{fig:esquema_servicios_c23}}
 \end{center}
 \end{figure}
-
 
 \subsubsection{\emph{Program allocation table} (\pat)}
 
@@ -329,7 +329,7 @@ La \sdt\ describe con más detalle que otras los programas transportados por un f
 
 \subsubsection{\emph{Network Information Table} (\nit)}
 
-La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestre. Viana con \pid\ 16 y contiene información obligatoria sobre la organización física de la red de transmisión que la emite, pero también de forma opcional puede enviar información de otras redes.
+La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestre. Se envía en paquetes con \pid\ 16 y contiene información obligatoria sobre la organización física de la red de transmisión que la emite, pero también de forma opcional puede enviar información de otras redes.
 
 \subsubsection{Descriptores}
 
@@ -337,10 +337,9 @@ Dentro de las tablas, parte de la información viaja en un formato de longitud va
 
 Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-Tb se provee en [TODO: Apéndice de descriptores].
 
-Un ejemplo de descriptor es el \emph{service\_descriptor} con \emph{descriptor\_tag} 72 que transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service\_descriptor} por cada uno de los servicios. Es del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
+Un ejemplo de descriptor es el \emph{service\_descriptor} de la SDT. Es identificado por el \emph{descriptor\_tag} 72 y transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service\_descriptor} por cada uno de los servicios. Del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
 
 \subsubsection{Flujos elementales}
-
 
 El formato con que viajan los audios y videos se denomina \emph{Packetized elementary stream}(\pes). Cada paquete \pes\ de este formato es de longitud variable y, de forma general, se puede asumir más grande que un paquete de flujo de transporte. Se puede establecer una analogía entre los paquetes \pes\ y las secciones. Igual que las secciones, los paquetes \pes\ se dividen entre los paquetes de flujo de transporte. 
 
@@ -352,13 +351,13 @@ En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 
 
 Las tareas de construcción de lista de servicios y sintonización de servicios que se tratan en la \cref{sec:consumeisdbt} se basan en la información provista por las tablas de la norma ISDB-Tb. A continuación se detalla cómo influye cada una:
 
-\subsubsection{Construcción de la lista de servicios}
+\subsubsection{Tablas en la construcción de lista de servicios}
 
 El proceso de construcción de la lista de servicios se resume a recorrer todas las frecuencias por las que vienen flujos de transporte, capturando la información que viaja por la \sdt\ y \nit. El receptor, con la información contenida en ambas(en todos los flujos) y en sus respectivos descriptores ya puede ofrecer la lista completa. 
 
 En este paso también se genera una asociación entre servicio y flujo de transporte. Es decir, el proceso de SCAN le indica al receptor que ``TV Pública HD'' es transmitido por Canal 23.
 
-\subsubsection{Sintonización de servicios}
+\subsubsection{Tablas en la sintonización de servicios}
 
 \begin{enumerate}
 \item El primer paso es sintonizar el canal físico por el cual viaja el flujo de transporte que lleva el servicio deseado. El mismo se obtiene de la asociación generada en el SCAN.
