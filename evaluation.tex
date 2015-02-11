@@ -26,13 +26,26 @@ Limitación por ancho de banda para pmt, limitación por tamaño de sdt. Limitación
 
 Hasta ahora es imposible incorporar distintos flujos elementales para un mismo servicio. Pero tampoco tendría sentido. Lo ideal sería mandar cada flujo de transporte en un grupo multicast distinto y que se logre algo similar a object based broadcasting.
 
-\section{EPG y \emph{Closed Caption}}
+\section{EPG y }
 
-Tienen que ir siempre por el flujo de transporte.
+
+\section{emph{Closed Caption}}
+
+La posibilidad de enviar \emph{Closed Caption} para servicios diferidos depende exclusivamente del formato, los cuales se pueden agrupar en dos categorías:
+\begin{itemize}
+	\item \textbf{Autónomos}: Existen algunos formatos de \emph{Closed Caption} (como CEA 608 y CEA 708\cite{ceaclosedcaption}) que no requieren señalización en la \pmt. Esta categoría de \emph{Closed Caption} funciona sin problema para servicios transportados por IP, debido a que viajan embebidos en el flujo de video del servicio. 
+	\item \textbf{Señalizados}: Categorizamos en este grupo a los canales de \emph{Closed Caption} que deben ser referidos por la \pmt\ y pueden viajan en un flujo con su propio PID. Si se desea incluir este tipo de \emph{Closed Captions}, es necesario agregar una entrada a la \pmt\ extendida haciendo referencia al flujo por el que viajan, y tal flujo debe estar incluido en el flujo de transporte ISDB-Tb. Este tipo de flujos, al incluir únicamente teletexto, no hacen un uso considerable del ancho de banda de modo que no implican una degradación notable del sistema integrado. [TODO: Podría agregarse algún grafiquito para ponerle onda.] 
+\end{itemize}
 
 \section{Averiguar qué onda con el scrambling y el acceso condicional} 
 
 \section{Redes son ambientes inseguros}
+
+Internet es un entorno inseguro y, en su estado actual, el sistema integrado no posee ningún tipo de protección de privacidad. Esto quiere decir que, a diferencia de la señal ISDB-T que es broadcast, si es posible asociar un grupo multicast a un cliente, es posible también definir qué servicio está consumiendo tal cliente. 
+
+% Supongamos que se está transmitiendo el servicio PEPE en el grupo multicast tal. Si logro capturar el join o algo... etc.
+Por ejemplo, si a través de un software de \emph{sniffing} un atacante logra hallar el pedido de unión al grupo mulitcast de un servicio, también podrá identificar 
+
 
 \section{Es lo mismo SD o HD para el ts}
 % Un transport stream que refiere a dos servicios diferidos.
