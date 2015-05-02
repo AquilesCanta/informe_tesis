@@ -7,6 +7,17 @@
 
 Este capítulo expone las pruebas realizadas sobre el sistema desarrollado y evalúa su comportamiento frente a los casos de uso planteados. El objetivo es estudiar cómo mejora el formato extendido sobre el estándar ISDB-Tb. Asimismo, se exponen las limitaciones del nuevo diseño.
 
+\section{Infraestructura}
+
+[Hay que decir que la infraestructura acá requiere de internet además de todo lo de tv digital. Y solo una máquina que esté stremeando los contenidos digitales por el grupo multicast. Quizá inclusive convenga poner una sección similar en la parte de introducción técnica]
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=10cm]{imgs/infraestructura_extendida.png}
+	\caption{Infraestructura utilizada en la emisión de servicios con el esquema extendido.\label{fig:infra_extended}} 
+	\end{center}
+\end{figure}
+
 \section{Número de servicios}
 
 El objetivo final del nuevo diseño es extender la lista de servicios provistos por una señal ISDB-Tb convencional, a través del aprovechamiento de redes IP disponibles para el decodificador.
@@ -54,9 +65,7 @@ La última tabla involucrada en la señalización es la PMT. A diferencia de las ot
 
 Cada uno de los servicios de un flujo de transporte requiere la emisión de una PMT asociada, así sea uno regualar o uno cuyos flujos elementales se transmiten por IP. El estándar ISDB-Tb establece que el intervalo máximo de tiempo entre instancias de la tabla es de 200 milisegundos. Siendo que una sección tiene un tamaño mínimo de un paquete, y el número de paquetes en un intervalo de tiempo es necesariamente finito, el número de servicios también lo es en consecuencia. 
 
-Para este análisis continuaremos con el ejemplo del Canal 23, presentado en el capítulo de Introducción Técnica. De los $17.3 Mbps$ disponibles del flujo de tranporte, unos $2.4$ son ocupados por paquetes nulos. A su vez, esta cifra representa unos 1500 paquetes nulos por segundos. Dado las instancias de la PMT deben encontrarse en un período de $200 ms$, la cantidad de paquetes disponibles para insertar tablas promedia los 300.
-
-A continuación se presenta una figura con los resultados de medición sobre un fragmento real de flujo de transporte de Canal 23.
+Para este análisis continuaremos con el ejemplo del Canal 23, presentado en el capítulo de Introducción Técnica. De los $17.3 Mbps$ disponibles del flujo de tranporte, unos $2.4$ son ocupados por paquetes nulos. A su vez, esta cifra representa unos 1500 paquetes nulos por segundo. La norma ISDB-Tb determina que las instancias de la PMT deben encontrarse en un período regular de $200 ms$, la cantidad de paquetes disponibles para insertar tablas promedia los 300.
 
 \begin{figure}[h]
 	\begin{center}
@@ -65,12 +74,14 @@ A continuación se presenta una figura con los resultados de medición sobre un fr
 	\end{center}
 \end{figure}
 
-La \cref{fig:null_available} muestra el conteo de paquetes nulos disponibles en los siguientes $200 ms$ de reproducción para cada instante de un fragmento de flujo de transporte de dos minutos y medio de duración. Se puede apreciar que el mínimo alcanzado es de 271 para un instante que ronda el segundo 86. Esto quiere decir que el número máximo de PMT's que se puede incluir dada esta sección del flujo de transporte supera las 200 instancias. 
+La \cref{fig:null_available} presenta los resultados de una medición sobre un fragmento real de flujo de transporte de Canal 23. Muestra el conteo de paquetes nulos disponibles en los siguientes $200 ms$ de reproducción para cada instante de un fragmento de flujo de transporte de dos minutos y medio de duración. Se puede apreciar que el mínimo alcanzado es de 271 para un instante que ronda el segundo 86. Esto quiere decir que el número máximo de PMT's que se puede incluir dada esta sección del flujo de transporte supera las 200 instancias. 
 
-Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, si no el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb.
+Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, sino el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb.
 
-
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 \section{Aspectos adicionales}
+
+Esta sección compara los servicios regulares ISDB-Tb con los servicios realocados con el \emph{service\_elementaries\_relocation\_descriptor} en los aspectos más específicos de la televisión digital. La  \cref{tab:evalcomparison} categoriza los distintos aspectos de la comparación, que se desarrollan en las subsecciones siguientes.
 
 \taburowcolors[2]{white .. black!20}
 
@@ -80,17 +91,22 @@ Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la
 \begin{tabu}{|>{\cellcolor{black!60}\color{white}}r|X[cm]|X[cm]|}
 \hline
 \rowcolor{black!80}\strut  & \color{white}Servicios Regulares & \color{white}Servicios Realocados \\
-Múltiples flujos elementales & \cmark & \plusmark \\
+Múltiples flujos elementales & \cmark & \xmark* \\
 Guía electrónica de programación & \cmark & \cmark \\
-\emph{Closed Caption} & \cmark & \plusmark \\
+\emph{Closed Caption} & \cmark & \xmark* \\
 Trazabilidad & \xmark & \cmark \\
 DSM-CC & \cmark & \xmark \\
 Independencia de calidad de servicio & \xmark & \cmark \\
+Sintonización múltiple simultánea & \xmark & \cmark \\
+Velocidad de sintonización & ~$1.8$ seg & Depende de la red \\
 \hline
 \end{tabu}
-\caption{Comparación entre los servicios de una señal ISDB-Tb y los servicios realocados. \cmark indica compatibilidad. \xmark indica incompatibilidad. \plusmark indica incompatibilidad del cliente. Esto quiere decir que con un cambio de implementación del lado del cliente alcanzaría para soportar esta funcionalidad.} 
-\end{figure}
+\caption{Comparación entre los servicios de una señal ISDB-Tb y los servicios realocados. \textbf{(*)} Limitación impuesta por el cliente, Mara. Implementaciones más sofisticadas podrían dar soporte.\label{tab:evalcomparison}} 
 
+% Reemplazar esto por un footnote que explique que esos dos (... como puede verse en la subsección tal ...) son limitaciones de implementacion del cliente, no del estándar. Así no hay que usar el plusmark del orto, que de otra manera, habría uqe explicar.
+
+\end{figure}
+\renewcommand{\thefootnote}{\arabic{footnote}}
 
 \subsection{Flujos elementales múltiples}
 
@@ -119,52 +135,29 @@ La \cref{fig:eit_size} establece una relación entre el número de eventos a descr
 
 \subsection{\emph{Closed Captioning}}
 
-Aca decimos que en el caso general es imposible. Pero que con los closed caption del estilo de CEA708, al ir incluidos en el video, no es tan complicado. Pero no se puede señalizar. La guía electrónica de programación no va a saberlo.
-
-La posibilidad de enviar \emph{Closed Caption} para servicios diferidos depende exclusivamente del formato, los cuales se pueden agrupar en dos categorías:
+Existen varios estándares ampliamente difundidos para la transmisión de \emph{Closed Caption}. El formato estándar para ISDB-Tb se define en ARIB-B37. Otro tipo también muy difundido, pero más popular en otras normas como ATSC, es CEA 608 y su sucesor CEA 708\cite{ceaclosedcaption}, denominados comúnmente simplemente por el número. Existe una diferencia principal entre ambos formatos que propone una clasificación de los estándares de subtitulado.
 
 \begin{itemize}
-	\item \textbf{Autónomos}: Existen algunos formatos de \emph{Closed Caption} (como CEA 608 y CEA 708\cite{ceaclosedcaption}) que no requieren señalización en la \pmt. Esta categoría de \emph{Closed Caption} funciona sin problema para servicios transportados por IP, debido a que viajan embebidos en el flujo de video del servicio. 
-	\item \textbf{Señalizados}: Categorizamos en este grupo a los canales de \emph{Closed Caption} que deben ser referidos por la \pmt\ y pueden viajan en un flujo con su propio PID. Si se desea incluir este tipo de \emph{Closed Captions}, es necesario agregar una entrada a la \pmt\ extendida haciendo referencia al flujo por el que viajan, y tal flujo debe estar incluido en el flujo de transporte ISDB-Tb. Este tipo de flujos, al incluir únicamente teletexto, no hacen un uso considerable del ancho de banda de modo que no implican una degradación notable del sistema integrado. [TODO: Podría agregarse algún grafiquito para ponerle onda.] 
+	\item \textbf{Embebidos}: En esta categoría se encuentran los formatos 608 y 708. Los subtítulos de esta categoría se incluyen en un espacio preasignado de un flujo externo. Por ejemplo, el formato de video H.264 provee un espacio de usuario para incluir, entre otras cosas, subtítulos. La característica que define a esta categoría es que no necesitan señalización en la PMT, dado que los \emph{Closed Caption} forman parte del flujo elemental de video.
+	\item \textbf{Señalizados}: Categorizamos en este grupo a los canales de \emph{Closed Caption} que deben ser referidos por la \pmt\ y que viajan en un flujo elemental con su propio PID. En esta categoría entra el formato ARIB-37.
 \end{itemize}
+
+Mara no posee la funcionalidad de reproducir ninguno de los dos tipos. La imposibilidad de reproducir subtítulos señalizados viene dada por el diseño de la señalización. Por otro lado, la imposibilidad de reproducir los subtítulos embebidos se debe a la forma que Wari reproduce los flujos elementales. 
+
+Reproducir el \emph{Closed Caption} de la primer categoría requeriría de Mara leer la PMT del servicio realocado para demultiplexar los paquetes que transportan los datos de subtitulado. Para esto, \emph{mpegparser} debería filtrar los paquetes involucrados y realizar el \emph{parsing}.
+
+Los subtítulos de la segunda categoría pueden ser manejados directamente por el reproductor, dado que forman parte del video. El cambio necesario implica enviar un mensaje al reproductor para active la pista de subtítulos correspondiente. La complejidad de la modificación depende el estándar de \emph{Closed Caption}, pero no implica la lectura del flujo de transporte en \emph{mpegparser}.
 
 \subsection{Trazabilidad}
 
-Sanata sanata!
+El esquema de emisión en las señales ISDB-Tb es \emph{broadcast}. En este esquema los consumidores son anónimos, lo cual implica que es imposible establecer si un receptor está consumiendo un servicio dado. En el caso de los servicios realocados, las redes IP identifican a los \emph{hosts} unívocamente a través de una dirección IP. Para saber si un receptor consume un servicio tranportado por IP, éste puede ser asociado a una dirección y determinar a qué grupo multicast está unido. 
+[TODO: Acá hay que decir algo más o sacarlo. Se puede decir algo sobre medición de rating, por ejemplo. Pero creo que está medio tirado de los pelos. Si bien creo que es interesante para comparar, no se si merece una subsección entera.]
 
 \subsection{DSM-CC}
 
-Acá quién te salva
+\subsection{Independencia de calidad del servicio}
 
-\section{Independencia de calidad del servicio}
-
-
-
-\section{Averiguar qué onda con el scrambling y el acceso condicional} 
-
-\section{Red IP como ambiente de distribución}
-
-Existen diferencias importantes entre una emisisón ISDB-Tb convencional y una conexión por red IP. La diferencia más importante radica en el esquema de emisión.
-
-% Armar una tabla de comparaciones quizá es una buena idea. 
-% Anónimo / Traceable
-% Estable / vulnerable a DoS
-% Controlable / Man in the Middle
-% Rígido / Versátil
-
-\begin{itemize}
-\item En un ambiente broadcast, cada cliente es anónimo. Es imposible para un tercero determinar qué servicio está consumiendo un cliente.
-\item 
-\end{itemize}
-
-
- Mientras que en una red, un cliente es identificado unívocamente por 
-
-Internet es un entorno inseguro y, en su estado actual, el sistema integrado no posee ningún tipo de protección de privacidad. Esto quiere decir que, a diferencia de la señal ISDB-T que es broadcast, si es posible asociar un grupo multicast a un cliente, es posible también definir qué servicio está consumiendo tal cliente. 
-
-% Supongamos que se está transmitiendo el servicio PEPE en el grupo multicast tal. Si logro capturar el join o algo... etc.
-Por ejemplo, si a través de un software de \emph{sniffing} un atacante logra hallar el pedido de unión al grupo mulitcast de un servicio, también podrá identificar 
-
+\subsection{Averiguar qué onda con el scrambling y el acceso condicional} 
 
 % Se podría stremear el certificado PKI por ISDB-Tb, por ejemplo.
 % Un transport stream que refiere a dos servicios diferidos.
@@ -174,13 +167,15 @@ Por ejemplo, si a través de un software de \emph{sniffing} un atacante logra hal
 % Closed caption
 % Cómo se comportaría el acceso condicional con el esquema extendido
 % Problemas de seguridad? Si alguien se pone a emitir algo en algún momento
-% EIT debería funcionar
 % Todo el resto de las cosas deberían funcionar. Ver el tema del bitrate puede ser más complicado.
 % Con este esquema es imposible usar varios audios.
 % También es imposible mandar video por multicast y audio por ts.
 % Todos los flujos elementales se deben enviar por el mismo medio.
 % Está bueno que no le interesa al ts si el servicio es HD o SD. Inclusive podría cambiar, supongo yo.
-% Que pasa si dos empiezan a emitir al mismo tiempo?
+
+\subsection{Tiempo de sintonización}
+
+[Se puede hacer referencia al diagrama de secuencia del capítulo anterior para explicar la demora.]
 
 
 \ifx\all\undefined
