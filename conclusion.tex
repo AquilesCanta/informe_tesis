@@ -3,20 +3,71 @@
 \begin{document}
 \fi
 
-\chapter{Conclusiones y Trabajos Futuros}
+\chapter{Conclusiones y Trabajo Futuro}
 
-Inclusión de WebVTT?
+En este trabajo de tesina se ha diseñado y especificado una extensión de la norma ISDB-Tb para señalizar servicios que se proveen a través de una red IP. De esta manera, aquellos receptores de televisión digital que tengan acceso a la misma puedan unirse a un grupo multicast definido y entregar el servicio al usuario de manera transparente.
+
+\section{Exentensión de la norma ISDB-Tb}
+
+La norma ISDB-Tb define los lineamientos para la transmisión de televisión digital en Argentina. Para la organización de la información, ISDB-Tb usa el formato MPEG Transport Stream. La extensión de la norma consiste en la creación de un nuevo descriptor que respeta las consideraciones definidas en este formato.
+
+El descriptor definidio, incluye la información necesaria para señalizar la emisión del servicio a través del protocolo IP. El \emph{service elementaries relocation descriptor} se incluye en las PMT de los servicios que se emiten por la topología IP. La estructura sintáctica del descriptor permite la inclusión de un grupo multicast y un número de puerto.
+
+La lista de servicios se construye de manera tradicional. Primero a través de un proceso de \emph{scan} que recolecta las SDT de cada flujo de transporte. Las instancias de esta tabla proveen los nombres que componen la lista.
+
+El proceso que cambia respecto a los servicios tradicionales es la sintonización. En el punto en que se ha capturado una instancia de la PMT, en la obtención de un servicio regular, es necesario comenzar a filtrar paquetes con los PID indicados. Por otro lado, si la PMT carga el \emph{service elementaries relocation descriptor}, entonces no posee flujos elementales asociados. En su lugar, es posible obtener el grupo multicast y puerto de emisión. 
+
+\subsection{Características importantes de la extensión}
+
+\begin{itemize}
+	\item \textbf{Retrocompatibilidad}: Cualquier software de decodificación de señal ISDB-Tb tradicional sigue funcionando normalmente cuando consume una señal extendida. No es capaz, sin embargo, de reproducir los servicios identificados con el \emph{service elementaries relocation descriptor}. Éstos figurarán en la lista de servicios, pero el usuario no podrá consumirlos.
+	\item \textbf{Tamaño de lista de servicios}: Impuesta por el tamaño de sección de la SDT, la cota superior para el número de servicios señalizables por un flujo de transporte es de 50, en promedio, considerando una longitud de nombre de 9 caracteres.
+\end{itemize}
+
+\section{Mara}
+
+A modo de implementación de referencia, el trabajo de tesina incluyó el desarrollo de Mara, un reproductor de televisión digital basado en Wari. A través de Mara, es posible sintonizar la lista completa de servicios de un flujo de transporte que incluye el \emph{service elementaries relocation descriptor} uniéndose al grupo multicast correspondiente y renderizando los contenidos. 
+
+Para la construcción de Mara, se utilizó Wari, que es un proyecto de código abierto dedicado a la reproducción de televisión digital. 
+
+\subsection{Características importantes de Mara}
+
+\begin{itemize}
+	\item \textbf{Transparencia:} Es imposible para el usuario de Mara determinar si un servicio está siendo consumido desde la señal de radiofrecuencia o de la red IP, asumiendo que el decodificador tiene acceso a ambos medios.
+	\item \textbf{}
+\end{itemize}
+
+\section{Trabajo Futuro}
+
+En esta sección se analizan posibles pasos en la mejora del trabajo realizado en esta tesina.
+
+\subsection{Relocación de objetos en \emph{Object Based Broadcasting}}
+
+La principal limitación del disño yace en la rigidez de los servicios que se obtienen por IP. A diferencia de los servicios regulares, es imposible incluir varios flujos elementales de un mismo tipo. Por ejemplo, varios audios de distintos idiomas. \emph{Object Based Broadcasting}\cite{objectbased} es una técnica a través de la cual múltiples recursos se emiten y el reproductor le permite al usuario seleccionar cómo componerlos para entregar el servicio completo.
+
+[Acá es necesario definir si se va a explicar más. Con imágenes o sólamente un párrafo descriptivo.]
+
+Si en lugar de aplicar el \emph{service elementaries relocation descriptor} a un servicio completo, se aplica a flujos elementales individuales, es posible proveer un enorme abanico de opciones sin incurrir en un desperdicio de ancho de banda. En el esquema esquema \emph{broadcast} es necesario emitir todo simultáneamente, y aquellos que no son utilizados son descartados. Cuando los flujos se emiten en \emph{multicast}, dado que el decodificador sólo debe solicitar la emisión de aquellos que le interesan al usuario, no se descartan contenidos.
+
+Así, cada flujo se emite por un grupo distinto. Y el receptor se une sólo a aquellos grupos que contienen un flujo que le interesa al usuario. Luego, el software de recepción debe ensamblar estos contenidos para entregar el servicio completo.  
+
+\subsection{Relocación por eventos}
+
+La motivación para integrar IPTV e ISDB-Tb se basa en la forma en que se complementan ambos sistemas de entrega. Mientras el primero permite una lista de servicios potencialmente muy grande (en comparación), la integridad del segundo no padece el número de consumidores del servicio. 
+
+En el caso de televisión digital, una de las variables más importantes que determina el número de consumidores que tiene un servicio es el evento que emite. Así, los eventos más populares suelen conseguir un mayor número de consumidores que aquellos menos populares. En el diseño presentado en este trabajo, cuando un servicio es emitido por un medio, no puede ser mudado al otro dinámicamente.
+
+Una posibilidad para solucionar este problema como trabajo futuro, es la señalización a través de eventos. Entonces, en lugar de asociar la información de emisión a un servicio, se puede vincular a un evento. El receptor sería el encargado de realizar el \emph{buffering} para que la transición sea transparente. En este formato, un servicio pasaría de ser emitido por un medio al otro sin los inconvenientes causados por un \emph{scan}. 
+
+\subsection{IPV6}
+
+En este caso se necesitaría modificar la estructura del descriptor para que pueda determinar qué versión de IP es. Cuando es la moderna, entonces debe alocar suficiente espacio para las direcciones más extensas (de 128 bytes).
+
+\subsection{Elminación de PMT pequeñas}
+
+En el diseño actual, por cada servicio se envía una PMT que desaprovecha un (buscar porcentaje) de espacio. Entonces, en lugar de hacer esto, podemos mandar toda la información directamente en la PAT, que no suele tener problemas de tamaño, porque toda la información que incluye es binaria. En este caso, la modificación del receptor suele ser un poco más complicada, porque el proceso de sintonización de servicios cambia, eliminando la parte en que se busca la PMT.
 
 
-Mandar cada stream en un grupo multicast distinto
-
-Object based broadcasting mandando cada cosa por distinto grupo multicast \cite{objectbased}
-
-Hacer señalización de eventos transparente. Es decir, se cambia de origen en tiempo real de forma transparente.
-
-Internet-> ISDB-T-> Internet
-
-Falta soporte de IPV6. Implicaría agrandar el descriptor
 
 \ifx\all\undefined
 \end{document}
