@@ -6,8 +6,8 @@
 \usepackage[T1]{fontenc}
 %----------------------------
 % Drawing crazy tables.
-\usepackage{xcolor}
-\usepackage{tabu}
+\usepackage[table,xcdraw]{xcolor}
+%\usepackage{xcolor}
 \usepackage{colortbl}
 \usepackage{amssymb}% http://ctan.org/pkg/amssymb
 \usepackage{pifont}% http://ctan.org/pkg/pifont
@@ -58,7 +58,11 @@
 \definecolor{mauve}{RGB}{160,126,175}
 
 \crefname{table}{\spanishtablename}{\spanishtablename}
-\crefname{listing}{cÃ³digo fuente}{cÃ³digos fuente}
+\crefname{listing}{código fuente}{códigos fuente}
+\crefname{lstlisting}{fragmento}{fragmentos}
+\Crefname{lstlisting}{Fragmento}{Fragmentos}
+\crefname{section}{Sección}{Secciones}
+\Crefname{section}{sección}{secciones}
 
 \lstset{language=Python, 
         basicstyle=\ttfamily\small, 
@@ -119,8 +123,6 @@
 %   title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 % }
 
-\crefname{lstlisting}{fragmento}{fragmentos}
-\Crefname{lstlisting}{Fragmento}{Fragmentos}
 \renewcommand\lstlistingname{Fragmento}
 \renewcommand\lstlistlistingname{Fragmentos}
 \def\lstlistingautorefname{Frag.}

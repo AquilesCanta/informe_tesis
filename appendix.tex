@@ -3,50 +3,64 @@
 \begin{document}
 \fi
 
-\chapter{Appendix} %Si no recuerdo mal, esto no es un capÃ­tulo si no una seccion especial de latex
+\newpage
 
-\section{MotivaciÃ³n}
+\chapter{Merengue merengue} \label{App:AppendixA}
 
-
-\section{Objetivos}
-
-
-
-
-
+Saracatunga
 
 \begin{figure}[h!]
 	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
-	\caption{Diagrama de composiciÃ³n de un flujo de transporte} 
+	\caption{Diagrama de composición de un flujo de transporte} 
 	\centering 
 \end{figure}
 
 \begin{itemize}
-\item \textbf{Red de transmisiÃ³n o \emph{network}:} Uno o mÃ¡s flujos de transporte emitidos por una misma entidad.
-\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o mÃ¡s servicios.
-\item \textbf{Servicio:} AlgÃºn contenido que puede consumir un receptor, \eg\ un canal de televisiÃ³n, un canal de radio o un servicio de ingenierÃ­a. 
-\item \textbf{Evento:} Un programa de televisiÃ³n. Dos eventos de un mismo servicio sÃ³lo estÃ¡n diferenciados por el momento en que se estÃ¡ sintonizando un servicio especÃ­fico.
-\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento estÃ¡ compuesto por uno o mÃ¡s flujos elementales. A su vez, puede contener mÃ¡s de un flujo del mismo tipo. \eg\ un show de televisiÃ³n puede estar emitiÃ©ndose en varios idiomas al mismo tiempo (un audio en inglÃ©s y otro en espaÃ±ol). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
+\item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
+\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios.
+\item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
+\item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
 \end{itemize}
 
 \subsubsection{Ejemplo de transport stream}
 
-Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el anÃ¡lisis a travÃ©s de la jerarquÃ­a anterior:
+Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
 
 \begin{itemize}
-\item \textbf{Red de transmisiÃ³n o \emph{network}:} El nombre de la red de transmisiÃ³n es ``RTA C23'' que es administrada por Radio y TelevisiÃ³n Argentina S.E[TODO: Agregar cita]. 
-\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal fÃ­sico 23 correspondiente a la frecuencia 527 Mhz.
-\item \textbf{Servicios:} Presenta 3. TV PÃºblica HD, TecnÃ³polis y TV PÃºblica.
-\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisiÃ³n de ``Ciencia ahora''.
+\item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
+\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
+\item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
+\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
 \item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos. Existen en el flujo de transporte otros \emph{elementary streams} que caen fuera del alcance de este informe.
 \end{itemize}
 
-\section{Contribuci\'on y resultados obtenidos}
+\newpage
+\chapter{Contribuci\'on y resultados obtenidos}
 
-\section{Estructura del documento}
+\newpage
+\chapter{Temas de apéndice}
+
+\begin{itemize}
+\item Estructura del paquete de transport stream / Repasar el formato mpeg entero
+
+\item Lista completa de las tablas de ISDB-Tb. Juntar con la de abajo.
+\item Lista completa de los descriptores ISDB-Tb. Juntar con el de abajo
+\item Lista de pids reservados, puede ir junto a lo de la tabla.
+
+\item Comunicación de threads en Wari
+\item Descompresión de audio y video? 
+
+\item Compilación de Mara?
+\item Construcción y utilización de herramientas en wari
+\item OpenCaster?
+\item DSM-CC explicado quizá es demasiado.
+\end{itemize}
 
 \ifx\all\undefined
 \end{document}
 \fi
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

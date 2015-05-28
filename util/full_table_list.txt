@@ -1,0 +1,724 @@
+
+Table name                                                                            Functions 
+PAT* 
+  (Program Association Table) 
+Designates packet identifier of TS packet carrying PMT related 
+to broadcasting program. 
+CAT* 
+  (Conditional Access Table) 
+Designates packet identifier of the TS packet conveying indi-
+vidual information among related information of charged 
+broadcasting.  
+PMT* 
+  (Program Map Table) 
+Designates packet identifier of TS packets conveying each 
+coded signal comparing a broadcasting program and packet 
+identifier of TS packets conveying common information among 
+related information of charged broadcasting. . 
+NIT* 
+  (Network Information Table) 
+Conveys information about the transmitting path such as modu-
+lation frequency and its relation    to broadcasting programs. 
+SDT 
+  (Service Description Table) 
+Conveys information related to programmed channel such as 
+channel name and broadcaster’s name. 
+BAT 
+  (Bouquet Association Table) 
+Conveys information related to bouquet (set of programmed 
+channels) such as names of bouquet and programmed channels 
+in it. 
+EIT 
+  (Event Information Table) 
+Conveys information related to program such as program name, 
+broadcasting date and time, and explanation of contents. 
+RST 
+  (Running Status Table) 
+Indicates program running status. 
+TDT 
+  (Time and Date Table) 
+Indicates present date and time. 
+TOT 
+ (Time Offset Table) 
+Indicates present date and time, and designates time difference 
+between present time and indication time for humans. 
+LIT 
+  (Local Event Information Table) 
+Conveys information related to local event such as discrimina-
+tion (time), name and explanation of local event (scene etc.) in 
+the program. 
+ERT 
+  (Event Relation Table) 
+Indicates relationship between programs or local events, such as 
+groups and attributes of programs or local events. 
+ITT 
+  (Index Transmission Table) 
+Describes information related to program index when sending 
+the program. 
+PCAT 
+  (Partial Content Announcement Table) 
+Indicates transmission schedule of partial content    in data 
+broadcasting. 
+ST 
+ (Stuffing Table) 
+Makes table invalid. 
+BIT 
+  (Broadcaster Information Table) 
+Designates unit of broadcaster and SI transmission parameter of 
+each broadcaster unit. 
+NBIT                                                                      Conveys network board information and reference information 
+  (Network Board Information Table)                   to gain the network board information. 
+LDT 
+  (Linked Description Table) 
+Conveys information by which reference information from other 
+tables is collected. 
+Table set by the companies                                   To be registered and released 
+
+
+Names and functions of tables used in digital broadcasting (excluding SI.)
+Table name                                                                             Function 
+ECM 
+  (Entitlement Control Message)
+*1
+Conveys common information consisting of program informa-
+tion (information related to programs and descramble key, etc.) 
+and control information (instruction of compulsory on/off of 
+decoder's descramble function). 
+EMM 
+  (Entitlement Management Message)
+*1
+Conveys individual information including contract information 
+of each subscriber and work key to decrypt common informa-
+tion. 
+ECM-S 
+  (Entitlement Control Message for S-band)
+*1
+Conveys information related to programs and key information 
+to decrypt, and/or individual contract information of domestic 
+audiences. 
+EMM-S 
+  (Entitlement Management Message for 
+S-band)
+*1
+Conveys key information to decrypt ECM-S. 
+DCT 
+  (Download Control Table)
+*3
+Conveys various information to separate and extract DLT. 
+DLT 
+ (DownLoad Table)
+*3
+Conveys software to be downloaded. 
+DIT 
+  (Discontinuity Information Table)
+*2
+Indicates changing point where possible discontinuity of service 
+information exists in a program transmitted by partial Transport 
+Stream. 
+SIT 
+  (Selection Information Table)
+*2
+Conveys information related to programs transmitted by partial 
+Transport Stream. 
+SDTT
+*2
+  (Software Download Trigger Table) 
+Conveys notification information for download such as service 
+ID, schedule and receiver types for revision. 
+CDT 
+(Common Data Table)
+ *2
+Conveys data commonly required for receivers and stored in 
+non-volatile memory such as company’s logo marks. 
+DSM-CC section
+ *4 
+Conveys various data in data broadcasting. 
+AIT (Application Information Table)                   Conveys dynamic control information concerning ARIB-J Ap-
+plication and additional information for the execution
+
+
+
+
+LISTA DE DESCRIPTORES:
+
+ARIB STD - B10 
+Version 4.6-E2
+─
+ 8 
+─
+Descriptors set by the companies should be registered and released as 
+Table 4-3 Names and function of descriptors in Service Information
+Descriptor name
+Function
+Conditional Access Descriptor
+*1
+Describes PID conveying conditional access method and 
+ECM & EMM.
+Copyright Descriptor
+*1
+Identifies copyright.
+Network Name Descriptor
+Describes network name.
+Service List Descriptor
+*1
+Describes programmed channels and their list of type.
+Stuffing Descriptor
+Secures descriptor space or invalidates descriptor.
+Satellite Delivery System Descriptor
+*1
+Describe physical characteristics of satellite transmission path
+Terrestrial Delivery System Descriptor
+*1
+Describes physical characteristics of terrestrial transmission 
+path
+Bouquet Name Descriptor
+Describes name of bouquet
+Service Descriptor
+Describes names of programmed channel and company
+Country Availability Descriptor
+Describes countries intended to be available with the service
+Linkage Descriptor
+Describes relation to other programmed channels
+NVOD Reference Descriptor
+Describes a list of time-shifted programmed channels for a 
+reference Near VOD programmed channel.
+Time Shifted Service Descriptor
+Describes a reference programmed channel for a Near VOD 
+time-shifted programmed channels.
+Short Event Descriptor
+Describes name and brief explanation of the program.
+Extended Event Descriptor
+Describes detailed information about the program
+Time Shifted Event Descriptor
+Describes the reference program for Near VOD time-shifted 
+programs.
+Component Descriptor
+Describes types and explanation related to program element 
+signal.
+Mosaic Descriptor
+Describes unit of division related to mosaic (picture division) 
+service and relation with other programmed channels and 
+programs, etc.
+Stream Identifier Descriptor
+Identifies individual program element signal.
+CA Identifier Descriptor
+Describes available conditional access method.
+Content Descriptor
+Describes program genre. 
+Parental Rating Descriptor
+Describes permitted minimum audience age.
+Hierarchical Transmission Descriptor
+Describes relation between hierarchical streams in hierarchi-
+cal transmission.
+Digital Copy Control Descriptor
+Describes information controlling copy generation in digital 
+recording equipment and maximum transmission rate.
+Emergency Information Descriptor
+*1
+Describes information and function necessary for emergency 
+alarm signal.
+Data Component Descriptor
+*1
+Identifies  data signal format.
+System Management Descriptor
+*1
+Identifies  broadcasting/non-broadcasting
+
+
+Local Time Offset Descriptor 
+Describes time difference between the present time (UTC + 9 
+hours) and indication time to human when summer time (day-
+light saving time) system is introduced. 
+Audio Component Descriptor 
+Describes parameters related to audio signal among program 
+elements. 
+Target Region Descriptor                                       Describes target region. 
+Hyperlink Descriptor 
+Describes links to other programs, program contents and pro-
+gram related information. 
+Data Content Descriptor 
+Describes detailed information related to contents of each data 
+program. 
+Video Deocode Control Descriptor                        Controls video decoding at event change. 
+Basic Local Event Descriptor                                 Describes information for local event identification. 
+Reference Descriptor                                              Describes node reference from programs and local events. 
+Node Relation Descriptor                                       Describes relation between nodes. 
+Short Node Information Descriptor                        Describes node name and brief explanation. 
+STC Reference Descriptor 
+Describes relation between identification time of local event 
+and STC. 
+Partial Reception Descriptor
+*1
+Describes service identifier transmitted by partial reception 
+hierarchy on terrestrial transmission path. 
+Series Descriptor                                                    Describes series 
+information among multiple events. 
+Event Group Descriptor                                          Describes grouping information of multiple events. 
+SI Parameter Descriptor 
+Describes SI transmission parameter (periodic group and re-
+sending period, etc.). 
+Broadcaster Name Descriptor                                 Describes broadcaster name. 
+Component Group Descriptor                                Describes grouping information of plural components. 
+SI Prime TS Descriptor 
+Describes identifier information 
+of SI prime TS and transmis-
+sion parameter. 
+Board Information Descriptor                                Describes title and text of board information. 
+LDT linkage Descriptor                                          Collects and conveys descriptions referred from other tables. 
+Connected Transmission Descriptor
+Describes physical characteristics of connected transmission 
+in terrestrial audio transmission path
+TS Information Descriptor
+Describes information related to TS such as allocation of the 
+remote control key number to the TS and the transmission 
+layer of service in the TS.
+Extended Broadcaster Descriptor
+Describes broadcaster information of other networks.
+Logo Transmission Descriptor
+Describes character string for simple logo or pointing to 
+CDT-format logo data.
+Content Availability Descriptor 
+Describes information to control record and output of pro-
+grams. 
+Carousel Compatible Composite Descriptor 
+Applies the descriptive functions of the descriptors defined in 
+the Data Carousel scheme. 
+Conditional Playback Descriptor
+*1,*2
+Describes PID conveying conditional playback method and its 
+ECM and EMM. 
+AVC Video Descriptor 
+Describes profile and level for 
+ITU-T Rec. H.264|ISO/IEC 
+14496-10 Video
+AVC timing and HRD descriptor 
+Describes timing information for decoding 
+ITU-T Rec. 
+H.264|ISO/IEC 14496-10 Video.
+Service Group Descriptor
+Describes grouping information of multiple services. 
+Descriptor set by the companies
+To be registered and released
+
+
+DIGITAL BROADCASTING
+
+Partial Transport Stream Descriptor
+*1
+                  Describes partial Transport Stream. 
+Network Identification Descriptor
+*1
+                     Describes network identifier. 
+Partial Transport Stream Time Descriptor
+*1
+        Describes partial Transport Stream time 
+Download Content Descriptor
+*1
+                           Describe attribute information such as size and types of 
+downloaded contents and downloaded ID. 
+CA EMM TS Descriptor
+*2
+                                    Indicates the specific channel when the EMM transmission is 
+made by the specific channel method 
+CA Contract Information Descriptor
+*2
+                 Describes conditional access service type (tear/flat/PPV) of 
+scheduled program    and permission of reception and recording.
+CA Service Descriptor
+*2
+                                       Describes charged broadcast service provider for presenting 
+automatic indication message. 
+Carousel Identifier Descriptor
+*3
+                           Describes Carousel Identifier specified in ISO/IEC 13818-6. 
+Association Tag Descriptor
+*3
+                               Describes ssociation Tag information specified in ISO/IEC 
+13818-6. 
+Deferred Association tags Descriptor
+*3
+                Describes Association Tags information of other broadcasting 
+programs specified in ISO/IEC 13818-6. 
+
+
+PID:
+PAT
+*1
+0x0000 
+PMT
+*1
+Indirect designation by PAT 
+CAT
+*1
+0x0001 
+ECM
+*1
+、
+ECM-S
+*1
+Indirect designation by PMT 
+EMM
+*1
+、
+EMM-S
+*1
+Indirect designation by CAT 
+NIT
+*1
+0x0010 
+SDT 
+0x0011 
+BAT 
+0x0011 
+EIT 
+0x0012 
+EIT (terrestrial digital television broad casting)*
+8
+0x0012, 0x0026, 0x0027 
+RST 
+0x0013 
+TDT 
+0x0014 
+TOT 
+0x0014 
+DCT
+*3
+0x0017 
+DLT
+*3
+Indirect designation by DCT 
+DIT
+*2
+0x001E 
+SIT
+*2
+0x001F 
+LIT 
+Indirect designation by PMT
+*6
+ or 0x0020
+*5
+ERT 
+Indirect designation by PMT
+*6
+ or 0x0021
+*5
+ITT 
+Indirect designation by PMT 
+PCAT 
+0x0022 
+SDTT
+*2
+0x0023 
+SDTT (terrestrial digital television broad cast-
+ing)
+ *2*8
+0x0023, 0x0028 
+BIT 
+0x0024 
+NBIT 
+0x0025 
+LDT 
+0x0025 
+CDT 
+0x0029 
+Multiple frame header information 
+*7
+0x002F 
+DSM-CC section 
+*4
+Indirect designation by PMT 
+AIT
+*9
+Indirect designation by PMT 
+ST 
+Exclude 0x0000, 0x0001, 0x0014 
+NULL PACKET: 0x1FFF
+
+
+
+TABLE ID:
+0x00 
+PAT
+*1
+0x01 
+CAT
+*1
+0x02 
+PMT
+*1
+0x3A 
+–
+ 0x3F 
+DSM-CC section
+*4
+0x40 
+NIT (Actual network)
+*1
+0x41 
+NIT (Other network)
+*1
+0x42 
+SDT (Actual stream) 
+0x46 
+SDT (Other stream) 
+0x4A 
+BAT 
+0x4E 
+EIT (Present and next program of actual stream) 
+0x4F 
+EIT (Present and next program of other stream) 
+0x50 
+–
+ 0x5F 
+EIT (Actual stream, schedule) 
+0x60 
+–
+ 0x6F 
+EIT (Other stream, schedule) 
+0x70 
+TDT 
+0x71 
+RST 
+0x72 
+ST 
+0x73 
+TOT 
+0x74 
+AIT
+*5
+0x7E 
+DIT
+*2
+0x7F 
+SIT
+*2
+0x82 
+–
+ 0x83 
+ECM
+*1
+, ECM-S
+*1
+0x84 
+–
+ 0x85 
+EMM
+*1
+, EMM-S
+*1
+0xC0 
+DCT
+*3
+0xC1 
+DLT
+*3
+0xC2 
+PCAT 
+0xC3 
+SDTT
+*1
+0xC4 
+BIT 
+0xC5 
+NBIT (Network board information body) 
+0xC6 
+NBIT (Reference information to gain network board information) 
+0xC7 
+LDT 
+0xC8 
+CDT
+*2
+0xD0 
+LIT 
+0xD1 
+ERT 
+0xD2 
+ITT 
+0x90 – 0xBF 
+Selectable range for table ID value set by companies 
+
+
+
+DESCRIPTOR TAGS!
+Tag value                                                     Descriptor 
+0x09 
+Conditional access descriptor
+*1
+0x0D 
+Copyright descriptor
+*1
+0x13 
+Carousel identifier descriptor
+*7
+0x14 
+Association tag descriptor
+*7
+0x15 
+Deferred association tags descriptor
+*7
+0x28 
+AVC video descriptor
+*8
+0x2A 
+AVC timing and HRD descriptor
+*8
+0x40 
+Network name descriptor
+*2
+0x41 
+Service list descriptor
+*1
+0x42 
+Stuffing descriptor 
+0x43 
+Satellite delivery system descriptor
+*1
+0x44 
+Cable distribution system descriptor
+*4
+0x47 
+Bouquet name descriptor 
+0x48 
+Service descriptor
+*2
+0x49 
+Country availability descriptor 
+0x4A 
+Linkage descriptor 
+0x4B 
+NVOD reference descriptor 
+0x4C 
+Time shifted service descriptor
+*2
+0x4D 
+Short event descriptor
+*2
+0x4E 
+Extended event descriptor 
+0x4F 
+Time shifted event descriptor
+*2
+0x50 
+Component descriptor 
+0x51 
+Mosaic descriptor 
+0x52 
+Stream identifier descriptor 
+0x53 
+CA identifier descriptor 
+0x54 
+Content descriptor 
+0x55 
+Parental rating descriptor 
+0x58 
+Local time offset descriptor 
+0x63 
+Partial Transport Stream descriptor
+*3
+0x80 – 0xBF 
+Selectable range for tag value of company-defined descriptor 
+0xC0 
+Hierarchical transmission descriptor 
+0xC1 
+Digital copy control descriptor 
+0xC2 
+Network identification descriptor
+*3
+0xC3 
+Partial Transport Stream time descriptor
+*3
+0xC4 
+Audio component descriptor 
+0xC5 
+Hyperlink descriptor 
+0xC6 
+Target region descriptor 
+0xC7 
+Data content descriptor 
+0xC8 
+Video decode control descriptor 
+0xC9 
+Download content descriptor
+*3
+0xCA 
+CA_EMM_TS descriptor
+*5
+0xCB 
+CA contract information descriptor
+*5
+0xCC 
+CA service descriptor
+*5
+0xCD 
+TS information descriptor 
+0xCE 
+Extended broadcaster descriptor 
+0xCF 
+Logo transmission descriptor 
+0xD0 
+Basic local event descriptor 
+0xD1 
+Reference descriptor 
+0xD2 
+Node relation descriptor 
+0xD3 
+Short node information descriptor 
+0xD4 
+STC reference descriptor 
+0xD5 
+Series descriptor 
+0xD6 
+Event group descriptor 
+0xD7 
+SI parameter descriptor 
+0xD8 
+Broadcaster name descriptor 
+0xD9 
+Component group descriptor 
+0xDA 
+SI prime TS descriptor 
+0xDB 
+Board information descriptor 
+0xDC 
+LDT linkage descriptor 
+0xDD 
+Connected transmission descriptor 
+0xDE 
+Content availability descriptor 
+For tag value extension 
+Subdescriptor tag value                                Descriptor 
+0xDF 
+0x00 – 0xFF                                Undefined 
+0xE0 
+Service group descriptor 
+0xE1 – 0xF6 
+Undefined 
+0xF7
+Carousel compatible composite descriptor
+*1
+0xF8
+Conditional playback descriptor
+*1
+0xF9
+Cable TS division system descriptor
+*6
+0xFA 
+Terrestrial delivery system descriptor
+*1
+0xFB 
+Partial reception descriptor
+*1
+0xFC 
+Emergency information descriptor
+*1
+0xFD 
+Data component descriptor
+*1
+0xFE 
+System management descriptor*
+*
+
+Cualquier tipo de información relacionada con las tablas de ISDB-Tb está en http://www.arib.or.jp/english/html/overview/doc/6-STD-B10v4_6-E2.pdf
+
+Hacer una referencia al documento en el capítulo que lo necesite y listo.
