@@ -7,9 +7,9 @@
 
 En este trabajo de tesina se ha diseñado y especificado una extensión de la norma ISDB-Tb para señalizar servicios que se proveen a través de una red IP. De esta manera, aquellos receptores de televisión digital que tengan acceso a la misma puedan unirse a un grupo multicast definido y entregar el servicio al usuario de manera transparente.
 
-\section{Exentensión de la norma ISDB-Tb}
+\section{Crecimiento de la lista de servicios}
 
-La norma ISDB-Tb define los lineamientos para la transmisión de televisión digital en Argentina. Para la organización de la información, ISDB-Tb usa el formato MPEG Transport Stream. La extensión de la norma consiste en la creación de un nuevo descriptor que respeta las consideraciones definidas en este formato.
+La norma ISDB-Tb define los lineamientos para la transmisión de televisión digital en Argentina. Para la organización de la información, ISDB-Tb usa el formato MPEG Transport Stream. Para lograr el crecimiento de la lista de servicios de una señal, se creó un nuevo descriptor que respeta las consideraciones definidas en este formato.
 
 El descriptor definidio, incluye la información necesaria para señalizar la emisión del servicio a través del protocolo IP. El \emph{service elementaries relocation descriptor} se incluye en las PMT de los servicios que se emiten por la topología IP. La estructura sintáctica del descriptor permite la inclusión de un grupo multicast y un número de puerto.
 
@@ -17,11 +17,15 @@ La lista de servicios se construye de manera tradicional. Primero a través de un
 
 El proceso que cambia respecto a los servicios tradicionales es la sintonización. En el punto en que se ha capturado una instancia de la PMT, en la obtención de un servicio regular, es necesario comenzar a filtrar paquetes con los PID indicados. Por otro lado, si la PMT carga el \emph{service elementaries relocation descriptor}, entonces no posee flujos elementales asociados. En su lugar, es posible obtener el grupo multicast y puerto de emisión. 
 
-\subsection{Características importantes de la extensión}
+\subsection{Características importantes de la combinación ISDB-Tb con IP}
 
 \begin{itemize}
 	\item \textbf{Retrocompatibilidad}: Cualquier software de decodificación de señal ISDB-Tb tradicional sigue funcionando normalmente cuando consume una señal extendida. No es capaz, sin embargo, de reproducir los servicios identificados con el \emph{service elementaries relocation descriptor}. Éstos figurarán en la lista de servicios, pero el usuario no podrá consumirlos.
-	\item \textbf{Tamaño de lista de servicios}: Impuesta por el tamaño de sección de la SDT, la cota superior para el número de servicios señalizables por un flujo de transporte es de 50, en promedio, considerando una longitud de nombre de 9 caracteres.
+	\item \textbf{Mayor tamaño de lista de servicios}: Impuesta por el tamaño de sección de la SDT, la cota superior para el número de servicios señalizables por un flujo de transporte es de 50 (valor independiente de la calidad de los servicios), en promedio, considerando una longitud de nombre de 9 caracteres. Muy superior al máximo de 5 servicios SD de ISDB-Tb tradicional.
+	\item \textbf{Escalable:} El nuevo diseño puede escalar en dos direcciones. En primera instancia, a cualquier flujo de transporte al que le quepan se le pueden adicionar nuevos servicios emitidos por una red IP. En segunda instancia, se pueden agregar servicios a otra frecuencias. La señalización de cada flujo es independiente y pueden ubicarse en distintas frecuencias sin problemas.
+	\item \textbf{Dinámico:} A cualquier flujo de transporte se le pueden agregar los servicios en tiempo real, sin la necesidad de demultiplexar el flujo original.
+	\item \textbf{Independiente del multiplexador:} Las estructuras utilizadas respetan por completo el estándar MPEG-2 TS. Por ende, no es necesaria ninguna maquinaria especial en la multiplexación del flujo de transporte.
+	\item \textbf{Preserva \emph{bitrate}:} Dado que las operaciones necesarias consisten únicamente en el reemplazo de paquetes, el bitrate del flujo de transporte se conserva igual.
 \end{itemize}
 
 \section{Mara}
@@ -34,7 +38,8 @@ Para la construcción de Mara, se utilizó Wari, que es un proyecto de código abie
 
 \begin{itemize}
 	\item \textbf{Transparencia:} Es imposible para el usuario de Mara determinar si un servicio está siendo consumido desde la señal de radiofrecuencia o de la red IP, asumiendo que el decodificador tiene acceso a ambos medios.
-	\item \textbf{}
+	\item \textbf{Portable:} Puede ser utilizado en las plataformas más conocidas. Por ejemplo: Linux, Windows, OS X, Android.
+	\item \textbf{Independiente del Hardware:} Funciona con cualquier sintonizador que soporte señales ISDB-Tb.
 \end{itemize}
 
 \section{Trabajo Futuro}
@@ -45,11 +50,16 @@ En esta sección se analizan posibles pasos en la mejora del trabajo realizado en
 
 La principal limitación del disño yace en la rigidez de los servicios que se obtienen por IP. A diferencia de los servicios regulares, es imposible incluir varios flujos elementales de un mismo tipo. Por ejemplo, varios audios de distintos idiomas. \emph{Object Based Broadcasting}\cite{objectbased} es una técnica a través de la cual múltiples recursos se emiten y el reproductor le permite al usuario seleccionar cómo componerlos para entregar el servicio completo.
 
-[Acá es necesario definir si se va a explicar más. Con imágenes o sólamente un párrafo descriptivo.]
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=13cm]{imgs/object_based_multicast.png}
+	\caption{Representación de \emph{object based broadcasting} combinando múltiples grupos multicast.\label{fig:object_based_multicast}} 
+	\end{center}
+\end{figure}
 
-Si en lugar de aplicar el \emph{service elementaries relocation descriptor} a un servicio completo, se aplica a flujos elementales individuales, es posible proveer un enorme abanico de opciones sin incurrir en un desperdicio de ancho de banda. En el esquema esquema \emph{broadcast} es necesario emitir todo simultáneamente, y aquellos que no son utilizados son descartados. Cuando los flujos se emiten en \emph{multicast}, dado que el decodificador sólo debe solicitar la emisión de aquellos que le interesan al usuario, no se descartan contenidos.
+La \cref{fig:object_based_multicast} representa un escenario en el que distintos flujos combinables se emiten en distintos grupos multicast. De esa manera no sólo se logra proveer varias opciones para un mismo tipo de flujo (por ejemplo, varios audios en diferentes idiomas), sino también servicios que se adecúan al usuario, dado que le permiten elegir qué se muestra en pantalla. Sin incurrir así en un desperdicio de ancho de banda para aquellos ignorados por el consumidor, como es el caso en ISDB-Tb tradicional.
 
-Así, cada flujo se emite por un grupo distinto. Y el receptor se une sólo a aquellos grupos que contienen un flujo que le interesa al usuario. Luego, el software de recepción debe ensamblar estos contenidos para entregar el servicio completo.  
+Para llevar adelante esta idea, es posible aplicar el \emph{service elementaries relocation descriptor} a flujos elementales, en lugar de un servicio completo. Así, cada uno se emite por un grupo distinto. Y el receptor se une sólo a aquellos grupos que contienen un flujo que le interesa al usuario. Luego, el software de recepción debe ensamblar estos contenidos para entregar el servicio completo.
 
 \subsection{Relocación por eventos}
 
@@ -67,6 +77,16 @@ En este caso se necesitaría modificar la estructura del descriptor para que pued
 
 En el diseño actual, por cada servicio se envía una PMT que desaprovecha un (buscar porcentaje) de espacio. Entonces, en lugar de hacer esto, podemos mandar toda la información directamente en la PAT, que no suele tener problemas de tamaño, porque toda la información que incluye es binaria. En este caso, la modificación del receptor suele ser un poco más complicada, porque el proceso de sintonización de servicios cambia, eliminando la parte en que se busca la PMT.
 
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=13cm]{imgs/canal_23_no_pmt.png}
+	\caption{Conjunto de tablas necesarias si se eliminara la PMT del esquema.\label{fig:canal_23_no_pmt}} 
+	\end{center}
+\end{figure}
+
+La \cref{fig:canal_23_no_pmt} es una adaptación de la \cref{fig:extended23} del capítulo de Diseño y desarrollo. En este caso, la PAT contiene la información necesaria para señalizar los servicios que se transmiten por IP. Esta solución presenta algunos inconvenientes y desafíos técnicos. En primer lugar, un decodificador común podría presentar problemas al encontrar la irregularidad en la emisión. De esta manera, imposibilitando la construcción completa de la lista de servicios, o hasta ignorando todos los servicios del flujo. Por otro lado, esto rompe con el protocolo de selección de servicios establecido por el formato MPEG-2 Transport stream y hace que algunas piezas de software involucradas en la emisión se vean obsoletas.
+
+La ventaja primordial en una solución de estas características es que elimina la necesidad de cambiar paquetes nulos por PMTs, simplificando notoriamente la inserción de servicios. Si además se eliminara la restricción sobre el tamaño de secciones para las tablas PAT y SDT, el número de servicios podría ascender considerablemente.
 
 
 \ifx\all\undefined
