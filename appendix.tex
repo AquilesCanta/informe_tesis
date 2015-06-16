@@ -5,14 +5,115 @@
 
 \newpage
 
-\chapter{Merengue merengue} \label{App:AppendixA}
+\chapter{Introducción al \emph{MPEG-2 Transport Stream}} \label{App:AppendixA}
 
-Saracatunga
+En este apéndice se revisan conceptos introductorios útiles del flujo de transporte MPEG. Inicialmente se realiza un recorrido sobre el ciclo de vida de los contenidos. Luego se estudia más en detalle la estructura de la información en el formato. Si bien este apéndice tiene caracter informativo, la referencia ulterior es el estándar oficial. En lo que a formato de datos respecta, particulamente el documento ARIB STD-B10.
+
+\section{Codificación y empaquetado de los datos}
 
 \begin{figure}[h!]
-	\includegraphics[width=12cm]{imgs/mpeg_structure.png}
-	\caption{Diagrama de composición de un flujo de transporte} 
+\begin{centering}
+	\includegraphics[width=12cm]{imgs/appendix_data_gen.png}
+	\caption{Diagrama funcional de una estación de televisión digital terrestre\label{fig:appendix_data_gen}} 
+\end{centering}
+\end{figure}
+
+La \cref{fig:appendix_data_gen} es una imagen simplificada de una estación que produce contenidos de televisión digital. Los componentes incluídos en la imagen son los siguientes:
+
+\begin{itemize}
+	\item \textbf{Generación de programa:} Las estaciones de TV incluyen equipamiento para la creación del servicio que se entrega finalmente al espectador. Dentro de este equipamiento se encuentras las cámaras, los \emph{switchers}\footnote{Equipo selector del video utilizado en el servicio a emitir.}, los generadores de efectos, los distribuidores, consolas de audio, etc. La salida de esta etapa es un flujo de contenido binario a tasas elevadas, no aptas para la distribución a través de radiofrecuencia.
+	\item \textbf{Codificación}: La señal recibida es codificada y empaquetada en bloques que contienen una cantidad relativamente reducida de bits, conformando un flujo de paquetes de longitud variable.
+	\item \textbf{Paquetización y Multiplexación:} Los paquetes producidos en la etapa anterior son nuevamente fragmentados para producir paquetes de tamaño aún menor, esta vez de longitud fija, utilizados en el flujo de transporte MPEG \emph{transport stream}. Es necesario en esta etapa incluir datos adicionales relativos al programa, como nombre, metainformación de transmisión y de demultiplexación.
+	\item \textbf{Multiplexación de programas:} Es poco común la transmisión de un flujo de transporte con un único servicio. En esta etapa se combinan varios para construir un \textbf{MPTS}, \emph{Multiple Program Transport Stream}.
+	\item \textbf{Remultiplexación:} Esta etapa recibe el flujo de transporte con múltiples servicios y le agrega información útil de transmisión, que incluye \emph{timestamps} entre otras cosas. Al resultado de esta etapa se lo denomina \emph{Broadcast transport stream}.
+	\item \textbf{Modulador y transmisor:} En esta última etapa, la información es convertida en una señal de radiofrecuencia que luego es emitida por la antena.
+\end{itemize}
+
+La información recibida por los receptores se estructura en el flujo de transporte. Este formato se adapta perfectamente a la televisión digital terrestre. Por la longitud de los paquetes, es fácil la inclusión de datos para corrección de errores. Por sus mecanismos de multiplexación, es posible incluir varios servicios simultáneamente, sin contar con una referencia de reloj común. 
+
+El flujo TS incluye paquetes de audio, video y datos. Además, otros paquetes suministran información para el receptor. En demultiplexación, la separación de paquetes es posible gracias a sus encabezados que incluyen un byte de sincronización y un PID (\emph{Packet Identifier}), que identifica el contenido.
+
+\begin{figure}[h!]
+\begin{centering}
+	\includegraphics[width=9cm]{imgs/appendix_ts_packet.png}
+	\caption{Representación de un paquete TS.\label{fig:appendix_ts_packet}} 
 	\centering 
+\end{centering}
+\end{figure}
+
+
+La \cref{fig:appendix_ts_packet} representa un paquete de un flujo de transporte, que se compone de un total de 1504 bits. Los primeros 4 bytes forman el encabezado del paquete. El primero de estos es el byte de sincronización que siempre contiene el valor $47_H$ (71 en notación decimal). Siendo fija la longitud de los paquetes TS, no es necesario un campo de longitud de \emph{payload} que es siempre 184. Cuando un decodificador halla 5 bytes de sincronización consecutivos, asume que ha logrado sincronizarse con la señal\footnote{Asimismo, un error en tres bytes de sincronización consecutivos se consideran pérdida de sincronismo.}.
+
+La longitud de los paquetes TS es fija. Siendo que los datos no se pueden ubicar arbitrariamente hasta rellenar este tamaño, a veces es necesario completar con contenidos descartables. Con este fin y otros, existe el campo de adaptación que se ubica en el encabezado de 4 bytes. En caso de que este campo esté presente, el encabezado aumenta su tamaño.
+
+\begin{figure}[h!]
+\begin{centering}
+	\includegraphics[width=14cm]{imgs/appendix_ts_packet_detail.png}
+	\caption{Estructura del encabezado del paquete de flujo de transporte\label{fig:appendix_ts_packet_detail}} 
+	\centering 
+\end{centering}
+\end{figure}
+
+La \cref{fig:appendix_ts_packet_detail} presenta en detalle la estructura del encabezado de los paquetes. La función de los campos del encabezado se detalla a continuación:
+
+\begin{itemize}
+	\item \textbf{Sync:} Preámbulo de sincronización $47_H$.
+	\item \textbf{Indicador de error de transporte: } Señaliza la existencia de error dentro del paquete. Cuando ese bit es puesto en 1, el decodificador procede a descartar el paquete.
+	\item \textbf{Indicador de comienzo de unidad de carga: } Cuando este bit está en 1, el paquete transporta el comienzo de una tabla o de un paquete de flujo elemental.
+	\item \textbf{Prioridad de transporte: } Indica que el paquete que contiene el bit en uno contiene mayor prioridad que aquellos con el mismo PID.
+	\item \textbf{PID: } Identifica el contenido del paquete. [TODO: Poner una referencia a la tabla con PIDs, pero no se si ponerla.]
+	\item \textbf{Control de codificación de transporte: } El término original en inglés es \emph{scrambling}. A diferencia de la encriptación, que opera en el campo digital, el \emph{scrambling} suele denominar operaciones en el campo analógico y tiene el objetivo de modificar la señal para que sólo sea interpretable por aquellos que posean el aparato necesario, sea físico o una llave digital. En conclusión, este campo provee información acerca de la codificación de la señal.
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{|c|l|}
+		\hline
+		\rowcolor[HTML]{C0C0C0} 
+		\textbf{Valor} & \textbf{Significado}                 \\ \hline
+		00    &  Sin  {\it scrambling}        \\ \hline
+		01    & Reservado                   \\ \hline
+		10    & Codificador con llave par   \\ \hline
+		11    & Codificador con llave impar \\ \hline
+		\end{tabular}
+		\caption{Significado de los posibles valores de \emph{scrambling}.}
+		\end{table}
+	\item \textbf{Control de campo de adaptación: }Indica la presencia o no dentro del paquete TS de los campos de adaptación y carga útil, de acuerdo a la siguiente tabla.
+
+		\begin{table}[h]
+		\centering
+		\begin{tabular}{|c|l|}
+		\hline
+		\rowcolor[HTML]{C0C0C0} 
+		\textbf{Valor} & \textbf{Significado}                 \\ \hline
+		00    & Reservado      \\ \hline
+		01    & Sólamente carga útil                   \\ \hline
+		10    & Sólamente campo de adaptación   \\ \hline
+		11    & Campo de adaptación seguido de la carga útil \\ \hline
+		\end{tabular}
+		\caption{Significado de los posibles valores del control de campo de adaptación.}
+		\end{table}
+
+	\item \textbf{Contador de continuidad: } Contador progresivo de paquetes identificados con el mismo PID, que transportan carga útil. Su valor se incrementa en una unidad con cada paquete de la serie, realizando un \emph{wrap around} cuando todos los bits están en uno. En ciertas situaciones, es necesario retransmitir un paquete. En estos casos, el contador no debe tener en cuenta el paquete duplicado.
+	\item \textbf{Campo de adaptación: } Es de carácter opcional, y su extensión depende de los \emph{flags} que posee en su interior. Una de sus importantes funciones es el rellenado de paquetes cuando su carga no alcanza a completar los 184 bytes necesarios. Este es el caso cuando se transporta la información de reloj denominada \emph{Program Clock Reference}(PCR), que se utiliza en el receptor. A continuación se detallan los 3 campos más relevantes. Para más detalle, se puede consultar el documento ISO 13818-1.
+		\begin{itemize}
+			\item \textbf{Longitud de campo de adaptación:} Indica el número de bytes que tiene el campo de adaptación, contando a partir del byte siguiente a este. Si el paquete TS no contiene ninguna carga útil, entonces este campo puede contener 184 bytes de longitud. En caso de contener paquetes PES, suele ser necesario agregar el campo de adaptación para incluir relleno. Para los bytes de relleno se utilizan ceros.
+			\item \textbf{Indicador de discontinuidad:} Se emplea para indicar si dentro del paquete se presenta alguna discontinuidad. Por ejemplo, en la base de tiempo en relación al \emph{Program clock reference} o en el contador de discontinuidad. El valor uno indica la presencia de discontinuidad.
+			\item \textbf{\emph{Program Clock Reference}(PCR):} Transporta la referencia del reloj principal utilizado en los procesos de decodificación. Ocupa un campo de 42 bits, conformado por una base de 33 bits (con un \emph{tick} de 90Khz) y una extensión de 9 bits que agrega precisión (corriendo a 27Mhz). El PCR sirve para la presentación de flujos elementales sincronizados. La norma permite un error de, a lo sumo, 500 nanosegundos.
+		\end{itemize}
+\end{itemize}
+
+\subsection{Obtención de paquetes PES a partir de paquetes TS}
+
+El formato de \emph{Packetized Elementary Stream} está definido en ISO 13818-1. Es el contenedor en el que se ubica el contenido multimedia comprimido. El problema de esta representación es que la longitud (demasiado grande) variable no resulta adecuada para su emisión en un ambiente no confiable.
+
+
+
+\subsection{Terminología útil en el flujo de transporte MPEG-2}
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=9cm]{imgs/mpeg_structure.png}
+	\caption{Diagrama de composición de un flujo de transporte} 
+	\end{center}	
 \end{figure}
 
 \begin{itemize}
@@ -36,7 +137,9 @@ Continuando con el ejemplo introducido previamente transmitido por la frecuencia
 \end{itemize}
 
 \newpage
-\chapter{Contribuci\'on y resultados obtenidos}
+\chapter{Introducción a Wari}
+
+Acá sacamos las cosas del tur de Kuntur y sale with frits.
 
 \newpage
 \chapter{Temas de apéndice}

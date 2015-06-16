@@ -7,53 +7,77 @@
 
 \section{Motivación}
 
-Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 servicios ofrecidos a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. 
+Al momento de escritura de este informe, la Ciudad autónoma de Buenos Aires presenta la mayor cantidad de servicios ofrecidos en el país por la televisión digital abierta: 16 a nivel nacional, más 10 servicios emitidos en AMBA y CABA y 2 adicionales en provincia de Buenos Aires, sumando un total de 28 servicios. 
 
-En una red privada de transmisión de televisión analógica por cable, el número de servicios asciende a 70. Está claro que la televisión digital terrestre no puede competir con la televisión por cable en este ámbito. A pesar del uso más eficiente que implica la digitalización de la señal.
+En una red privada de transmisión de televisión analógica por cable normal, el número de servicios asciende a 70. Si bien la digitalización de la señal de radiofrecuencia optimiza la utilización del medio de transmisión, la televisión digital terrestre no puede competir con la televisión por cable en lo que a tamaño de lista de servicios respecta.
 
-La escacez de servicios que ofrece ISDB-T radica en el número de canales físicos de radiofrecuencia asignados a la transmisión de servicios. Para este problema no hay una solución previsible a futuro mediato. 
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=8cm]{imgs/isdbt.png}
+	\caption{Esquema de la emisión de televisión digital terrestre.\label{fig:isdbt_intro_scheme}} 
+	\end{center}
+\end{figure}
 
-IPTV usa una red de internet que además está siendo exigida por otros clientes. Lo cual quiere decir que cualquiera de los nodos puede caerse por motivos ajenos  a iptv. Es decir, no es una infraestructura dedicada. Con lo cual está sujeta a la cantidad de clientes, no solo en iptv, si no en tv.
+El número de \emph{canales}\footnote{El término canal se suele utilizar en la televisión analógica en reemplazo del término servicio por la correspondencia unívoca entre ambos. En el caso de televisión digital, cada canal puede y suele contener varios servicios. Éste último es el término correcto.} de la televisión digital terrestre depende del número de bandas de radiofrecuencia asignadas a la transmisión de tal servicio. Es improbable que este aspecto cambie radicalmente en el futuro. Esto significa que si se busca engrosar la programación de la televisión digital terrestre, es necesario analizar otras posibilidades.
 
-La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del sistema implica dejar sin servicio a un gran porcentaje de la población, potencialmente.
+En el marco del plan nacional de telecomunicaciones Argentina Conectada\cite{argentinacontectada}, la provisión de servicios multimedia por red IP a gran escala es una realidad posible. Las redes IP presentan características atractivas para su uso complementario con la emisión de televisión digital terrestre porque, si bien reúne cualidades que difieren de lo ideal para la tarea, comprende también otro conjunto de aspectos positivos. Sólo por ejemplificar se puede mencionar el canal de retorno que existe desde el cliente al servidor.
 
-El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega parcial o totalmente a los receptores.
+Un aspecto en particular de las redes IP complica la implementación de IPTV. Las redes IP se basan en la conmutación de paquetes, y la misma es suceptible a sobrecarga de usuarios. Es decir, en la medida en que las exigencias de la red aumentan demasiado, también disminuye la eficacia del medio, así causando pérdidas de paquetes y tiempos de latencia excesivos para aplicaciones de tiempo real. Estos elementos no son problemas en la emisión \emph{broadcast}. 
 
+Durante el año 2014, en Brasil, se llevó adelante el mundial de fútbol organizado por la FIFA. Con la popularidad del deporte en Argentina, al momento de la definición de semifinal por penales contra Holanda, casi 10 millones(TODO: Agregar cita? No es una fuente muy formal que digamos => http://www.tutele.net/2014/07/10/audiencias-tv-casi-10-millones-de-espectadores-siguen-los-penaltis-de-paises-bajos-argentina/) de espectadores estaban sintonizando el evento deportivo. En ocasiones como esta, el fallo del servicio de televisión no es una opción. 
 
-http://www.tutele.net/2014/07/10/audiencias-tv-casi-10-millones-de-espectadores-siguen-los-penaltis-de-paises-bajos-argentina/
+Por el contrario, a diferencia de la televisión digital terrestre, IPTV permite listas de servicios arbitrariamente grandes. Es mientras que no es aconsejable que los servicios críticos se encuentren en ellas. Por el contrario, la televisión digital terrestre es ideal para estas situaciones siendo que no se ve amenazada en escenarios con semejante exigencia.
 
-Durante los penales de Argentina Holanda, casi 10 millones de personas estaban mirando la tele.
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=8cm]{imgs/isdbt_con_ip.png}
+	\caption{Esquema de la emisión de televisión digital terrestre en combinación con IPTV.\label{fig:isdbt_mas_ip_intro_scheme}} 
+	\end{center}
+\end{figure}
+
+% >>>>> TODO: Meter alguna imagen o algo, porque es medio feo semejante bloque de texto. Aspecto interesante: IPTV usa una red de internet que además está siendo exigida por otros clientes. Lo cual quiere decir que cualquiera de los nodos puede caerse por motivos ajenos  a iptv. Es decir, no es una infraestructura dedicada. Con lo cual está sujeta a la cantidad de clientes, no solo en iptv, si no en tv.
+
+% La masividad del consumo televisivo, por otro lado, dificulta la utilización de mecanismos que no utilicen broadcasting. Es necesaria una infraestructura extremadamete robusta para soportar la alimentación de millones de sistemas de recepción[AGREGAR UNA CITA A INTRODUCCION CON EJEMPLOS DE LOS PENALES CON HOLANDA?]. Por ejemplo, la transmisión de IPTV, en estos casos, es riesgosa y la caída del sistema implica dejar sin servicio a un gran porcentaje de la población, potencialmente.
+
+% El problema de IPTV radica en que la infraestructura es suceptible al número de consumidores en un momento dado, siendo que es compleja y delicada. La sobreexigencia puede denegar a la entrega parcial o totalmente a los receptores.
+
 
 \section{Objetivos}
 
-\subsubsection{Compatibilidad con versiones anteriores}
+\subsubsection{Retrocompatibilidad}
 
 El estándar ISDB-Tb ya es utilizado en un gran números de sistemas de recepción. Una cualidad esencial de una extensión con las características de este trabajo es la compatibilidad con versiones anteriores. Es decir, aquellos servicios que se sigan transmitiendo por radiofrecuencia, deben seguir siendo accesibles.
 
-\subsubsection{Cambios necesarios mínimos}
+\subsubsection{Minimización de cambios}
 
 Una cualidad buscada en el diseño debe ser la minimización del número de cambios introducidos al estándar. Los motivos para esto son tanto mantener simplicidad en la extensión como requerir la menor cantidad de trabajo posible en los cambios de receptores ya funcionales.
 
-En este capítulo se describe el diseño utilizado para lograr la referencia de un \emph{ts} que viaja por radiofrecuencia y otro que viaja por un medio distinto: una red \textbf{IP}.
-
-\subsection{En entrega de servicios IPTV}
-
 \subsubsection{Aprovechamiento eficiente de la infraestructura}
 
-En el caso de las redes IP, el uso eficiente de los recursos de red, como \emph{buffers} o ancho de banda es importante para proteger la infraestructura de transmisión, a diferencia de la emisión \emph{broadcast} de ISDB-Tb cuya integridad no sufre el aumento de consumidores, \eg\ es necesario enviar paquetes nulos para completar el \emph{bitrate} constante del \textbf{TS}. El envío de paquetes nulos en el caso de las redes IP es inútil.
+En el caso de las redes IP, el uso eficiente de los recursos de red, como \emph{buffers} o ancho de banda es importante para proteger la infraestructura de transmisión, a diferencia de la emisión \emph{broadcast} de ISDB-Tb cuya integridad no sufre el aumento de consumidores. Específicamente es necesario evitar cualquier tipo de emisión redundante en la red IP.
 
-\subsection{En recepción}
+\subsubsection{Transparencia para el usuario}
 
-\subsubsection{Conservación de las interfaces}
+Uno de los objetivos con los que se desarrolla este trabajo es el de proveer los servicios al usuario sin que perciba diferencia alguna entre los servicios de los distintos medios. Si bien existen argumentos de usabilidad en contra de este aspecto, se asume como una hipótesis de trabajo.
 
-Los cambios a realizar deberían limitarse idealmente a la librería \textbf{mpeg-parser} de modo que sus clientes puedan aprovechar la extensión de forma transparente. Esto implicaría que cualquiera de los reproductores de \emph{Kuntur} podrían consumir la lista de servicios extendida.
+\section{Contribución y resultados obtenidos}
 
-
-
-
-\section{Contribuci\'on y resultados obtenidos}
+[TODO: Esto lo saqué de algún lado en los comienzos de la escritura. Pero no tengo idea qué poner, creo que lo saqué de contexto y no tiene cabida.. Lo saco?]
 
 \section{Estructura del documento}
+
+Este documento se compone de cuatro capítulos, además del actual. [TODO: Esto está bien? Se saca? Se desarrolla más? Falta algún capítulo?]
+
+\begin{itemize}
+\item \textbf{Introducción Técnica:} Explora los elementos técnicos necesarios para la comprensión de la solución desarrollada.
+\item \textbf{Diseño y desarrollo:} Expone el diseño e implementación del esquema de transmisión que combina ISDB-Tb e IPTV. Esto comprende desde la extensión de la norma de televisión digital terrestre hasta la modificación de un reproductor de TV para la creación de uno que soporta la nueva funcionalidad.
+\item \textbf{Evaluación:} Analiza los resultados expuestos en el capítulo anterior comparándolos con la norma tradicional.
+\item \textbf{Conclusión:} Resume lo comprendido por el informe y plantea puntos de trabajo futuro para la complementación de esta tesina.
+\end{itemize}
+
+[TODO: Ver qué más poner y qué sacar. Las imágenes me da la sensación que no aportan demasiado más que un descanso para el lector y una sensación de lo que es la televisión terrestre (alguien puede leer el término y pensar en cable.)]
+
+[TODO: Quizá incluir información de los apéndices sería bueno, como para sacarlo de en medio.]
 
 \ifx\all\undefined
 \end{document}
