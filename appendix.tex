@@ -29,6 +29,8 @@ La \cref{fig:appendix_data_gen} es una imagen simplificada de una estación que p
 	\item \textbf{Modulador y transmisor:} En esta última etapa, la información es convertida en una señal de radiofrecuencia que luego es emitida por la antena.
 \end{itemize}
 
+\subsection{Formato de paquetes TS}
+
 La información recibida por los receptores se estructura en el flujo de transporte. Este formato se adapta perfectamente a la televisión digital terrestre. Por la longitud de los paquetes, es fácil la inclusión de datos para corrección de errores. Por sus mecanismos de multiplexación, es posible incluir varios servicios simultáneamente, sin contar con una referencia de reloj común. 
 
 El flujo TS incluye paquetes de audio, video y datos. Además, otros paquetes suministran información para el receptor. En demultiplexación, la separación de paquetes es posible gracias a sus encabezados que incluyen un byte de sincronización y un PID (\emph{Packet Identifier}), que identifica el contenido.
@@ -103,9 +105,25 @@ La \cref{fig:appendix_ts_packet_detail} presenta en detalle la estructura del en
 
 \subsection{Obtención de paquetes PES a partir de paquetes TS}
 
-El formato de \emph{Packetized Elementary Stream} está definido en ISO 13818-1. Es el contenedor en el que se ubica el contenido multimedia comprimido. El problema de esta representación es que la longitud (demasiado grande) variable no resulta adecuada para su emisión en un ambiente no confiable.
+El formato de \emph{Packetized Elementary Stream} está definido en ISO 13818-1. Es el contenedor en el que se ubica el contenido multimedia comprimido. El problema de esta representación es que la longitud (demasiado grande) variable no resulta adecuada para su emisión en un ambiente no confiable como el espectro de radiofrecuencia.
 
+Para obtener el flujo TS, los paquetes PES deben ser segmentados en porciones de 184 bytes, a las que se le agregan encabezados de 4 bytes para formar los paquetes TS de 188 bytes. La longitud de los paquetes PES en bytes no es necesariamente múltiplo de 184; cuando este este es el caso el último paquete TS contendrá menos de la totalidad disponible de bytes como carga. La diferencia se compensa en el rellenado del campo de adaptación.
 
+Algunas reglas generales:
+\begin{itemize}
+	\item El comienzo de un paquete PES debe siempre coincidir con el inicio de cargar útil de un paquete TS.
+	\item El último byte de un PES debe coincidir con el último byte de un paquete TS.
+	\item El contenido de los paquetes TS debe pertenecer a un mismo programa o servicio y no pueden mezclarse servicios diferentes en un mismo paquete. 
+\end{itemize}
+
+\begin{figure}[h!]
+	\begin{center}
+	\includegraphics[width=12cm]{imgs/appendix_pes_in_ts.png}
+	\caption{Ejemplo de distribución de paquetes PES en un flujo de transporte.\label{fig:appendix_pes_in_ts}} 
+	\end{center}
+\end{figure}
+
+La \cref{fig:appendix_pes_in_ts} representa la distribución de paquetes PES a lo largo de un flujo de transporte MPEG. El primero de los paquetes no tiene una longitud múltiplo de 184, por lo que un pequeño resto debe ubicarse en el último paquete TS, que debe ser rellenado con el campo de adaptación. El segundo paquete PES del gráfico sí es múltiplo y por ende no requiere bytes de rellenado.
 
 \subsection{Terminología útil en el flujo de transporte MPEG-2}
 
@@ -113,7 +131,7 @@ El formato de \emph{Packetized Elementary Stream} está definido en ISO 13818-1. 
 	\begin{center}
 	\includegraphics[width=9cm]{imgs/mpeg_structure.png}
 	\caption{Diagrama de composición de un flujo de transporte} 
-	\end{center}	
+	\end{center}
 \end{figure}
 
 \begin{itemize}
