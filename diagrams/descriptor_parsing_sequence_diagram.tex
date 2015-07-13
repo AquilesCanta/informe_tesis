@@ -24,16 +24,22 @@
 					\end{call}
 					\begin{call}{servprov}{startFilter(PMTDemuxer)}{provider}{}
 					\end{call}
+					\begin{call}{servprov}{startFilter(NITDemuxer)}{provider}{}
+					\end{call}
 					\begin{call}{servprov}{process(SDT)}{service}{}
-						\begin{callself}{service}{process(Descriptors)}{}
+						\begin{callself}{service}{process(SDT.Descriptors)}{}
 						\end{callself}
 					\end{call}
 					\begin{call}{servprov}{process(PAT)}{service}{}
-						\begin{callself}{service}{process(Descriptors)}{}
+						\begin{callself}{service}{process(PAT.Descriptors)}{}
 						\end{callself}
 					\end{call}
 					\begin{call}{servprov}{process(PMT)}{service}{}
-						\begin{callself}{service}{process(Descriptors)}{}
+						\begin{callself}{service}{process(PMT.Descriptors)}{}
+						\end{callself}
+					\end{call}
+					\begin{call}{servprov}{process(NIT)}{service}{}
+						\begin{callself}{service}{process(NIT.Descriptors)}{}
 						\end{callself}
 					\end{call}
 				\end{call}

@@ -130,58 +130,192 @@ La \cref{fig:appendix_pes_in_ts} representa la distribución de paquetes PES a lo
 \begin{figure}[h!]
 	\begin{center}
 	\includegraphics[width=9cm]{imgs/mpeg_structure.png}
-	\caption{Diagrama de composición de un flujo de transporte} 
+	\caption{Diagrama de composición de un flujo de transporte\label{fig:diagram_ts_concepts}} 
 	\end{center}
 \end{figure}
 
-\begin{itemize}
-\item \textbf{Red de transmisión o \emph{network}:} Uno o más flujos de transporte emitidos por una misma entidad.
-\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios.
-\item \textbf{Servicio:} Algún contenido que puede consumir un receptor, \eg\ un canal de televisión, un canal de radio o un servicio de ingeniería. 
-\item \textbf{Evento:} Un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico.
-\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte.
-\end{itemize}
-
-\subsubsection{Ejemplo de transport stream}
-
-Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
+A continuación se detallan conceptos importantes del formato MPEG \emph{Transport Stream} representados en la \cref{fig:diagram_ts_concepts}:
 
 \begin{itemize}
-\item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
-\item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
-\item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
-\item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
-\item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos. Existen en el flujo de transporte otros \emph{elementary streams} que caen fuera del alcance de este informe.
+\item \textbf{Red de transmisión o \emph{network}:} Es una entidad que centraliza la gestión de uno o más flujos de transporte. En Argentina, Radio y Televisión Argentina S.E.\footnote{\emph{http://www.rta-se.com.ar/}} es un ejemplo de red de transmisión.
+\item \textbf{Flujo de transporte:} Un flujo \textbf{MPEG-2} que lleva uno o más servicios. Se transmite a través de una única banda de frecuencia de las asignadas a televisión digital y suele incluir multiprogramación. En Argentina, Canal 23 (frecuencia 527Mhz) es un ejemplo, a través del cual se transmiten TV Pública HD, Tecnópolis y TV Pública.
+\item \textbf{Servicio:} El término servicio responde al uso coloquial de la palabra \emph{canal}, hecho que deriva de la señal analógica donde a cada banda de radiofrecuencia le corresponde unívocamente un servicio. TV Pública HD es un ejemplo de servicio, pero con la señal digital, existen nuevos tipos de servicios, como los servicios de ingeniería que sirven para mejorar la calidad del servicio. Por ejemplo, las actualizaciones de \emph{firmware} se realizan a través de servicios de ingeniería. 
+\item \textbf{Evento:} Es un programa de televisión. Dos eventos de un mismo servicio sólo están diferenciados por el momento en que se está sintonizando un servicio específico. El término deviene del cambio de estado que puede sufrir el flujo de transporte, por ejemplo, por el cambio de los flujos elementales emitidos a través del mismo. Un ejemplo de evento es un partido de fútbol, de tiene una duración y, potencialmente, nombre, descripción, etc. si hay una guía electrónica de programación disponible para el usuario.
+\item \textbf{Flujo elemental o \emph{elementary stream}:} Un evento está compuesto por uno o más flujos elementales. A su vez, puede contener más de un flujo del mismo tipo. \eg\ un show de televisión puede estar emitiéndose en varios idiomas al mismo tiempo (un audio en inglés y otro en español). Los flujos elementales requieren de la mayor parte del ancho de banda de un flujo de transporte. Se compone de una secuencia de paquetes (no necesariamente consecutivos) con el mismo PID.
 \end{itemize}
+
+% \subsubsection{Ejemplo de transport stream}
+
+% Continuando con el ejemplo introducido previamente transmitido por la frecuencia 527 Mhz, se puede ahondar en el análisis a través de la jerarquía anterior:
+
+% \begin{itemize}
+% \item \textbf{Red de transmisión o \emph{network}:} El nombre de la red de transmisión es ``RTA C23'' que es administrada por Radio y Televisión Argentina S.E[TODO: Agregar cita]. 
+% \item \textbf{Flujo de transporte:} El flujo de transporte son los contenidos enviados por el canal físico 23 correspondiente a la frecuencia 527 Mhz.
+% \item \textbf{Servicios:} Presenta 3. TV Pública HD, Tecnópolis y TV Pública.
+% \item \textbf{Evento:} Son los distintos shows de cada canal. Por ejemplo, a las 14:00 horas del 5 de Junio comienza una emisión de ``Ciencia ahora''.
+% \item \textbf{Flujo elemental o \emph{elementary stream}:} Los flujos elementales pueden cambiar dependiendo del evento emitido en el momento. En el caso del fragmento utilizado, presenta 4 audios y 3 videos. Existen en el flujo de transporte otros \emph{elementary streams} que caen fuera del alcance de este informe.
+% \end{itemize}
+
+\chapter{Limitación del número de servicios de la transmisión híbrida}\label{app:appendix_service_number}
+
+En un flujo de transporte de una señal ISDB-Tb tradicional, la única limitación considerable para el número de servicios provistos viene dada por el ancho de banda disponible para transmitir los contenidos multimedia. En el caso del formato extendido, los servicios que se envían por IP no ocupan ancho de banda(en términos de contenido multimedia) y el mismo requerido por la información de señalización es despreciable.
+
+El número máximo de servicios con el uso del nuevo descriptor está determinado por dos restricciones fijadas por el formato MPEG. La primera es el tamaño de sección, que afecta la transmisión de tablas, limitando la cantidad de información que pueden transportar. Siendo que el tamaño requerido varía, se analiza cada tabla por separado. La segunda restricción es la frecuencia mínima de emisión de tablas.
+
+La \cref{fig:max_serv_num} muestra cómo afectan las dos restricciones al número máximo de servicios señalizados por cada tabla. La barra roja indica cuántos servicios puede señalizar una tabla si ésta ocupa una sección completa y, por el otro, la barra azul indica cuántos servicios se pueden señalizar con un único paquete de flujo de transporte. Las secciones siguientes detallan cómo limita cada aspecto del formato MPEG al número máximo de servicios que se pueden señalizar.
+
+% TODO: La SDT puede dividirse en múltiples secciones. Así que hay que modificar esto y el dibujito para contemplarlo.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=10cm]{imgs/maximo_num_servicios.png}
+	\caption{Cantidad máxima de servicios permitida por cada tabla.\label{fig:max_serv_num}} 
+	\end{center}
+\end{figure}
+
+% TODO: Quizás un reordenamiento es lo ideal acá. Porque no se entiende bien que el cuello de botella se presente al medio.
+
+\subsection{Tamaño de sección}
+
+% Averiguar qué concha es el tamaño de sección. Porque si distintos pedazos de la tabla se pueden enviar en distintas secciones, estamos hasta la chota.
+% A partir de ahí la SDT tiene que compartir ancho de banda con la PMT. Podría intentar construir un ts con una SDT de muchas secciones.
+% Si ese es el caso, seríá útil hacer una escala de "para x servicios, y ancho de banda necesario"
+
+Las tablas viajan en estructuras sintácticas denominadas \emph{secciones}. El encabezado de una sección contiene su longitud en bytes en un campo de \emph{12 bits}. En consecuencia, este campo limita la longitud a 4096 bytes. Pero el estándar ISDB-Tb, a su vez, define que sólo la sección que transporta una EIT puede alcanzar este tamaño. El resto de las secciones deben limitarse a \emph{1024 bytes}. En consecuencia, las tablas involucradas en la señalización de servicios transportados por IP están acotadas a este tamaño. 
+
+A continuación se analiza cómo influye esta cota sobre el número total de servicios. Todas las mediciones se realizaron construyendo flujos de transporte reales, donde las tablas y secciones fueron creadas y multiplexadas utilizando el conjunto de herramientas provisto por OpenCaster y \emph{ts\_util}\cite{tsutil}.
+
+\subsubsection{PAT}
+
+Al momento de extender la lista de servicios de un flujo de transporte, el número de PAT's que viajan se conserva igual. Existe una PAT por flujo de tranporte. Sin embargo, el tamaño de la sección que transporta la PAT impone, como muestra la \cref{fig:max_serv_num}, un máximo de 252 servicios, en promedio. Este valor podría disminuir ante la inclusión de descriptores o datos adicionales, pero este no es un caso común. Si además se deseara limitar el tamaño de la PAT a un único paquete, la cota se reduce a 41 servicios.
+
+El motivo para utilizar una PAT de un único paquete radica en la drástica simplificación de la multiplexación y decodificación del flujo de transporte. Adicionalmente, implica un pequeño ahorro en paquetes de flujo de transporte (que podría ser utilizado, por ejemplo, para agregar nuevas PMT's, aunque esto no implique una diferencia sustancial).
+
+\subsubsection{SDT}
+
+La SDT transporta contenido textual descriptivo de los servicios y ésto le confiere dependencia respecto de los servicios provistos por el flujo de transporte. Para realizar la medición del número máximo de servicios que permite esta tabla, se utilizaron nombres de una longitud promedio de 9 caracteres. Como puede apreciarse en la \cref{fig:max_serv_num}, una sección establece una cota superior de 50 servicios, mientras que una SDT de un único paquete puede describir hasta 8 servicios. Esto convierte a las SDT en una limitación real para el número se servicios señalizables por la extensión del estándar ISDB-Tb.
+
+\subsection{Disponibilidad de paquetes nulos}
+
+% Decir que son dos imposiciones diferentes la que hace que la PMT limite el numero de servicios y la que hace que la SDT lo haga.
+
+Finalmente, resta analizar cómo influye la PMT sobre el número máximo de servicios que se pueden señalizar. A diferencia de las otras dos, la PMT no cambia en tamaño en la medida en que se agregan servicios, dado que aparecen nuevas instancias en lugar de modificar las existentes. Por lo tanto la limitación del tamaño de sección no afecta a la PMT. El problema es que cada una requiere un PID distinto y cada PID requiere de un paquete de flujo de transporte distinto. La solución planteada inserta estos paquetes donde el flujo original contenía paquetes nulos. Esta sección analiza la suficiencia de estos paquetes para la inserción de PMT's.
+
+Cada uno de los servicios de un flujo de transporte requiere la emisión de una PMT asociada, así sea un servicio regular o uno cuyos flujos elementales se transmiten por IP. El estándar ISDB-Tb establece que el intervalo máximo de tiempo entre instancias de la tabla es de 200 milisegundos. Siendo que una sección se transporta en, al menos, un paquete, y el número de paquetes en un intervalo de tiempo es necesariamente finito, el número de servicios también lo es en consecuencia. 
+
+Para este análisis se continúa con el ejemplo del Canal 23, presentado en el capítulo Introducción Técnica. De los $17.3 Mbps$ disponibles del flujo de tranporte, unos $2.4 Mbps$ son ocupados por paquetes nulos, los cuales pueden ser reemplazados por una PMT de un servicio realocado. Esta cifra representa unos 1500 paquetes nulos por segundo. La norma ISDB-Tb determina que las instancias de la PMT deben encontrarse en un período regular de $200 ms$, un quinto de segundo. Así, la cantidad de paquetes disponibles para insertar PMT's se aproxima a los 300.
+
+Esta estimación indica que el número máximo de servicios, si de la PMT depende, tiene una cota superior en 300. El problema de esta aproximación es que ignora la variabilidad de \emph{bitrate} utilizado; y la cota superior real es el mínimo local absoluto de número de paquetes nulos en períodos de $200ms$ en todo el flujo de transporte. Siendo que este es arbitrariamente largo, es imposible determinar este número con certeza. 
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=14cm]{imgs/nulos_disponibles.png}
+	\caption{Gráfico lineal de disponibilidad de paquetes nulos en el flujo de transporte\label{fig:null_available}} 
+	\end{center}
+\end{figure}
+
+La \cref{fig:null_available} presenta los resultados de una medición sobre un fragmento real de flujo de transporte de Canal 23. Muestra el conteo de paquetes nulos disponibles en los siguientes $200 ms$ de reproducción para cada instante de un fragmento de flujo de transporte de dos minutos y medio de duración. Se puede apreciar que el mínimo alcanzado es de 271 paquetes para un instante que ronda el segundo 86. Esto quiere decir que el número máximo de PMT's que se puede incluir dada esta sección del flujo de transporte supera las 200 instancias. 
+
+Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, sino el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb. En conclusión, una estimación conservadora del número máximo de servicios que se pueden incluir en un flujo de transporte con características similares al de Canal 23 es de \textbf{200 servicios}.
+
+\begin{center}
+\noindent\rule{4cm}{0.4pt}
+\end{center}
+
+
+Del conjunto de entidades analizadas deviene el hecho de que la SDT es el limitante real para el número de servicios señalizables. Para un conjunto de servicios cuya longitud de nombres promedia los 9 caracteres, la cota superior es de \textbf{50 servicios por flujo de transporte}. El resto de las tablas no influyen directamente sobre esta limitación.
 
 \newpage
-\chapter{Introducción a Wari}
+\chapter{Estudio de Wari}\label{app:appendix_wari}
 
-Acá sacamos las cosas del tur de Kuntur y sale with frits.
+Wari es el reproductor de televisión digital utilizado como base para la construcción de Mara. Está destinado a computadoras personales sin restringirse a un único sistema operativo. La mejor fuente de estudio para Wari es claramente el código, que es abierto y se puede conseguir a través del sitio del Lifia\cite{lifia}. No obstante, la comprensión del mismo requiere de cierta asistencia por la complejidad del dominio.
+
+Es muy importante mencionar que Wari no existe como una entidad autónoma sino que pertenece a un proyecto más importante, denominado \emph{Kuntur}. Wari es, de hecho, una pieza de frontend que le da apariencia a los mecanismos utilizados de fondo. \emph{Zamba} es otra de estas piezas que utiliza exactamente los mismos mecanismos, pero en lugar de estar orientado a computadoras personales, se orienta a \emph{Set Top Boxes}\footnote{Denominación para los dispositivos que toman como entrada una señal y entregan como salida contenido apto para la reproducción en un televisor. Esta entrada puede y suele ser un sintonizador. También, puede contener múltiples entradas.}.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=6cm]{imgs/kuntur_simple_diagram.png}
+	\caption{Diagrama de las librerías de Kuntur.\label{fig:kuntur_simple_diagram}} 
+	\end{center}
+\end{figure}
+
+Kuntur está escrito mayoritariamente en C++ y clasifica sus componentes en dos grupos. Las \emph{Libs}\footnote{Proveniente del término en inglés \emph{libraries}} proveen los mecanismos de \emph{backend} mencionados y las \emph{Tools}\footnote{En inglés, herramientas. Pero el termino resulta muy confuso porque Zamba y Wari no encajan perfectamente en la definición de herramientas, por eso se usará el término tools para referirse a ellos.} son productos finales que se apoyan sobre estas. Ambos grupos se exponen en la \cref{fig:kuntur_simple_diagram}. 
+
+La punta de la pirámide de esta figura representa la última categoría, las tools, y es la componente que comienza el hijo de ejecución principal y luego lo delega a las libs. Las mismas se comportan como un \emph{framework}, adueñandose luego del control. Cada bloque representa un módulo de Kuntur, que depende de los que se encuentran subyacentes en el gráfico. Cada uno de estos cumple una tarea específica del dominio que se describen en la \cref{tab:kuntur_desc}.
 
 \newpage
-\chapter{Temas de apéndice}
+\begin{table}[H]
+\centering
+\begin{tabular}{|rm{10cm}|}
+\rowcolor[HTML]{656565}
+ {\color[HTML]{EFEFEF}Lib} 			& {\color[HTML]{EFEFEF}Descripción}  \\
+ Luaz 			& Es la última capa de abstracción que se les provee a las \emph{tools}. Idealmente, las mismas interactúan exclusivamente con esta librería de métodos y \emph{callbacks}. El nombre deriva de la idea de que Luaz es un envoltorio de Zapper con \emph{bindings}\tablefootnote{Mecanismo para posibilitar la invocación de métodos o clases desde un lenguage a otro.} a Lua\tablefootnote{Lenguaje de \emph{scripting} con semánticas extensibles, desarrollado en 1993 por la Universidad Pontificia Católica de Río de Janeiro.}. Esto quiere decir que las Tools pueden limitarse a un conjunto de \emph{scripts} Lua para implementar la interfaz que, por ser un lenguaje interpretado, colabora en el desarrollo rápido de interfaz de usuario.\\
+ \rowcolor{gray}Zapper 		& El término \emph{Zapper} refiere a cualquier dispositivo que sirva para hacer \emph{zapping} o cambiar canales, como un control remoto. En Kuntur, el Zapper es la única abstracción a la que acceden las tools (así sea directamente o a través de Luaz), y esta les permite realizar todas las tareas propias de un reproductor de TV.\\
+ Canvas 		& Responsable de la entrada/salida hacia el usuario. El principal problema que resuelve es la independización de las aplicaciones respecto del software de abstracción de hardware. De esta manera, se pueden desarrollar tools que corran sobre muy diversas plataformas, usando SDL, Cairo, etc.\\
+ \rowcolor{gray}MPEG-Parser 	& Permite que Zapper provea abstracciones basadas en los conceptos descritos en \cref{App:AppendixA}. El contenido recibido a través de un sintonizador es completamente dinámico y requiere la demultiplexación compleja de secciones, tablas, servicios, etc. Como buena parte de los contenidos cambian con el tiempo, MPEG-Parser hace un uso fuerte de \emph{callbacks}. Así, si un cliente como Zapper hace uso de la librería, provee métodos para ser invocados ante eventos y así es como los cambios en el flujo de transporte llegan hasta el cliente. Por ejemplo, si la programación sufre un cambio, es posible adaptar la guía electrónica de programación dinámicamente.\\
+ Util 			& Es una librería que incluye un conjunto de entidades necesarias en el dominio de televisión digital, como \emph{buffers} binarios o un modelo para representación de instantes\tablefootnote{Representación de instantes en el tiempo a través del conteo de días desde un instante representativo prefijado.} (\emph{Julian Date}, \emph{POSIX time} y variantes), utilizados en el flujo de transporte. Cabe notar, también, que por ser los reproductores de televisión digital sistemas de tiempo real, las librerías requieren de \emph{multithreading} y util provee los mecanismos de comunicación utilizados por el resto de las librerías.\\ \hline
+\end{tabular}
+\caption{Descripción de las diferentes libs de Kuntur. \label{tab:kuntur_desc}}
+\end{table}
 
-\begin{itemize}
-\item Estructura del paquete de transport stream / Repasar el formato mpeg entero
+\section{Multithreading}
 
-\item Lista completa de las tablas de ISDB-Tb. Juntar con la de abajo.
-\item Lista completa de los descriptores ISDB-Tb. Juntar con el de abajo
-\item Lista de pids reservados, puede ir junto a lo de la tabla.
+Se mencionó en reiteradas ocasiones la necesidad de \emph{multithreading} en el dominio de Wari y los reproductores de TV Digital. Para resolver esta dependencia, el proyecto Kuntur utiliza las librerías \textbf{Boost}\cite{boost}, en particular, el módulo \texttt{Thread}. Ésta librería provee una abstracción portable para el manejo de múltiples \emph{threads} y mecanismos de sincronización, de interfaz similar a los \emph{Posix Threads}\cite{posixthreads}.
 
-\item Comunicación de threads en Wari
-\item Descompresión de audio y video? 
+En lo que a parametrización respecta, Kuntur no requiere una configuración específica de políticas de \emph{scheduling} o exclusión mutua, usando las que utiliza por defecto \texttt{Boost.Thread}, que a su vez son dictadas por la plataforma subyacente. Para información más específica se puede consultar la documentación que explora estos temas\cite{boostthreaddoc}.
 
-\item Compilación de Mara?
-\item Construcción y utilización de herramientas en wari
-\item OpenCaster?
-\item DSM-CC explicado quizá es demasiado.
-\end{itemize}
+\section{Compilación de Wari y Mara}
 
-\ifx\all\undefined
-\end{document}
-\fi
+Kuntur provee herramientas para la construcción de cualquier lib o tool que se desee, a través de \emph{scripts python}. Sin embargo, una cuota de asistencia es útil en el proceso. Para empezar, es necesario contar con el código fuente. El mismo puede ser obtenido del sitio oficial del Lifia\cite{lifia}. Si es Mara el software que se desea compilar, es necesario aplicar el parche provisto junto a este informe previamente. El proceso de compilación y ejecución es el mismo para Wari y Mara, y se detallan a continuación para una distribución de Linux \emph{debian-based}:
 
+\begin{enumerate}
+	\item Descomprimir los contenidos en \emph{dir-kuntur}, sea /home/user/Development/kuntur.
+	\item Crear un contenido para la construcción \emph{out of source}, sea \emph{dir-kuntur}/install.UNIX.
+	\item Resolver las dependendicas de software. Para un \emph{debian-based} común, los siguientes paquetes suelen ser suficientes:
+	\begin{itemize}
+		\item cmake
+		\item lua5.1
+		\item liblua5.1-0-dev
+		\item zlib1g-dev
+		\item libxerces-c-dev
+		\item libev-dev
+		\item libboost-filesystem-dev
+		\item libboost-thread-dev
+		\item libboost-date-time-dev
+		\item libglib2.0-dev
+		\item libfreetype6-dev
+		\item libgtk-3-dev
+		\item libboost-math-dev
+		\item libdb-dev
+		\item libvlc-dev
+		\item vlc
+	\end{itemize}
+	\item En el directorio \emph{dir-kuntur}/config, crear el archivo \texttt{SetupUser.cmake} con los siguientes contenidos. Este archivo sirve para configurar el tipo de compilación deseada que, por simplicidad, será mínima para análisis.
+	\begin{lstlisting}
+		SET(CMAKE_BUILD_TYPE "Debug" )
+		SET(SYS_PLAYER_USE_VLC 1 )
+	\end{lstlisting}
+	\item Con \emph{dir-kuntur}/install.UNIX como ruta actual, ejecutar \texttt{../build/build.py -t wari}. Esta operación puede demorar unos minutos.
+	\item En \emph{dir-kuntur}/install.UNIX/rootfs/bin/ se encontrarán todas las tools compiladas. En caso de utilizar únicamente los pasos enumerados hasta ahora, sólo se hallará Wari.
+	\item Para ejecutar Wari o Mara, se debe utilizar el comando(desde \emph{dir-kuntur}/install.UNIX):
+	\begin{lstlisting}
+		./rootfs/bin/wari
+	\end{lstlisting}
+\end{enumerate}
 
+\subsection{Troubleshooting}
+
+Hay un motivo muy común por el que la ejecución de las tools incurre en un \emph{segmentation fault} y es la presencia de un \emph{pluging} para VLC relacionado con Lua. El problema se soluciona fácilmente eliminando tal plugin.
+\begin{lstlisting}
+	rm /usr/lib/vlc/plugins/lua/liblua_plugin.so
+\end{lstlisting}
+
+También es necesario considerar que para ejecutar Wari, se requiere poseer un dispositivo de sintonización de TV digital. La ausencia de tal dispositivo incurre en un error de ejecución fatal. No obstante, es posible ejecutar Wari utilizando como entrada un archivo de \emph{Transport Stream}, en lugar de un sintonizador. Para hacerlo, se debe cambiar la linea de ejecución, agregando los siguientes parámetros:
+
+\begin{lstlisting}
+	 ./rootfs/bin/wari --set tuner.provider.use=tsdata:tuner.provider.tsdata.use=file:tuner.provider.tsdata.file.bitrate=XXXXXXXX:zapper.mpeg.player=ts
+\end{lstlisting} 
+
+El campo denotado con "XXXXXXXX" debe ser reemplazado por el bitrate real del flujo de transporte. Este valor puede estar indicado en el nombre del archivo o, en caso de no poseerse, puede inferirse de los valores de PCR del campo de adaptación de algún flujo elemental. \emph{Ts\_util}\cite{tsutil} provee herramientas para realizar este cálculo.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

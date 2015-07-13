@@ -27,11 +27,13 @@ Para asegurar esta correspondencia, se introduce una segunda entidad. El \emph{c
 
 \subsection{Cabeceras de transmisión}
 
-Una transmisora de señal ISDB-Tb modula una señal que puede ser directamente intepretada por un decodificador. Esto es, el flujo de transporte provee todas las capas de abstracción necesarias para la comunicación. De este modo, soluciona problemas como sincronización, multiplexación y corrección de errores.
+Una emisora ISDB-Tb modula una señal que puede ser directamente intepretada por un decodificador. Esto es, el flujo de transporte provee todas las capas de abstracción necesarias para la comunicación. De este modo, soluciona problemas como sincronización, multiplexación y corrección de errores.
 
-En cambio, las redes IP se basan en el intercambio de paquetes entre nodos. Pero la forma en que estos paquetes se transmiten recae sobre los protocolos de capa inferior a la capa IP y los enlaces que unen a estos nodos. Si un flujo de transporte es enviado a través de una red IP, como es el caso de los servicios realocados, las capas inferiores incurren en un \emph{overhead} de comunicación redundante, respecto de la señal ISDB-Tb plana. Por ejemplo, tanto el \emph{transport stream} MPEG y el protocolo UDP proveen \emph{checksum}. Los mecanismos de sincronización que provee el flujo de transporte son innecesarios en las redes IP, también.
+En cambio, las redes IP se basan en el intercambio de paquetes entre nodos y respetan un modelo de capas. El término IP refiere a una de estas capas. Esto significa que el mecanismo con que estos paquetes se transmiten recae sobre los protocolos de capa inferior a la capa IP y los enlaces que unen a estos nodos. De forma inherente al modelo de capas, cada una agrega \emph{overhead} necesario para cumplir sus funciones.
 
-En términos de la \cref{fig:infra_extended}, el enlace entre el servidor de \emph{streaming} y la red IP resulta un eslabón clave en el esquema. Especialmente si se trata de un servidor que debe transmitir varios servicios por la red. La sobrecarga de esta vía implicaría que se vean afectados todos los servicios que emite en caso de alcanzar su límite de acho de banda. Por el contrario, es más difícil encontrar sobrecargas sobre los enlaces de \emph{última milla}\footnote{Término utilizado en telecomunicaciones para referir al último extremo de la red que entrega conexión a los clientes.} porque no es de suponer que van a transportar un gran número de servicios simultáneamente.
+Si un flujo de transporte es enviado a través de una red IP, como es el caso de los servicios reubicados, las diferentes capas incurren en un \emph{overhead} de comunicación, a veces redundante. Por ejemplo, los mecanismos de sincronización que provee el flujo de transporte son innecesarios en las redes IP. También, tanto el \emph{transport stream} MPEG como el protocolo UDP proveen \emph{checksum}\footnote{Si bien podría argumentarse que esto mejora la calidad de control de errores, la realidad es que viola la razón fundamental detrás del modelo de capas.}.
+
+En términos de la \cref{fig:infra_extended}, el enlace entre el servidor de \emph{streaming} y la red IP resulta un eslabón clave en el esquema. Especialmente si se trata de un servidor que debe transmitir varios servicios por la red. La sobrecarga de esta vía implicaría que se vean afectados todos los servicios que emite en caso de alcanzar su límite de acho de banda. Por el contrario, es más más extraño encontrar sobrecargas sobre los enlaces de \emph{última milla}\footnote{Término utilizado en telecomunicaciones para referir al último extremo de la red que entrega conexión a los clientes.}. Se puede asumir que estos enlaces van a transportar un pequeño número de servicios simultáneamente, probablemente uno.
 
 \begin{figure}[h]
 	\begin{center}
@@ -79,48 +81,78 @@ Para las pruebas realizadas cuyos resultados se exponen en este capítulo se util
 \begin{itemize}
 	\item \textbf{Host Multiplexador:} Controla la moduladora y provee el \emph{transport stream} extendido que se emite a través de la señal modulada. En este punto se introducen los elementos necesarios para señalizar los servicios que se obtienen a través de la red IP, identificada por la dirección IP asignada por el coordinador. Por supuesto, en un escenario ficticio como este, la coordinación se trata de configurar correctamente descriptores y \emph{streaming} únicamente.
 	\item \textbf{Moduladora}: Convierte el \emph{transport stream} en una señal radioeléctrica modulada.
-	\item \textbf{\emph{Splitter:}} Mezcla la señal modulada que transporta el \emph{transport stream} generado y una señal regular de Televisión Digital Abierta. El objetivo de esta combinación es estudiar la convivencia del flujo de tranporte generado con otros tradicionales.
+	\item \textbf{Combinador de señales:} Es un dispositivo simple que mezcla la señal modulada que transporta el \emph{transport stream} generado y una señal regular de Televisión Digital Abierta. El objetivo de esta combinación es estudiar la convivencia del flujo de tranporte generado con otros tradicionales.
 	\item \textbf{Sintonizador:} El sintonizador es la contrapartida de la moduladora, convierte una señal modulada en un \emph{bitstream} intepretable por \emph{Mara}.
 	\item \textbf{Mara:} Computadora que corre el reproductor de televisión y entrega los servicios al usuario, consumiendo de una u otra fuente de manera transparente.
 	\item \textbf{Red IP:} Red con soporte de la \emph{suite} de protocolos IP, incluyendo emisión multicast.
 	\item \textbf{Host de \emph{streaming}:} Emite el flujo de transporte que incluye el servicio realocado a través del grupo indicado por el coordinador.
 \end{itemize}
 
-\newpage
 \section{Análisis del trabajo}
 
-\begin{table}[H]
-\begin{tabular}{|r|c|c|c|}
+A fin de evaluar la extensión de la norma y el reproductor Mara en un marco práctico, se analizan diversos aspectos relevantes utilizando la infraestructura presentada en \cref{fig:infra_extended} para las ejecución de pruebas. La \cref{tab:evalcomparison} presenta y clasifica los resultados de las evaluaciones. A su vez, incluye referencias a las secciones posteriores, que desarrollan más detalladamente cada prueba o aspecto del análisis. Es importante remarcar que la columna titulada \textbf{ISDB-Tb + IP} analiza los aspectos inherentes a los servicios enviados por IP. Es decir, el diagrama no establece que es imposible enviar \emph{Closed Caption} con la extensión de la norma. Sí afirma que es imposible enviarlo para aquellos servicios que se transmiten por IP.
+
+% \begin{table}[H]
+% \begin{tabular}{|r|c|c|c|}
+% \hline
+% \rowcolor[HTML]{656565} 
+% \multicolumn{1}{|l}{\cellcolor[HTML]{656565}{\color[HTML]{EFEFEF} Aspecto}} & \multicolumn{1}{c}{\cellcolor[HTML]{656565}{\color[HTML]{EFEFEF} \begin{tabular}[c]{@{}c@{}}ISDB-Tb\\ Tradicional\end{tabular}}} & {\color[HTML]{EFEFEF}ISDB-Tb+IP}                             & {\color[HTML]{EFEFEF} Ver} \\ \hline
+% Número de servicios & Hasta 5 SD y 1 LD & Hasta 50 HD & \cref{sec:maxservicenumber}                \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Con el uso del nuevo descriptor, el máximo número de servicios asciende a 50. La cota es consecuencia del tamaño máximo de la sección de la SDT.}                                                                                                                                                        \\ \hline
+% \begin{tabular}[c]{@{}r@{}}Múltiples flujos\\ elementales\end{tabular}      & \cmark                                                                                                                              & \xmark                                                              & \cref{sec:multipleelementarystreams}                 \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0} Mara no posee la funcionalidad necesaria para entregar múltiples flujos elementales intercambiables. Por otro lado, su inclusión incurriría en un desperdicio innecesario de ancho de banda.}                                                                                                                                                              \\ \hline
+% \begin{tabular}[c]{@{}r@{}}Guía electrónica de\\ programación\end{tabular}  & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:epg}                  \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                                   & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}El soporte que ofrece MPEG para la descripción de guía electrónica de programación no basta para el número de servicios que permite la extensión.}                                                                                                                                                              \\ \hline
+% \textit{Closed Caption}                                                     & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:closedcaptioning}                   \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Mara actualmente no soporta \emph{closed captioning} para los servicios que se envían por IP. Dependiendo del tipo de los mismos, sería fácil adaptar el reproductor para soportarlo. }                                                                                                                                                                            \\ \hline
+% \begin{tabular}[c]{@{}r@{}}Gestión de audiencias\end{tabular} & \xmark & \cmark & \cref{sec:traceability}                    \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}En el caso de ISDB-Tb convencional, es imposible determinar qué servicio consume cada usuario. Por el contrario, esto es posible con los servicios enviados por IP.}                                                                                                                                                                                   \\ \hline
+% \begin{tabular}[c]{@{}r@{}}Aplicaciones\\ interactivas\end{tabular}         & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:interactiveapps}                          \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0} Mara no provee soporte para esta funcionalidad. Si se deseara posibilitar esto, sería necesario un uso diferente de este mecanismo respecto al que utiliza ISDB-Tb.}                                                                                                                                                                                   \\ \hline
+% \begin{tabular}[c]{@{}r@{}}Velocidad de\\ sintonización\end{tabular}        & 1,8 seg                                                                                                                          & \begin{tabular}[c]{@{}l@{}}Sintonización + \\ \emph{buffering} (1,7 seg)\end{tabular}                                          & \cref{sec:tunespeed}                        \\
+% \rowcolor[HTML]{C0C0C0} 
+% \textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Aún para los servicios que se transmiten por IP, es necesario sintonizar la banda de radiofrecuencia que transporta el flujo que señaliza al servicio.} \\ \hline
+
+% \end{tabular}
+% \caption{Resumen de características de la solución elaborada.\label{tab:evalcomparison}}
+% \end{table}
+
+
+
+% \newpage
+\begin{sidewaystable}[ph!]
+\centering
+\caption{Resumen de características de la solución elaborada\label{tab:evalcomparison}}
+\begin{tabular}{|r|c|c|m{2cm}|m{8cm}|}
 \hline
 \rowcolor[HTML]{656565} 
-\multicolumn{1}{|l}{\cellcolor[HTML]{656565}{\color[HTML]{EFEFEF} Aspecto}} & \multicolumn{1}{c}{\cellcolor[HTML]{656565}{\color[HTML]{EFEFEF} \begin{tabular}[c]{@{}c@{}}ISDB-Tb\\ Tradicional\end{tabular}}} & {\color[HTML]{EFEFEF}ISDB-Tb+IP}                             & {\color[HTML]{EFEFEF} Ver} \\ \hline
-Número de servicios & Hasta 5 SD y 1 LD & Hasta 50 HD & \cref{sec:maxservicenumber}                \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Con el uso del nuevo descriptor, el máximo número de servicios asciende a 50. La cota es consecuencia del tamaño máximo de la sección de la SDT.}                                                                                                                                                        \\ \hline
-\begin{tabular}[c]{@{}r@{}}Múltiples flujos\\ elementales\end{tabular}      & \cmark                                                                                                                              & \xmark                                                              & \cref{sec:multipleelementarystreams}                 \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0} Mara no posee la funcionalidad necesaria para entregar múltiples flujos elementales intercambiables. Por otro lado, su inclusión incurriría en un desperdicio innecesario de ancho de banda.}                                                                                                                                                              \\ \hline
-\begin{tabular}[c]{@{}r@{}}Guía electrónica de\\ programación\end{tabular}  & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:epg}                  \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                                   & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}El soporte que ofrece MPEG para la descripción de guía electrónica de programación no basta para el número de servicios que permite la extensión.}                                                                                                                                                              \\ \hline
-\textit{Closed Caption}                                                     & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:closedcaptioning}                   \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Mara actualmente no soporta \emph{closed captioning} para los servicios que se envían por IP. Dependiendo del tipo de los mismos, sería fácil adaptar el reproductor para soportarlo. }                                                                                                                                                                            \\ \hline
-\begin{tabular}[c]{@{}r@{}}Gestión de audiencias\end{tabular} & \xmark & \cmark & \cref{sec:traceability}                    \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}En el caso de ISDB-Tb convencional, es imposible determinar qué servicio consume cada usuario. Por el contrario, esto es posible con los servicios enviados por IP.}                                                                                                                                                                                   \\ \hline
-\begin{tabular}[c]{@{}r@{}}Aplicaciones\\ interactivas\end{tabular}         & \cmark                                                                                                                               & \xmark                                                              & \cref{sec:interactiveapps}                          \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0} Mara no provee soporte para esta funcionalidad. Si se deseara posibilitar esto, sería necesario un uso diferente de este mecanismo respecto al que utiliza ISDB-Tb.}                                                                                                                                                                                   \\ \hline
-\begin{tabular}[c]{@{}r@{}}Velocidad de\\ sintonización\end{tabular}        & 1,8 seg                                                                                                                          & \begin{tabular}[c]{@{}l@{}}Sintonización + \\ \emph{buffering} (1,7 seg)\end{tabular}                                          & \cref{sec:tunespeed}                        \\
-\rowcolor[HTML]{C0C0C0} 
-\textit{Resumen}                                                            & \multicolumn{3}{p{11cm}|}{\cellcolor[HTML]{C0C0C0}Aún para los servicios que se transmiten por IP, es necesario sintonizar la banda de radiofrecuencia que transporta el flujo que señaliza al servicio.} \\ \hline
-
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} & {\color[HTML]{EFEFEF}Ver} & {\color[HTML]{EFEFEF}Resumen} \\
+\hline \hline
+\specialcell{Número de\\servicios}              & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular}   & Hasta 50 HD                                                                        & \cref{sec:maxservicenumber} & Con el uso del nuevo descriptor, el máximo número de serviciosasciende a 50. La cota es consecuencia del tamaño máximo de lasección de la SDT.                                               \\
+\hline
+\rowcolor{gray}\specialcell{Múltiples Flujos\\ elementales}     & \cmark                                                    & \xmark                                                                         & \cref{sec:multipleelementarystreams} & Mara no posee la funcionalidad necesaria para entregar múltiplesflujos elementales intercambiables. Por otro lado, su inclusión in-curriría en un desperdicio innecesario de ancho de banda. \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark                                                    & \xmark                                                                         & \cref{sec:epg} & El soporte que ofrece MPEG para la descripción de guía electrónica de programación no basta para el número de servicios que permite la extensión.                                            \\
+\hline
+\rowcolor{gray}
+Closed Caption                   & \cmark                                                    & \xmark                                                                         & \cref{sec:closedcaptioning} & Mara actualmente no soporta closed captioning para los servicios que se envían por IP. Dependiendo del tipo de los mismos, seríafácil adaptar el reproductor para soportarlo.                \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark                                                    & \cmark                                                                         & \cref{sec:traceability} & En el caso de ISDB-Tb convencional, es imposible determinar qué servicio consume cada usuario. Por el contrario, esto es posible con los servicios enviados por,IP.                          \\
+\hline
+\rowcolor{gray}
+\specialcell{Aplicaciones\\interactivas} & \cmark                                                    & \xmark                                                                         & \cref{sec:interactiveapps} & Mara no provee soporte para esta funcionalidad. Si se deseara posibilitar esto, sería necesario un uso diferente de este mecanismo respecto al que utiliza ISDB-Tb.                          \\
+\hline
+\specialcell{Velocidad de\\ sintonización}     & 1,8s                                                  & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} & \cref{sec:tunespeed} & Aún para los servicios que se transmiten por IP, es necesario sintonizar la banda de radiofrecuencia que transporta el flujo que señaliza al servicio.\\
+\hline
 \end{tabular}
-\caption{Resumen de características de la solución elaborada.\label{tab:evalcomparison}}
-\end{table}
+\end{sidewaystable}
 
-A fin de evaluar la extensión de la norma y el reproductor Mara en un marco práctico, se analizan diversos aspectos relevantes utilizando la infraestructura presentada en \cref{fig:infra_extended} para las ejecución de pruebas. La \cref{tab:evalcomparison} presenta y clasifica los resultados de las evaluaciones. A su vez, incluye referencias a las secciones posteriores, que desarrollan más detalladamente cada prueba o aspecto del análisis. Es importante remarcar que la columna titulada \textbf{ISDB-Tb + IP} analiza los aspectos inherentes a los servicios enviados por IP. Es decir, el diagrama no establece que es imposible enviar \emph{Closed Caption} con la extensión de la norma. Sí afirma que es imposible enviarlo para aquellos servicios que se transmiten por IP.
 
 % \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 % \taburowcolors[2]{white .. black!20}
@@ -152,74 +184,23 @@ A fin de evaluar la extensión de la norma y el reproductor Mara en un marco prác
 
 \section{Número de servicios}\label{sec:maxservicenumber}
 
-El objetivo final del nuevo diseño es extender la lista de servicios provistos por una señal ISDB-Tb convencional, a través del aprovechamiento de redes IP disponibles para el decodificador.
+El objetivo final del nuevo diseño es extender la lista de servicios provistos por una señal ISDB-Tb convencional, a través del aprovechamiento de redes IP disponibles para el decodificador. En consecuencia se debe analizar la limitación del tamaño de la lista de servicios, considerando la nueva posibilidad de usar el \emph{Service Elementaries Relocation Descriptor}.
 
-En un flujo de transporte de una señal ISDB-Tb tradicional, la única limitación considerable para el número de servicios provistos viene dada por el ancho de banda disponible para transmitir los contenidos multimedia. En el caso del formato extendido, los servicios que se envían por IP no ocupan ancho de banda(en términos de contenido multimedia) y el mismo requerido por la información de señalización es despreciable.
+Son varios los aspectos que se deben considerar para determinar la verdadera limitación del número de servicios en un flujo de transporte, de acuerdo al formato MPEG. En esta sección se mencionan estos aspectos y se incluye el resultado del análisis, pero para una discusión completa de este punto, ver el \cref{app:appendix_service_number}.
 
-El número máximo de servicios con el uso del nuevo descriptor está determinado por dos restricciones fijadas por el formato MPEG. La primera es el tamaño de sección, que afecta la transmisión de tablas, limitando la cantidad de información que pueden transportar. Siendo que el tamaño requerido varía, se analiza cada tabla por separado. La segunda restricción es la frecuencia mínima de emisión de tablas.
+\begin{itemize}
+	\item \textbf{Tamaño de sección:} El tamaño de sección para la mayoría de las tablas de ISDB-Tb es de 1024 \emph{Kilobytes}. Esto limita el número de entradas y descriptores que pueden incluirse en ellas. Las tablas afectadas son la PAT y la SDT.
+		\begin{itemize}
+			\item\textbf{PAT:} Transporta contenidos binarios, por lo que la señalización no ocupa demasiado espacio. En la absoluta mayoría de los casos, toda la información necesaria cabe en un único paquete TS. En una sección de PAT pueden señalizarse hasta 252 servicios. 
+			\item\textbf{SDT:} Transporta información textual sobre el flujo de transporte. En primer lugar esto significa que los contenidos son los más pesados de todas las tablas obligatorias. En segundo lugar, la cantidad de bytes utilizados para la misma depende de los servicios que describe. Para un análisis que supone nombres de servicios de 9 caracteres en promedio, la SDT ubica la cota superior en el número de servicos en 50.
+		\end{itemize}
+	\item \textbf{Disponibilidad de paquetes nulos:} La inclusión de servicios no implica que las PMT crezcan, en su lugar aparecen nuevas instancias de la tabla. Es la única tabla con estas características.
+		\begin{itemize}
+			\item \textbf{PMT:} La adición de un servicio, de acuerdo al capítulo anterior, requiere del reemplazo de un paquete nulo por uno que contenga una instancia de esta tabla. El formato MPEG establece que debe haber una separación temporal máxima de 200 milisegundos entre instancias de la PMT para un mismo servicio. Con esta restricción, es necesario considerar el \emph{bitrate} del flujo de transporte en el análisis. Para un flujo de transporte similar al de Canal 23 estudiado previamente, la limitación de este aspecto del formato fija el número máximo de servicios en 200.  
+		\end{itemize} 
+\end{itemize}
 
-La \cref{fig:max_serv_num} muestra cómo afectan las dos restricciones al número máximo de servicios señalizados por cada tabla. La barra roja indica cuántos servicios puede señalizar una tabla si ésta ocupa una sección completa y, por el otro, la barra azul indica cuántos servicios se pueden señalizar con un único paquete de flujo de transporte.
-
-% TODO: La SDT puede dividirse en múltiples secciones. Así que hay que modificar esto y el dibujito para contemplarlo.
-
-\begin{figure}[h]
-	\begin{center}
-	\includegraphics[width=10cm]{imgs/maximo_num_servicios.png}
-	\caption{Cantidad máxima de servicios permitida por cada tabla.\label{fig:max_serv_num}} 
-	\end{center}
-\end{figure}
-
-% TODO: Quizás un reordenamiento es lo ideal acá. Porque no se entiende bien que el cuello de botella se presente al medio.
-
-\subsection{Tamaño de sección}
-
-% Averiguar qué concha es el tamaño de sección. Porque si distintos pedazos de la tabla se pueden enviar en distintas secciones, estamos hasta la chota.
-% A partir de ahí la SDT tiene que compartir ancho de banda con la PMT. Podría intentar construir un ts con una SDT de muchas secciones.
-% Si ese es el caso, seríá útil hacer una escala de "para x servicios, y ancho de banda necesario"
-
-Las tablas viajan en estructuras sintácticas denominadas \emph{secciones}. El encabezado de una sección contiene su longitud en bytes en un campo de \emph{12 bits}. En consecuencia, este campo limita la longitud a 4096 bytes. Pero el estándar ISDB-Tb, a su vez, define que sólo la sección que transporta una EIT puede alcanzar este tamaño. El resto de las secciones deben limitarse a \emph{1024 bytes}. En consecuencia, las tablas involucradas en la señalización de servicios transportados por IP están acotadas a este tamaño. 
-
-A continuación se analiza cómo influye esta cota sobre el número total de servicios. Todas las mediciones se realizaron construyendo flujos de transporte reales, donde las tablas y secciones fueron creadas y multiplexadas utilizando el conjunto de herramientas provisto por OpenCaster y \emph{ts\_util}\cite{tsutil}.
-
-\subsubsection{PAT}
-
-Al momento de extender la lista de servicios de un flujo de transporte, el número de PAT's que viajan se conserva igual. Existe una PAT por flujo de tranporte. Sin embargo, el tamaño de la sección que transporta la PAT impone, como muestra la \cref{fig:max_serv_num}, un máximo de 252 servicios, en promedio. Este valor podría disminuir ante la inclusión de descriptores o datos adicionales, pero este no es un caso común. Si además se deseara limitar el tamaño de la PAT a un único paquete, la cota se reduce a 41 servicios.
-
-El motivo para utilizar una PAT de un único paquete radica en la drástica simplificación de la multiplexación y decodificación del flujo de transporte. Adicionalmente, implica un pequeño ahorro en paquetes de flujo de transporte (que podría ser utilizado, por ejemplo, para agregar nuevas PMT's, aunque esto no implique una diferencia sustancial).
-
-\subsubsection{SDT}
-
-La SDT transporta contenido textual descriptivo de los servicios y ésto le confiere dependencia respecto de los servicios provistos por el flujo de transporte. Para realizar la medición del número máximo de servicios que permite esta tabla, se utilizaron nombres de una longitud promedio de 9 caracteres. Como puede apreciarse en la \cref{fig:max_serv_num}, una sección establece una cota superior de 50 servicios, mientras que una SDT de un único paquete puede describir hasta 8 servicios. Esto convierte a las SDT en una limitación real para el número se servicios señalizables por la extensión del estándar ISDB-Tb.
-
-\subsection{Disponibilidad de paquetes nulos}
-
-% Decir que son dos imposiciones diferentes la que hace que la PMT limite el numero de servicios y la que hace que la SDT lo haga.
-
-Finalmente, resta analizar cómo influye la PMT sobre el número máximo de servicios que se pueden señalizar. A diferencia de las otras dos, la PMT no cambia en tamaño en la medida en que se agregan servicios, dado que aparecen nuevas instancias en lugar de modificar las existentes. Por lo tanto la limitación del tamaño de sección no afecta a la PMT. El problema es que cada una requiere un PID distinto y cada PID requiere de un paquete de flujo de transporte distinto. La solución planteada inserta estos paquetes donde el flujo original contenía paquetes nulos. Esta sección analiza la suficiencia de estos paquetes para la inserción de PMT's.
-
-Cada uno de los servicios de un flujo de transporte requiere la emisión de una PMT asociada, así sea un servicio regular o uno cuyos flujos elementales se transmiten por IP. El estándar ISDB-Tb establece que el intervalo máximo de tiempo entre instancias de la tabla es de 200 milisegundos. Siendo que una sección se transporta en, al menos, un paquete, y el número de paquetes en un intervalo de tiempo es necesariamente finito, el número de servicios también lo es en consecuencia. 
-
-Para este análisis se continúa con el ejemplo del Canal 23, presentado en el capítulo Introducción Técnica. De los $17.3 Mbps$ disponibles del flujo de tranporte, unos $2.4 Mbps$ son ocupados por paquetes nulos, los cuales pueden ser reemplazados por una PMT de un servicio realocado. Esta cifra representa unos 1500 paquetes nulos por segundo. La norma ISDB-Tb determina que las instancias de la PMT deben encontrarse en un período regular de $200 ms$, un quinto de segundo. Así, la cantidad de paquetes disponibles para insertar PMT's se aproxima a los 300.
-
-Esta estimación indica que el número máximo de servicios, si de la PMT depende, tiene una cota superior en 300. El problema de esta aproximación es que ignora la variabilidad de \emph{bitrate} utilizado; y la cota superior real es el mínimo local absoluto de número de paquetes nulos en períodos de $200ms$ en todo el flujo de transporte. Siendo que este es arbitrariamente largo, es imposible determinar este número con certeza. 
-
-\begin{figure}[h]
-	\begin{center}
-	\includegraphics[width=14cm]{imgs/nulos_disponibles.png}
-	\caption{Gráfico lineal de disponibilidad de paquetes nulos en el flujo de transporte\label{fig:null_available}} 
-	\end{center}
-\end{figure}
-
-La \cref{fig:null_available} presenta los resultados de una medición sobre un fragmento real de flujo de transporte de Canal 23. Muestra el conteo de paquetes nulos disponibles en los siguientes $200 ms$ de reproducción para cada instante de un fragmento de flujo de transporte de dos minutos y medio de duración. Se puede apreciar que el mínimo alcanzado es de 271 paquetes para un instante que ronda el segundo 86. Esto quiere decir que el número máximo de PMT's que se puede incluir dada esta sección del flujo de transporte supera las 200 instancias. 
-
-Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, sino el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb. En conclusión, una estimación conservadora del número máximo de servicios que se pueden incluir en un flujo de transporte con características similares al de Canal 23 es de \textbf{200 servicios}.
-
-\begin{center}
-\noindent\rule{4cm}{0.4pt}
-\end{center}
-
-
-Del conjunto de entidades analizadas deviene el hecho de que la SDT es el limitante real para el número de servicios señalizables. Para un conjunto de servicios cuya longitud de nombres promedia los 9 caracteres, la cota superior es de \textbf{50 servicios por flujo de transporte}. El resto de las tablas no influyen directamente sobre esta limitación.
+En conclusión, el número máximo de servicios, si bien depende de los contenidos del flujo de transporte, responde directamente al formato de específico de la SDT. Y para el caso promedio de 9 caracteres por nombre de servicio, este número es de 50 servicios por flujo de transporte. 
 
 \section{Flujos elementales múltiples}\label{sec:multipleelementarystreams}
 
@@ -266,11 +247,11 @@ Existen varios estándares ampliamente difundidos para la transmisión de \emph{Cl
 	\item \textbf{Señalizados}: Categorizamos en este grupo a los canales de \emph{Closed Caption} que deben ser referidos por la \pmt\ y que viajan en un flujo elemental con su propio PID. En esta categoría entra el formato ARIB-37.
 \end{itemize}
 
-Mara no posee la funcionalidad de reproducir ninguno de los dos tipos. La imposibilidad de reproducir subtítulos señalizados viene dada por el diseño de la señalización. Por otro lado, la imposibilidad de reproducir los subtítulos embebidos se debe a la forma que Wari reproduce los flujos elementales. 
+Mara no posee la funcionalidad de reproducir ninguno de los dos tipos. Sin embargo, cambios en el cliente son suficientes para proveerlos, dado que no son limitacione del formato MPEG sino la incapacidad del reproductor de entregarlos al cliente.
 
-Reproducir el \emph{Closed Caption} de la primer categoría requeriría de Mara leer la PMT del servicio realocado para demultiplexar los paquetes que transportan los datos de subtitulado. Para esto, \emph{mpegparser} debería filtrar los paquetes involucrados y realizar el \emph{parsing}.
+La imposibilidad de reproducir subtítulos señalizados viene dada por el diseño de la señalización. Por otro lado, la imposibilidad de reproducir los subtítulos embebidos se debe a la forma que Wari reproduce los flujos elementales. Reproducir el \emph{Closed Caption} de la primer categoría requeriría de Mara leer la PMT del servicio realocado para demultiplexar los paquetes que transportan los datos de subtitulado. Para esto, \emph{mpegparser} debería filtrar los paquetes involucrados y realizar el \emph{parsing}.
 
-Los subtítulos de la segunda categoría pueden ser manejados directamente por el reproductor, dado que forman parte del video. El cambio necesario implica enviar un mensaje al reproductor para active la pista de subtítulos correspondiente. La complejidad de la modificación depende el estándar de \emph{Closed Caption}, pero no implica la lectura del flujo de transporte en \emph{mpegparser}, facilitando drásticamente la implementación.
+De forma mucho más simple, los subtítulos de la segunda categoría pueden ser manejados directamente por el reproductor, dado que forman parte del video. El cambio necesario implica enviar un mensaje al reproductor para active la pista de subtítulos correspondiente. La complejidad de la modificación depende el estándar de \emph{Closed Caption}, pero no implica la lectura del flujo de transporte en \emph{mpegparser}, facilitando drásticamente la implementación.
 
 \section{Gestión de audiencias}\label{sec:traceability}
 
@@ -324,6 +305,13 @@ En conclusión, mientras los servicios audiovisuales de una señal ISDB-Tb se real
 \end{figure}
 
 Utilizando la infraestructura de prueba presentada en la \cref{fig:test_scheme} se realizaron mediciones sobre el tiempo de selección de un servicio. La \cref{fig:tune_time} presenta los resultados obtenidos clasificándolos por el servicio \emph{destino}, dado que este valor es independiente del servicio \emph{origen}. Hay cuatro escenarios posibles:
+
+\begin{itemize}
+	\item El servicio destino se transmite por el mismo canal de radiofrecuencia, de forma tradicional. En la \cref{fig:tune_time} corresponde al destino \emph{regulares}, misma frecuencia.
+	\item El servicio destino se transmite de forma tradicional, pero por una frecuencia distinta a la sintonizada actualmente. En el gráfico corresponde a los servicios regulares, distinta frecuencia.
+	\item El servicio destino se transmite por una red IP, y es señalizado por el flujo de transporte sintonizado actualmente. En el gráfico, servicios realocados, misma frecuencia.
+	\item El servicio destino se transmite por la red IP, y es señalizado por un flujo de transporte ajeno al actual. En el gráfico, servicios realocados, distinta frecuencia.
+\end{itemize}
 
 La medición de mayor magnitud corresponde a la selección de un servicio tradicional que se transmite por un flujo de transporte distinto al actual, obligando al reproductor a realizar una sintonización de banda. La demora para tal selección es de $1.8$ segundos. Por el contrario, si el servicio sí se encuentra en el mismo flujo de transporte, el tiempo de selección no supera las tres décimas de segundo.
 

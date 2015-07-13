@@ -196,7 +196,7 @@ Los \emph{service\_id} serán: 60000 para ``TV Universidad'' y 60001 para ``TV La
 
 \subsubsection{Adición de servicios a la \pat}
 
-La \pat\ les asigna PID's a las \pmt\ de los servicios del flujo de transporte. Habiendo ya definido los \emph{service\_id}, sólo resta definir los \pid s. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado o utilizado por alguna otra componente del flujo. Se incluye una lista en el apéndice [TODO: Apéndice de los pids reservados].
+La \pat\ les asigna PID's a las \pmt\ de los servicios del flujo de transporte. Habiendo ya definido los \emph{service\_id}, sólo resta definir los \pid s. En el caso de los \pid\, es importante cuidar que no se utilice un número de \pid\ reservado o utilizado por alguna otra componente del flujo. Se incluye una lista de PIDs reservados en ARIB-STD B10.
 
 Los \pid\ asignados a las \pmt\ serán 1000 para ``TV Universidad'' y 1001 para ``TV La Plata''.
 
@@ -220,13 +220,9 @@ Las tablas generadas con los script incluidos poseen la característica de ocupar
 
 Con el objetivo de mantener exactamente el mismo bitrate, se pueden ubicar en el lugar de paquetes nulos, reemplazándolos. Para hacer la inserción, es necesario conocer el bitrate de emisión del flujo de transporte y, a su vez, calcular la posición de las inserciones a realizar, dado que la \pmt\ debe aparecer en un período de 200 milisegundos.
 
-Para realizar estas tareas se utilizará la librería \emph{ts\_util}\cite{tsutil} desarrollada específicamente para este trabajo. Incluye varias herramientas. En la multiplexación intervienen \texttt{packet\_replacer}(reemplaza los paquetes de un flujo de transporte de un PID definido por otro) y \texttt{packet\_inserter}(inserta un paquete en un flujo de transporte en el lugar de un paquete nulo, a fin de que aparezca en un período dado).
+Para realizar estas tareas se utilizará la librería \emph{ts\_util}\cite{tsutil} desarrollada específicamente para este trabajo. Incluye varias herramientas. En la multiplexación intervienen \texttt{packet\_replacer}(reemplaza los paquetes de un flujo de transporte de un PID definido por otro) y \texttt{packet\_inserter}(inserta un paquete en un flujo de transporte en el lugar de un paquete nulo, a fin de que aparezca en un período dado). El \cref{lst:tsutilmux} incluye las líneas utilizadas en la multiplexación final del flujo de transporte de referencia.
 
 \lstinputlisting[language=bash,caption={Multiplexación a través de \emph{ts\_util}},label={lst:tsutilmux}]{src_code/mux.sh}
-
-El \cref{lst:tsutilmux} incluye las líneas utilizadas en la multiplexación final del flujo de transporte de referencia. La utilización de las herramientas se explica en detalle en [TODO: Apéndice]
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -288,9 +284,6 @@ Las componentes necesarias para probar el sistema son:
 
 La última componente del sistema concierne a la recepción. A continuación se introduce \emph{Mara}, una modificación de \emph{Wari} que es capaz de consumir el \emph{Service Elementaries Relocation Descriptor} y entregar la lista extendida completa de servicios de un flujo de transporte con el descriptor. 
 
-%----------------------------------------------------------------------------------------------------------
-TODO: También podemos pensar en un ejemplo en el que se pasan los servicios a Multicast, por ejemplo, y se libera muchísimo bitrate. Se puede lograr algo así como ``Realocación por eventos''.
-%----------------------------------------------------------------------------------------------------------
 
 El desarrollo de Mara se ubica sobre Wari aprovechando la absoluta mayoría de funcionalidades que no sufren cambios respecto a ISDB-Tb tradicional. Específicamente, Mara se comporta de manera idéntica a Wari cuando consume un flujo de transporte regular.
 
@@ -309,7 +302,7 @@ El siguiente paso es construir un prototipo de software de recepción que sea cap
 \end{itemize}
 
 La \cref{fig:maraflowdiag} presenta un diagrama de flujo para la reproducción de servicios con la inclusión de la nueva funcionalidad.
-
+\newpage
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[height=\textheight]{imgs/play_flow_diagram_mara.png}
@@ -376,7 +369,7 @@ En detalle, el \emph{parsing} de descriptores en Mara implica los siguientes cam
 	\end{center}
 \end{figure}
 
-El \cref{lst:desccapture} es utilizado en Mara para obtener una instancia del \emph{Service Elementaries Relocation Descriptor} a partir del flujo de transporte sintonizado. [TODO: Arrglar el pedazo de codigo para que las variables coincidan con los diagramas (y ulteriormente con el codigo).] El macro \texttt{DESC\_PARSE(descriptors, elementaries\_relocation, d)} genera la invocación del \emph{parser} del descriptor, incluido en el \cref{lst:descparse}.
+El \cref{lst:desccapture} es utilizado en Mara para obtener una instancia del \emph{Service Elementaries Relocation Descriptor} a partir del flujo de transporte sintonizado. El macro \texttt{DESC\_PARSE(descriptors, elementaries\_relocation, d)} genera la invocación del \emph{parser} del descriptor, incluido en el \cref{lst:descparse}.
 
 \lstinputlisting[language=C++,caption={Captura de \emph{Elementary Streams Relocation Descriptor} en Mara},label={lst:desccapture}]{src_code/desc_capture.cpp}
 
@@ -406,7 +399,7 @@ A partir de los \pid\ filtrados, las clases de demultiplexación construyen un UR
 
 \lstinputlisting[language=C++,caption={Construcción de URL de reproducción en Mara},label={lst:maraplay}]{src_code/mara_play.cpp}
 
-Finalmente, la \cref{fig:marascreenshot} es una captura de pantalla de Mara en funcionamiento (TODO: No lo es aun, debe cambiarse por la verdadera. Esta es del ts viejo. También hay que cambiar el caption por mara en lugar de wari). En la imagen se pueden ver los servicios ``TV Universidad'' y ``TV La Plata'' conformando la lista de servicios disponible. El servicio sintonizado es ``TV Universidad'', que está siendo consumido desde multicast.
+Finalmente, la \cref{fig:marascreenshot} es una captura de pantalla de Mara en funcionamiento. En la imagen se pueden ver los servicios ``TV Universidad'' y ``TV La Plata'' conformando la lista de servicios disponible. El servicio sintonizado es ``TV Universidad'', que está siendo consumido desde multicast.
 
 \begin{figure}[H]
 \begin{center}

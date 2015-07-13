@@ -9,13 +9,13 @@ En este trabajo de tesina se ha diseñado y especificado una extensión de la norm
 
 \section{Crecimiento de la lista de servicios}
 
-La norma ISDB-Tb define los lineamientos para la transmisión de televisión digital en Argentina. Para la organización de la información, ISDB-Tb usa el formato MPEG Transport Stream. Para lograr el crecimiento de la lista de servicios de una señal, se creó un nuevo descriptor que respeta las consideraciones definidas en este formato.
+La norma ISDB-Tb define los lineamientos para la transmisión de televisión digital en varios países del mundo, incluyendo Argentina. Para la organización de la información, ISDB-Tb usa el formato MPEG Transport Stream que permite la multiplexación de múltiples servicios en un único flujo. Para la demultiplexación, MPEG provee tablas. Las tablas entregan información necesaria al receptor y permiten el agregado de descriptores. Los hay obligatorios y opcionales; también permite el formato MPEG el uso de descriptores privados, definidos por el usuario.
 
-El descriptor definidio, incluye la información necesaria para señalizar la emisión del servicio a través del protocolo IP. El \emph{service elementaries relocation descriptor} se incluye en las PMT de los servicios que se emiten por la topología IP. La estructura sintáctica del descriptor permite la inclusión de un grupo multicast y un número de puerto.
+Para lograr el crecimiento de la lista de servicios de una señal, se creó un nuevo descriptor que respeta las consideraciones definidas en el formato MPEG, pudiendo clasificarse como privado. El mismo incluye la información necesaria para señalizar la emisión del servicio a través del protocolo IP. El \emph{service elementaries relocation descriptor} se incluye en las PMT de los servicios que se emiten por red IP. La estructura sintáctica del descriptor permite la inclusión de un grupo multicast y un número de puerto.
 
-La lista de servicios se construye de manera tradicional. Primero a través de un proceso de \emph{scan} que recolecta las SDT de cada flujo de transporte. Las instancias de esta tabla proveen los nombres que componen la lista.
+En el capítulo Introducción Técnica se demostraron dos procedimientos necesarios en la reproducción de televisión digital, siendo el primero de ellos el \emph{scan} y el segundo la sintonización de servicios. El primero, que construye la lista de servicios se mantiene intacta. Inicialmente, se recorren todas las frecuencias disponibles, recolectando las SDT de cada flujo de transporte. Las instancias de esta tabla proveen los nombres que componen la lista.
 
-El proceso que cambia respecto a los servicios tradicionales es la sintonización. En el punto en que se ha capturado una instancia de la PMT, en la obtención de un servicio regular, es necesario comenzar a filtrar paquetes con los PID indicados. Por otro lado, si la PMT carga el \emph{service elementaries relocation descriptor}, entonces no posee flujos elementales asociados. En su lugar, es posible obtener el grupo multicast y puerto de emisión. 
+El proceso que cambia es la sintonización, pero sólo en el caso de los servicios que incluyen una instancia del \emph{service elementaries relocation descriptor}. Si la PMT carga tal descriptor, entonces no posee flujos elementales asociados en el \emph{transport stream}. En su lugar, es posible obtener de su \emph{payload} el grupo multicast y puerto de emisión por el que se emiten los flujos. Una vez el receptor dispone de los mismos, puede redirigirlos hacia su reproducción sin la necesidad de interpretar sus contenidos. 
 
 \subsection{Características importantes de la combinación ISDB-Tb con IP}
 
@@ -88,6 +88,17 @@ La \cref{fig:canal_23_no_pmt} es una adaptación de la \cref{fig:extended23} del 
 
 La ventaja primordial en una solución de estas características es que elimina la necesidad de cambiar paquetes nulos por PMTs, simplificando notoriamente la inserción de servicios. Si además se eliminara la restricción sobre el tamaño de secciones para las tablas PAT y SDT, el número de servicios podría ascender considerablemente.
 
+\section{Conclusión}
+
+Esta tesina presenta un primer acercamiento al inconveniente del número de servicios transmitidos por la televisión digital terrestre, y logra que sea comparable a la señal analógica en este aspecto. Es una solución que puede convivir perfectamente en el esquema actual de transmisión y respeta los estándares involucrados. Tiene aún muchos puntos para mejorar, pero el diseño simple y ordenado de la solución y de MPEG desplazan todo el trabajo al esfuerzo de implementación de un cliente tan poderoso como se requiera. \emph{Mara} es una adaptación muy sencilla que sirve como referencia de lo realizado. Es deseable, en un futuro, crear una versión de \emph{Mara} nueva, con un enfoque más modular y flexible que el que impulsó a \emph{Wari}, cuyos objetivos fueron claros desde un inicio como reproductor de TV tradicional.
+
+Es cierto que la digitalización puso a la señal de aire sobre la mesa, pero aún no es ni remotamente suficiente considerando la hegemonía del cable como medio. Se procuró con este trabajo acortar las distancias que se encuentran al analizar soluciones que combinen diferentes entornos. Esta iniciativa, lejos de ser novedosa, posee algunos referentes como \emph{HbbTV} que tiene 6 años de vida al momento de escritura de este informe. Aún así dista de poseer la popularidad necesaria para ser reconocido como el mecanismo \emph{de facto} para consumir televisión, pero da evidencia de que la inciativa es un buen camino a seguir.
+
+La distribución de contenidos televisivos es un tema de investigación atractivo por dos motivos. En primer lugar, disciplinas muy diversas intervienen en la construcción del servicio: Ingenieros electrónicos, expertos en telecomunicaciones, diseñadores de experiencia de usuario y hasta sociólogos y artistas, que producen contenidos. El aparato que rodea la entrega de servicios audiovisuales involucra mecanismos extremadamente complejos a niveles muy diversos de abstracción. La informática colabora apenas en una porción del desafío completo.
+
+En segundo lugar, es un tema de desarrollo en la agenda de las empresas más importantes del mundo y el debate técnico está vigente actualmente. Sucede que, al igual que con internet, la televisión es simplemente el medio. Los usos que se le dan actualmente apenas comienzan a experimentar interactividad y múltiples pantallas; dando así nacimiento a nuevos protocolos y formatos, como MPEG-DASH, para señales adaptativas. Está demás observar que en Argentina, este fenómeno se potencia por circunstancias geográficas, sociales y hasta económicas.
+
+En los orígenes de la televisión a color, la necesidad de incluir \emph{closed caption} presentó un incoveniente enorme para las normas de televisión y la solución dista de ser perfecta. Pero fue un logro técnico admirable. En la actualidad, la posibilidad de incluir contenidos digitales propios abre un abanico nuevo de oportunidades atractivas cuyo desafío tecnológico no es inabordable, en absoluto, por estudiantes de grado.
 
 \ifx\all\undefined
 \end{document}

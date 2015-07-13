@@ -16,6 +16,7 @@
 \usepackage[citecolor=black, urlcolor=black, linkcolor=black, colorlinks=true, bookmarksopen=true]{hyperref}
 \usepackage{cleveref}
 \usepackage{float}
+\usepackage{rotating}
 \usepackage{enumitem}
 \usepackage[font={small,it}]{caption}
 % \usepackage[toc]{glossaries} %xindy
@@ -30,6 +31,9 @@
   \nonscript\mskip-\medmuskip
 }
 \makeatother
+
+\usepackage{amsthm}
+\newtheorem{definition}{Definición}
 
 \usepackage[]{geometry}
 \usepackage{tikz}
@@ -54,7 +58,7 @@
 \definecolor{comments}{RGB}{0,0,113}
 \definecolor{red}{RGB}{160,0,0}
 \definecolor{green}{RGB}{0,90,0}
-\definecolor{gray}{RGB}{190,190,190}
+\definecolor{gray}{RGB}{220,220,220}
 \definecolor{mauve}{RGB}{160,126,175}
 
 \crefname{table}{\spanishtablename}{\spanishtablename}
@@ -153,3 +157,6 @@
   (\umlcdPackageName.north west) {\umlcdPackageTitle};
   \end{pgfonlayer}
 }
+
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}r@{}}#2\end{tabular}}

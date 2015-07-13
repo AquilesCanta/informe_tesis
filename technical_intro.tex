@@ -6,29 +6,31 @@
 
 La Televisión Digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50.
 
-El término \textbf{Televisión digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
+El término \textbf{Televisión Digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
 Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
 	\item Exhibe una mejor calidad de sonido e imagen.
 	\item Permite contenidos en alta definición.
-	\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora\footnote{En la televisión analógica existe una correspondencia unívoca entre los canales de radiofrecuencia y los servicios provistos por la emisora. Es decir, en cada canal viaja un único servicio. Por eso, en la televisión analógica se suele referir a los servicios como canales. El término correcto, sin embargo, es \emph{servicio}. Canal hace referencia a una división en el espectro de radiofrecuencia.}.
-	\item Permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.
-	\item Permite que se integren y complementen los contenidos con Internet. Por ejemplo, referenciando recursos que se encuentran en la web.
+	\item Posibilita la multiprogramación, dado que permite la transmisión de varias señales en el mismo ancho de banda asignado a la emisora. Esta es una diferencia sustancial respecto de la correspondencia unívoca entre servicio y canal de radiofrecuencia de la televisión analógica.
+	\item Permite que un mismo servicio provea varios flujos distintos de un mismo tipo. Por ejemplo, para transmitir una película con audio en varios idiomas.\footnote{La televisión analógica utiliza técnicas (como \emph{Second Audio Program}) para la emisión de dos alternativas de audio o \emph{closed caption}. No obstante, no se puede hablar de multiplicidad de flujos, dado que se limita a tipos específicos de flujos y, en general, a dos alternativas.}
 	\item Permite brindar servicios complementarios, como aplicaciones interactivas y guía electrónica de programación.
 	\item Ahorra ancho de banda. Es posible transmitir más servicios en el mismo ancho de banda.
-	\item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, o GPS's con sintonizador.
-	\item Permite que un contenido audiovisual pueda verse en diferentes aparatos con diferentes calidades, esto se conoce como \emph{producción para multiplataforma}. Esto es, que un mismo servicio se reproduzca con una resolución en un televisor, y con una menor en un dispositivo pequeño.
+	\item Permite brindar servicios a una mayor cantidad de dispositivos, como teléfonos celulares, computadoras portátiles, o GPS's con sintonizador. Esto se conoce como \emph{producción para multiplataforma}. Un mismo servicio se puede reproducir en distintos dispositivos, con diferentes soportes de resolución.
 \end{enumerate}
 
-El término televisión digital define a cualquier formato de difusión de programación de audio y video digitalizado, que utiliza \emph{bits} para codificar la información. Puede ser canalizada por distintos medios y viajar con distintos formatos. Los principales tipos de televisión digital son (ver \cite{liendo}):
+\section{Conceptos Preliminares}\label{sec:concep_prelim}
+
+La televisión digital utiliza \emph{bits} para codificar tanto contenidos audiovisuales como metainformación. Las señales digitales pueden ser canalizadas por distintos medios y viajar con distintos formatos. Los principales tipos de televisión digital son (ver \cite{liendo}):
 \begin{itemize}
 \item Terrestre: Emite la señal a través del espectro de radiofrecuencia de la atmósfera terrestre sobre las bandas UHF\footnote{\emph{Ultra High Frequency}: designación del \emph{Iternational Telecommunication Union} para las frecuencias que oscilan entre los 300MHz y 3GHz}.
 \item Satelital: Consiste en retransmitir desde un satélite una señal emitida desde un punto en la Tierra utilizando SHF\footnote{\emph{Super High Frequency}: designación del \emph{Iternational Telecommunication Union} para las frecuencias que oscilan entre los 3GHz y 30GHz}. 
 \item Cable: Utilizan la señal propagada por redes de cable coaxial o fibra óptica.
-\item \emph{Internet Protocol Television}(IPTV): El término ha adquirido varias definiciones con el crecimiento de las tecnologías. En este marco utilizaremos la definición provista por la \emph{Internation Telecommunication Union}\cite{ituiptv}:
+\item \emph{Internet Protocol Television}(IPTV): El término ha adquirido varias definiciones con el crecimiento de las tecnologías. En este marco utilizaremos la definición provista por la \emph{International Telecommunication Union}\cite{ituiptv}:
 
-	IPTV define a la entrega de servicios como televisión/video/audio/texto/imágenes/datos sobre redes basadas en IP manejadas para proveer el nivel requerido de calidad de servicio y experiencia, seguridad, interactividad y confiabilidad.
+\begin{definition}
+	IPTV define a la entrega de servicios como televisión/video/audio/texto/imágenes/datos sobre redes basadas en IP manejadas para proveer el nivel requerido de calidad de servicio y experiencia, seguridad, interactividad y confiabilidad.\label{def:iptv}
+\end{definition}
 % IPTV is defined as multimedia services such as television/video/audio/text/graphics/data delivered over IP based networks managed to provide the required level of quality of service and experience, security, interactivity and reliability.
 
 \item \emph{Over the Top}(OTT): Consiste en la transmisión de televisión por internet. A diferencia de IPTV, al no utilizar una red manejada, no presenta garantías de calidad de servicio.
@@ -51,7 +53,7 @@ Las primeras dos categorías se denominan \emph{de radiodifusión}, dado que utili
 
 La televisión terrestre envía información a través del espectro de radiofrecuencia de la atmósfera que oscila entre los 300Mhz y los 3GHz. Al ser éste un fenómeno físico intrínsecamente analógico, la información digital que se desea transmitir se codifica por medio de variaciones de amplitud y fase de la señal. Estas variaciones se denominan \textbf{modulación}. ISDB-Tb permite utilizar varios parámetros de modulación distintos.
 
-Por sobre la codificación de la información digital, la norma define una forma de organización de los bytes. Ésta organización compone lo que se denomina \emph{formato contenedor}. En el caso de ISDB-Tb, el formato contenedor de la transmisión es el \textbf{Flujo de Transporte MPEG} (\emph{MPEG Transport Stream}), definido en MPEG-2 ISO/IEC standard 13818.
+Por encima de la capa de codificación de la información digital o modulación de bits, la norma define una forma de organización de los bytes. Ésta organización compone lo que se denomina \emph{formato contenedor}. En el caso de ISDB-Tb, el formato contenedor de la transmisión es el \textbf{Flujo de Transporte MPEG} (\emph{MPEG Transport Stream}), definido en MPEG-2 ISO/IEC standard 13818. Es este formato el que permite la multiplexación de servicios y flujos multimedia en una misma señal de radiofrecuencia. Por supuesto, aprovechando la efectividad de las técnicas avanzadas de modulación de información digital.
 
 \subsection{Modulación y bitrate disponible}
 
@@ -73,14 +75,14 @@ La limitación de bitrate de los canales físicos establece una cota superior para
 	\end{center}
 \end{figure}
 
-Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta argentina[TODO: Agregar cita de tda] del 5 de Junio de 2013 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
+Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 527 Mhz) de la Televisión Digital Abierta Argentina del 5 de Junio de 2013 dispone de un ancho de banda de 17,3 Mbps. Presenta 3 servicios: TV Pública HD(un video HD, dos audios), Tecnópolis(un video SD, un audio) y TV Pública(un video LD, un audio). El bitrate promedio para estos videos se presenta en \cref{tab:avgbitrates}.
 
 \begin{table}[H]
 \begin{center}
 \resizebox{\linewidth}{!}{
 	\begin{tabular}{| l | c | c | c |}
 	\hline 
-	\textbf{Nombre del servicio} & \textbf{Tipo de video} & \textbf{Bitrate promedio utilizado} & \textbf{Porcentaje del bitrate del flujo utilizado}\\
+	\textbf{Nombre del servicio} & \textbf{Tipo de video} & \textbf{\begin{tabular}[x]{@{}c@{}}Bitrate promedio\\utilizado\end{tabular}} & \textbf{\begin{tabular}[x]{@{}c@{}}Porcentaje del bitrate\\del flujo utilizado\end{tabular}}\\
 	\hline 
 	TV Pública HD & \emph{High Definition Video} & 11,7 Mbps & 67,7\% \\
 	\hline
@@ -93,13 +95,11 @@ Para ejemplificar, un fragmento de la señal emitida por el canal 23 (frecuencia 
 	\hline 
 	\end{tabular}
 }
-\caption{Utilización de bitrate en ejemplo de Canal 23\label{tab:avgbitrates}}
+\caption{Utilización de bitrate por el video en el ejemplo de Canal 23\label{tab:avgbitrates}}
 \end{center}
 \end{table}
 
-La \cref{tab:avgbitrates} indica el bitrate promedio utilizado por los videos, sumando un total de 14Mbps. Dado que el bitrate disponible total es de 17,3 Mbps, resta indicar en qué se utiliza un 3.3 Mbps(18,7\%) del bitrate siendo que, como se ha dicho, el mismo es constante en la norma ISDB-Tb.
-
-Los audios toman un bitrate promedio de $0,4$ Mbps entre los 4. Una pequeña parte de los $2,9$ Mbps (específicamente $0,5$ Mpbs) restantes son utilizados para guía electrónica de programación y otros datos.
+La \cref{tab:avgbitrates} indica el bitrate promedio utilizado por los videos, sumando un total de 14Mbps. Dado que el bitrate disponible total es de 17,3 Mbps, resta indicar en qué se utiliza un 3.3 Mbps(18,7\%) del ancho de banda siendo que, como se ha dicho, el mismo es constante en la norma ISDB-Tb. Los audios toman un \emph{bitrate} promedio de $0,4$ Mbps entre los 4. La información requerida por el flujo de transporte para ser demultiplexable y utilizable por un decodificador comprende un $0,4\%$ del \emph{bitrate} total(unos $0,07 Mbps$). La guía electrónica de programación, por otro lado, ocupa casi el doble, con un $0,7\%$ del ancho de banda total. 
 
 Cuando el contenido de un flujo de transporte no llega a cubrir el ancho de banda disponible del canal físico, el emisor debe completar con contenido \emph{dummy} que el receptor debe ignorar. Este contenido se compone de \emph{paquetes nulos}. De modo que en la muestra utilizada por el ejemplo anterior, un promedio de $2,4$ Mbps son llenados con paquetes nulos. Contenidos con la finalidad de completar el bitrate disponible.
 
@@ -144,7 +144,7 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 % +---------------+---------------+---------------+---------------+
 % |529            |6201556        |            1.9|            0.3| Video LD (Servicio 59224)
 % +---------------+---------------+---------------+---------------+
-% |530            |935488         |            0.2|            0.0| Audio SD (Servicio 59224)
+% |530            |935488         |            0.2|            0.0| Audio LD (Servicio 59224)
 % +---------------+---------------+---------------+---------------+
 % |532            |42300          |            0.0|            0.0| Private Data (QUE ES?) (Servicio 59201 y ld)
 % +---------------+---------------+---------------+---------------+ 
@@ -152,7 +152,10 @@ Considerando los promedios del ejemplo, podría pensarse en la posibilidad de agr
 % +---------------+---------------+---------------+---------------+
 % |8191           |46091208       |           14.2|            2.4|
 % +---------------+---------------+---------------+---------------+
+%  TOTAL           322335400
+% Tablas(excluyendo EIT): 280496 + 28012 + 13912 + 5640 + 28012 + 41736 + 280496 + 280496 + 42300 + 280496 = 1281596 (0.397%) (con EIT 3589860, 1.1% )
 
+Ya es conocida la importancia de la modulación de información digital en este formato de televisión. Aún así, este proceso no es suficiente para la entrega de contenidos. Aún es necesario organizar los bytes para que tengan significado en el receptor. De otra manera, el receptor observaría un flujo ininterrumpido de bytes dispuestos fuera de contexto. A fin de interpretar los mismos es necesario agruparlos de alguna manera y asignarles un significado. Éste es el objetivo del formato contenedor \emph{MPEG-2 Transport Stream}.
 
 \subsection{MPEG Transport stream}
  
@@ -171,11 +174,11 @@ La modulación de la señal, permite pensar en cada canal físico como un flujo con
 
 Desde el punto de vista de un receptor de señal, el flujo de transporte es una serie de dígitos binarios, de modo que es imposible definir dónde termina un paquete y comienza el siguiente. El receptor también necesita saber qué información viaja en el interior de un paquete, para interpretar el contenido binario. Con estos objetivos, entre otros, cada paquete de un flujo de transporte contiene un prefijo de 4 \emph{bytes}.
 
-El primer byte de ellos es el byte de sincronización, que sirve al receptor para identificar el comienzo de los paquetes. Transporta siempre el valor 71 (0x47). Entonces, cuando el receptor sintoniza un canal de radiofrecuencia dado, debe utilizar este campo para encontrar el comienzo de los paquetes. Este proceso se conoce como \emph{sincronización}. El estándar \textbf{MPEG-TS}\cite{isoiec13818} define que, al encontrar 5 bytes de sincronización intercalados por 187 bytes, el receptor puede asumir que se ha sincronizado al flujo.
+El primer byte de ellos es el \textbf{byte de sincronización}, que sirve al receptor para identificar el comienzo de los paquetes. Transporta siempre el valor $47_H$. Entonces, cuando el receptor sintoniza un canal de radiofrecuencia dado, debe utilizar este campo para encontrar el comienzo de los paquetes. Este proceso se conoce como \emph{sincronización}. El estándar \textbf{MPEG-TS}\cite{isoiec13818} define que, al encontrar 5 bytes de sincronización intercalados por 187 bytes, el receptor puede asumir que se ha sincronizado al flujo.
 
 %El estándar de implementación de un sistema de recepción establece que al encontrar 5 bytes de sync en sus lugares, el receptor puede asumir que ha logrado sincronización. y si no encuentra uno en 3 lugares, ha perdido la sincronización.
 
-Otro de los campos del prefijo transporta el \emph{packet identifier}(\textbf{PID}) del paquete, que consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Todo filtrado de paquetes en el flujo depende del valor que transporta el PID. Con este identificador, el receptor puede filtrar los paquetes de audio, video y datos.
+Otro campo del prefijo de los paquetes de igual importancia que el byte de sincronización transporta el \emph{packet identifier}(\textbf{PID}) del paquete. Consiste en un entero sin signo de 13 \emph{bits} que identifica los contenidos. Gracias a este valor, el receptor puede obtener los paquetes de audio, video y datos. En general, es necesario conocer el PID con el que viaja una entidad del formato a fin de buscar la información que contiene.
 
 \begin{figure}[H]
 	\begin{center}
@@ -184,7 +187,7 @@ Otro de los campos del prefijo transporta el \emph{packet identifier}(\textbf{PI
 	\end{center}
 \end{figure}
 
-Para información más detallada relacionada con la estructura de los paquetes del flujo de transporte ver [TODO: Apéndice].
+Para información más detallada relacionada con la estructura de los paquetes del flujo de transporte ver \cref{App:AppendixA}.
 
 \subsection{Recepción de señal \textbf{ISDB-Tb}\label{sec:consumeisdbt}}
 
@@ -197,7 +200,7 @@ Los receptores de señal ISDB-Tb tienen dos tareas básicas. La primera tarea es e
 %VISITAR ESO QUE AHI ESTA LA LISTA DE SERVICIOS COMPLETA
 A diferencia de la televisión analógica, en televisión digital cada banda UHF contiene más de un servicio. Si se desea conocer los servicios que viajan por un canal, es necesario sintonizar ese canal e identificar los servicios a través de la información que contiene el flujo de transporte.
 
-La \cref{tab:servicestablec23} presenta una lista de servicios de la plataforma estatal. La primer columna indica el canal físico por el que viaja cada flujo de transporte y la segunda, todos los servicios asociados al mismo.
+La \cref{tab:servicestablec23} presenta una lista de servicios de la \textbf{Televisión Digital Abierta}. La primer columna indica el canal físico por el que viaja cada flujo de transporte y la segunda, todos los servicios asociados al mismo.
 
 \newpage
 \begin{table}[H]
@@ -232,13 +235,13 @@ La \cref{tab:servicestablec23} presenta una lista de servicios de la plataforma 
 \end{table}
 
 
-Cada canal físico contiene un flujo de transporte independiente, que multiplexa a su vez varios servicios. Un sintonizador puede decodificar un único canal físico en un momento dado. De modo que para indicar al usuario la lista completa de servicios debe memorizarlos previamente. A este proceso se lo conoce como ``SCAN''.
+Cada canal físico contiene un flujo de transporte independiente, que multiplexa a su vez varios servicios. Un sintonizador puede decodificar un único canal físico en un momento dado. De modo que para indicar al usuario la lista completa de servicios debe memorizarlos previamente. A este proceso se lo conoce como ``\emph{scan}''.
 
-El SCAN consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema. A partir de esta información, el receptor puede conocer los nombres de los servicios y su tipo. A su vez, recordará en qué canal se encuentra cada uno, para su posterior sintonización.
+El \emph{scan} consiste en recorrer todas las frecuencias posibles, sincronizándose y memorizando información del sistema. A partir de esta información, el receptor puede conocer los nombres de los servicios y su tipo. A su vez, recordará en qué canal se encuentra cada uno, para su posterior sintonización.
 
-En la \cref{tab:servicestablec23} se incluye la lista de canales de la plataforma estatal. Asumiendo que se desea construir esa lista de servicios, el SCAN consiste en recorrer los canales 22, 23, 24 y 25, memorizando toda la información que provee cada flujo de transporte. Ejemplo de esta información, en términos del Canal 23, son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') y el nombre del flujo de transporte (``TVPublica''). Estos tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521MHz).
+Asumiendo que se desea construir la lista de servicios correspondiente a la \cref{tab:servicestablec23}, el \emph{scan} consiste en recorrer los canales 22, 23, 24 y 25, memorizando toda la información que provee cada flujo de transporte. Ejemplo de esta información, en términos del Canal 23, son el nombre de la red transmisora (``RTA C23''), los nombres de los servicios (``TV Pública'', ``TV Pública HD'' y ``Tecnópolis'') y el nombre del flujo de transporte (``TVPublica''). Estos tres servicios se sumarían a todos los de otros flujos de transporte de otros canales físicos, como ``Encuentro'' de canal 22 (Frecuencia 521MHz).
 
-El proceso de SCAN puede demorar algunos minutos, dependiendo de la cantidad de frecuencias recorridas. Por eso, la información obtenida y construida hasta aquí suele ser persistida. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir este procedimiento.
+El proceso de \emph{scan} puede demorar algunos minutos, dependiendo de la cantidad de frecuencias recorridas. Por eso, la información obtenida y construida hasta aquí suele ser persistida. Así, aún luego de apagar el sistema de recepción, el usuario no requerirá volver a repetir este procedimiento.
 
 \subsubsection{Sintonización de servicios}
 
@@ -259,20 +262,22 @@ El proceso de cambiar de canal físico, implica demodular la nueva señal y sincro
 
 \subsection{Tablas}
 
-En la televisión analógica, un sistema de recepción se limita a sintonizar un canal físico, interpretar la señal y reproducirla para el usuario. La televisión digital requiere de procesos más complejos, como la construcción de la lista de servicios. Para estos, el receptor requiere información por parte del emisor fuera del contenido multimedia propiamente dicho.
+En la televisión analógica, un sistema de recepción se limita a sintonizar un canal físico, interpretar la señal y reproducirla para el usuario. La televisión digital requiere de procesos más complejos, como la construcción de la lista de servicios. Para estos, el receptor requiere información por parte del emisor fuera del contenido multimedia propiamente dicho. Para entregar dicha información, ISDB-Tb utiliza \textbf{tablas}. 
 
-ISDB-Tb utiliza las \textbf{tablas} provistas por el formato \textbf{MPEG-TS} para entregar dicha información. Las tablas son una definición sintáctica para transportar información. El formato \textbf{MPEG-TS} define una lista de tablas, donde cada una cumple un rol específico. A su vez, ISDB-Tb extiende esta lista con algunas tablas. Una lista completa de las tablas de formato \textbf{ISDB-Tb} se incluye en [TODO: Agregar apéndice].
+Las tablas son estructuras sintácticas concebidas en el formato \textbf{MPEG-TS} que cumplen una función específica como transportadores de información. Existe un conjunto de cuatro tablas denominado \emph{Program Specific Information}(\textbf{PSI}, creadas por el formato MPEG-TS) que interviene directamente en la demultiplexación de servicios. Estas son \textbf{PAT}, \textbf{CAT}, \textbf{NIT} y \textbf{PMT}, que serán exploradas a continuación. Como el formato MPEG-TS trasciende los dominios específicos como la televisión digital, es necesario que algunas tablas sean agregadas por normas como ISDB-Tb. De las tablas ajenas al PSI, sólo la \textbf{SDT} es de interés para este trabajo, que es agregada para la distribución de TV digital. La lista completa de tablas en la norma ISDB-Tb se define en ARIB-STD B10\cite{dibeg}.
 
-Los paquetes tienen tamaño de 188 bytes y disponen de aún menos para enviar contenidos. Las tablas, por ejemplo, pueden exceder este tamaño. Por ello viajan en un formato denominado ``secciones'' de longitud variable, que se dividen entre tantos paquetes como sean necesarios. El receptor debe recostruir las secciones para obtener las tablas que contiene. 
+% Los paquetes tienen tamaño de 188 bytes y disponen de aún menos para enviar contenidos. Las tablas, por ejemplo, pueden exceder este tamaño. Por ello viajan en un formato denominado ``secciones'' de longitud variable, que se dividen entre tantos paquetes como sean necesarios. El receptor debe recostruir las secciones para obtener las tablas que contiene. 
 
 La \cref{fig:esquema_servicios_c23} muestra la relación entre las distintas tablas. Las referencias entre tablas se realizan a través del PID que tienen asignado. A continuación se desarrolla la utilidad de cada una.
 
-\begin{figure}[H]
+\begin{figure}[h]
 \begin{center}
 \includegraphics[width=12cm]{imgs/canal_23_tables.png}
 \caption{Esquema general de tablas en el ejemplo de Canal 23\label{fig:esquema_servicios_c23}}
 \end{center}
 \end{figure}
+
+Es importante notar que los paquetes del flujo de transporte tienen un tamaño de 188 bytes y disponen de aún menos para cargar contenidos. Las tablas pueden exceder este tamaño. Para zanjar este problema, las mismas viajan en \emph{secciones}, que son estructuras de longitud variable y se dividen entre tantos paquetes como sean necesarios. El receptor debe recostruir las secciones para obtener las tablas que contiene. 
 
 \subsubsection{\emph{Program allocation table} (\pat)}
 
@@ -291,7 +296,7 @@ La \pat\ es la primera tabla que debe buscar el decodificador para sintonizar un
 \end{center}
 \end{table}
 
-\subsubsection{\emph{Program map table} (\pmt)}
+\subsubsection{\emph{Program Map Table} (\pmt)}
 
 La \pmt\ define los contenidos multimedia que corresponden a un programa. El \pid\ que tiene asignado un servicio por \pat, es el \pid\ con el que viaja la \pmt\ de tal servicio. Esta tabla le permite al decodificador acceder a los paquetes que llevan los flujos con contenidos multimedia a través de sus respectivos \pid.
 
@@ -310,9 +315,9 @@ Tipo de flujo & PID del flujo \\
 \end{center}
 \end{table}
 
-\subsubsection{\emph{Service description table} (\sdt)}
+\subsubsection{\emph{Service Description Table} (\sdt)}
 
-La \sdt\ describe con más detalle que otras los programas transportados por un flujo de transporte. Viaja con \pid\ 17. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc\\
+La \sdt\ describe con más detalle los programas transportados por un flujo de transporte. Viaja con \pid\ 17. Es una tabla descriptiva, como el nombre lo indica, en términos de que incluye información textual sobre el servicio, como su nombre. También establece de qué tipo de servicio se trata: radio, TV, \etc\\
 
 \begin{table}[H]
 \begin{center}
@@ -335,7 +340,7 @@ La transmisión de la \nit\ es obligatoria en los sistemas de televisión terrestr
 
 Dentro de las tablas, parte de la información viaja en un formato de longitud variable denominado ``descriptores''. Cada descriptor es identificado numéricamente de forma unívoca por un \emph{descriptor\_tag} que ocupa un \emph{byte}. El segundo elemento que viaja en un descriptor es un campo denominado \emph{descriptor\_length} que denota la longitud $l$ de la estructura en \emph{bytes}. Los siguientes $l$ \emph{bytes} transportan el contenido del descriptor propiamente dicho.
 
-Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-Tb se provee en [TODO: Apéndice de descriptores].
+Los descriptores viajan en \emph{loops} de descriptores, y no existe una limitación para la cantidad que pueden viajar en un mismo \emph{loop}. Tampoco existen restricciones para el orden en que deben viajar los descriptores y el mismo no tiene influencia sobre el significado de los mismos. Una lista completa de los tipos de descriptores de ISDB-Tb se provee en ARIB-STD B10\cite{dibeg}.
 
 Un ejemplo de descriptor es el \emph{service\_descriptor} de la SDT. Es identificado por el \emph{descriptor\_tag} 72 y transporta una descripción de un servicio, incluyendo el nombre. En el caso del ejemplo del canal 23, la SDT transporta un \emph{service\_descriptor} por cada uno de los servicios. Del mismo desde donde se obtienen los nombres ``TV Pública'', ``TV Pública HD'' y ``Tecnópolis''.
 
@@ -349,18 +354,20 @@ En el ejemplo, el servicio ``Televisión Pública HD'', el video viaja con el PID 
 
 \subsection{Decodificación de tablas en flujos de transporte\label{sec:tunesteps}}
 
-Las tareas de construcción de lista de servicios y sintonización de servicios que se tratan en la \cref{sec:consumeisdbt} se basan en la información provista por las tablas de la norma ISDB-Tb. A continuación se detalla cómo influye cada una:
+Es sumamente importante para este informe analizar cómo influyen las tablas en los procesos de \emph{scan} y selección de servicios. Es a través de estos procedimientos que la combinación de medios es posibles. En primer instancia, el \emph{scan} permite que los servicios ajenos al flujo de transporte sean presentados al usuario. Y el segundo de ellos efectiviza la búsqueda de información multimedia para su posterior reproducción. Claro está, si se requiere modificar el protocolo estándar es menester comprenderlo.  
+
+Las tareas de construcción de lista de servicios y sintonización de servicios que se trataron en la \cref{sec:consumeisdbt} se basan en la información provista por las tablas de la norma ISDB-Tb. A continuación se detalla cómo influye cada una:
 
 \subsubsection{Tablas en la construcción de lista de servicios}
 
 El proceso de construcción de la lista de servicios se resume a recorrer todas las frecuencias por las que vienen flujos de transporte, capturando la información que viaja por la \sdt\ y \nit. El receptor, con la información contenida en ambas(en todos los flujos) y en sus respectivos descriptores ya puede ofrecer la lista completa. 
 
-En este paso también se genera una asociación entre servicio y flujo de transporte. Es decir, el proceso de SCAN le indica al receptor que ``TV Pública HD'' es transmitido por Canal 23.
+En este paso también se genera una asociación entre servicio y flujo de transporte. Es decir, el proceso de \emph{scan} le indica al receptor que ``TV Pública HD'' es transmitido por Canal 23.
 
 \subsubsection{Tablas en la sintonización de servicios}
 
 \begin{enumerate}
-\item El primer paso es sintonizar el canal físico por el cual viaja el flujo de transporte que lleva el servicio deseado. El mismo se obtiene de la asociación generada en el SCAN.
+\item El primer paso es sintonizar el canal físico por el cual viaja el flujo de transporte que lleva el servicio deseado. El mismo se obtiene de la asociación generada en el \emph{scan}.
 
 \item Una vez el canal físico está en sintonía, y el receptor sincronizado con el flujo de transporte, el receptor debe reconstruir la sección que viaja con \pid\ 0, que corresponde a la \pat. 
 
@@ -398,7 +405,7 @@ La utilización de la API requiere crear un \emph{script} que genere las estructu
 
 \subsubsection{Multiplexación del flujo de transporte}
 
-Una vez se poseen todas las componentes del flujo, las mismas se pueden multiplexar a través de una herramienta provista en el proyecto llamada \texttt{tscbrmuxer}. Con esta herramienta se puede determinar el \emph{bitrate} final del \emph{ts}. Es necesario tener en cuenta el \emph{bitrate} de los flujos elementales contenidos para evitar que la distribución de la carga final sea errónea.
+Una vez que se poseen todas las componentes del flujo, las mismas se pueden multiplexar a través de una herramienta provista en el proyecto llamada \texttt{tscbrmuxer}. Con esta herramienta se puede determinar el \emph{bitrate} final del \emph{ts}. Es necesario tener en cuenta el \emph{bitrate} de los flujos elementales contenidos para evitar que la distribución de la carga final sea errónea.
 
 \section{Recepción y decodificación de señal ISDB-Tb}
 
@@ -407,7 +414,7 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
 \begin{itemize}
 	\item La mayoría de los eventos de recepción y reproducción son asincrónicos.
 	\begin{itemize}
-		\item Para ejemplificar, la lectura de tablas implica esperar que lleguen al receptor todos los paquetes necesarios para construir la sección por la que viaja. Salvo por las limitaciones de tiempo que impone la norma sobre los tiempos de emisión de la misma, no hay forma de predecir el momento en que esto ocurre.
+		\item Para ejemplificar, la lectura de tablas implica esperar que lleguen al receptor todos los paquetes necesarios para construir la sección por la que viaja. Salvo por las limitaciones de tiempo que impone la norma sobre la emisión de las diferentes tablas, no hay forma de predecir el momento en que esto ocurre. En concreto, el estándar establece que la PMT debe ser transmitida en un período no mayor a 100 milisegundos. A partir de ahí, el decodificador no posee más garantías para la espera.
 	\end{itemize}
 	\item Es un sistema que debe responder correctamente a las exigencias de un sistema \emph{soft real time}\cite{realtime}.
 	\begin{itemize}
@@ -416,74 +423,33 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
 	\end{itemize}
 \end{itemize}
 
-Éstas características hacen que los receptores sean sistemas \emph{multithreaded}. Esto se puede ver reflejado en la \cref{fig:flux_diagram_play} y la \cref{fig:flux_diagram_scan} que representan el proceso común de reproducción y SCAN de un reproductor. Estos pueden variar dependiendo de la implementación.
-
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%%
-%
-%
-%
-%
-% Agregar los diagramas de flujo y explicar un poco y después pasar a wari. Se sacó la máquina de estados pedorra que había
-%
-
-% La máquina de estados de la \cref{fig:player_state_machine} presenta los posibles estados de un reproductor de televisión digital básico. 
+Éstas características hacen que los receptores sean sistemas \emph{multithreaded}. Esto se puede ver reflejado en la \cref{fig:flux_diagram_play} y la \cref{fig:flux_diagram_scan} que representan el proceso común de reproducción y \emph{scan} de un reproductor. Estos pueden variar dependiendo de la implementación.
 
  \begin{figure}
 	\begin{center}
 	\includegraphics[height=19cm]{imgs/play_seq_diagram.png}
-	\caption{Diagrama de flujo de reproducción\label{fig:flux_diagram_play}} 
+	\caption{Diagrama de Flujo del procedimiento tradicional de Reproducción de Servicios\label{fig:flux_diagram_play}} 
 	\end{center}
 \end{figure}
 
  \begin{figure}
 	\begin{center}
 	\includegraphics[height=13cm]{imgs/scan_seq_diag.png}
-	\caption{Diagrama de flujo de SCAN\label{fig:flux_diagram_scan}} 
+	\caption{Diagrama de Flujo del procedimiento tradicional de \emph{Scanning}\label{fig:flux_diagram_scan}} 
 	\end{center}
 \end{figure}
 
 \subsection{Reproductor de Televisión Digital Wari}
 
-\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}.
+\emph{Wari} es un reproductor de televisión digital en la norma ISDB-Tb ideado para ser utilizado en computadoras personales. Es actualmente desarrollado y mantenido por Lifia\cite{lifia}, bajo la licencia LGPL\cite{lgpl}. Está desarrollado mayoritariamente en C++ y es un sistema \emph{multithreaded}. Información útil respecto al reproductor se puede encontrar en el \cref{app:appendix_wari}. En esta sección se exploran los conceptos estrictamente necesarios para el desarrollo de esta tesina.
 
-Está desarrollado mayoritariamente en C++ y es un sistema \emph{multithreaded}. Con el único fin de simplificar, los diagramas de secuencia que se introducen a continuación se representan como sistemas de un único hilo.
+Los diagramas de secuencia presentados en este informe presentan un único hilo de ejecución. En realidad, Wari utiliza un \emph{dispatcher} de tareas a través del cual los hilos se asignan invocaciones de funciones que deben ser realizadas cuando el control está disponible. Para la notificación de finalización de estas tareas (como podría ser la lectura satisfactoria de una tabla), se puede utilizar este mismo mecanismo o invocación de funciones \emph{callback}. Si bien la ejecución de los métodos es en realidad diferida, la simplificación ayuda drásticamente la lectura y comprensión de los procesos.
 
-En realidad, Wari utiliza un \emph{dispatcher} de tareas a través del cual los hilos se asignan invocaciones de funciones que deben ser realizadas cuando el control está disponible. Para la notificación de finalización de estas tareas (como podría ser la lectura satisfactoria de una tabla), se puede utilizar este mismo mecanismo o invocación de funciones \emph{callback}.
-
-En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. Para más información, el se puede consultar el sitio de descarga de código fuente y manuales de Wari.
+%En [TODO: Apéndice ] se realiza una breve explicación del sistema de comunicación de \emph{threads} en Wari. Para más información, el se puede consultar el sitio de descarga de código fuente y manuales de Wari.
 
 \subsection{Construcción de lista de servicios en Wari}
 
-Contruir la lista de servicios consiste en identificar todos los servicios que aparecen en todos los flujos de transporte disponibles para el sistema receptor. En el caso común, recorrer las \sdt\ de todos los flujos de transporte sería suficiente, dado que esta indica los nombres y tipos de los servicios. No obstante, Wari realiza un proceso algo diferente explicado en la \cref{fig:descparse_wari}, donde intervienen la \pat\ y \pmt.
-
-\begin{figure}[]
-\begin{center}
-
-\resizebox{\linewidth}{!}{
-\input{diagrams/descriptor_parsing_sequence_diagram}
-}
-\caption{Diagrama de Secuencia de construcción de lista de servicios en Wari\label{fig:descparse_wari}}
-\end{center}
-\end{figure}
-
-La solicitud del usuario de un SCAN lleva a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles.
-
-Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan al \texttt{Provider}, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. Parte del procesamiento de las tablas, como se indica en la \cref{fig:descparse_wari}, implica procesar también los descriptores que incluye la tabla.
-
-Para obtener las tablas \sdt, \pat, y \pmt, es necesario antes construir las secciones por las que viajan. A su vez, las secciones requieren de los paquetes sobre los que viajan. Los paquetes se asocian a las tablas a través del \pid. Cada tabla tiene un \pid\ asignado. 
-
-Para obtener los paquetes de un \pid\ dado, el sistema utiliza los \emph{demuxers}. Los \emph{demuxers} son \emph{listeners} que se ubican sobre el flujo de transporte que esperan un paquete con un \pid\ dado. De modo que cuando el \texttt{ServiceProvider} desea construir la lista de servicios, le pide al \texttt{Provider} que cree un \emph{demuxer} para cada tabla que necesitan, a través del método \texttt{startFilter(aDemuxer)}\footnote{El método se llama \texttt{startFilter} en lugar de \texttt{startDemuxer} porque la componente que conecta el \emph{demuxer} con el flujo de transporte se llama \texttt{filter}.}. 
-
-Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}. 
+Contruir la lista de servicios consiste en identificar todos los servicios que aparecen en todos los flujos de transporte disponibles para el sistema receptor. En el caso común, recorrer las \sdt\ de todos los flujos de transporte sería suficiente, dado que esta indica los nombres y tipos de los servicios. Wari da un paso extra e involucra también las tablas \pat\ y \pmt. Si bien este no es exactamente igual al procedimiento descrito por el estandar, garantiza que los servicios que aparecen en la lista de servicios sean seleccionables para el usuario\footnote{No es algo completamente extraño encontrar flujos de transporte mal formados donde no se emiten tablas necesarias o hay errores de referencia por PID.}. El procedimiento completo se describe en la \cref{fig:descparse_wari}, la \cref{fig:class_scan_diag} muestra un enfoque estático de la lógica utilizada en Wari a través de un diagrama de clases.
 
 \begin{figure}[]
 \begin{center}
@@ -496,9 +462,27 @@ Un diagrama de la relación estática entre las clases del sistema se presenta en 
 \end{center}
 \end{figure}
 
+La solicitud del usuario de un \emph{scan} lleva a la invocación del método \texttt{startScan} de la clase \texttt{Tuner}. Ésta solicitará sistemáticamente al \texttt{Provider} que sintonice las frecuencias disponibles. Sobre cada una de las frecuencias, el \texttt{ServiceProvider} esperará por la \sdt, la \pat, y la \pmt. Cuando las tablas llegan al \texttt{Provider}, se notifica a las instancias de la clase \texttt{Service} correspondiente, y esta se actualiza acordemente. Parte del procesamiento de las tablas, como se indica en la \cref{fig:descparse_wari}, implica procesar también los descriptores que incluye la tabla.
+
+Para obtener las tablas \sdt, \pat, y \pmt, es necesario antes construir las secciones por las que viajan. A su vez, las secciones requieren de los paquetes sobre los que viajan. Los paquetes se asocian a las tablas a través del \pid. Cada tabla tiene un \pid\ asignado. 
+
+Para obtener los paquetes de un \pid\ dado, el sistema utiliza los \emph{demuxers}. Los \emph{demuxers} son \emph{listeners} que se ubican sobre el flujo de transporte que esperan un paquete con un \pid\ dado. De modo que cuando el \texttt{ServiceProvider} desea construir la lista de servicios, le pide al \texttt{Provider} que cree un \emph{demuxer} para cada tabla que necesitan, a través del método \texttt{startFilter(aDemuxer)}\footnote{El método se llama \texttt{startFilter} en lugar de \texttt{startDemuxer} porque la componente que conecta el \emph{demuxer} con el flujo de transporte se llama \texttt{filter}.}. 
+
+Un diagrama de la relación estática entre las clases del sistema se presenta en la \cref{fig:class_scan_diag}. 
+
+\begin{figure}[]
+\begin{center}
+
+\resizebox{\linewidth}{!}{
+\input{diagrams/descriptor_parsing_sequence_diagram}
+}
+\caption{Diagrama de Secuencia de construcción de lista de servicios en Wari\label{fig:descparse_wari}}
+\end{center}
+\end{figure}
+
 Descripción de la responsabilidad de las clases:
 \begin{itemize}
-	\item \texttt{Tuner} coordina el proceso de SCAN desde el tope de la jerarquía de abstracción. La clase \texttt{Tuner} responde a todos los requerimientos del \emph{Zapper}\footnote{Se denomina \emph{Zapper} a un dispositivo utilizado para sintonizar servicios en un televisor.} que utiliza el usuario. 
+	\item \texttt{Tuner} coordina el proceso de \emph{scan} desde el tope de la jerarquía de abstracción. La clase \texttt{Tuner} responde a todos los requerimientos del \emph{Zapper}\footnote{Se denomina \emph{Zapper} a un dispositivo utilizado para sintonizar servicios en un televisor.} que utiliza el usuario. 
 	\item \texttt{ServiceProvider} junto con \texttt{ServiceManager} gestionan los servicios(que se modelan a través de la clase \texttt{Service}), durante todo su ciclo de vida. Es esta clase la que posee la lista de servicios propiamente dicha.
 	\item \texttt{Provider} encapsula y abstrae las operaciones de \emph{hardware} del dispositivo de sintonización subyacente. También gestiona los \emph{demuxers}. 
 	\item Cada instancia de \texttt{Service}, finalmente, modela un servicio que viene por alguno de los flujos de transporte disponible. Guarda información como \emph{service\_id} nombre y tipo.  
@@ -511,15 +495,9 @@ Descripción de la responsabilidad de las clases:
 %%% Complete
 %%%
 
-El proceso de recolección de flujos consiste en la reconstrucción del flujo elemental original que se deconstruye en la multiplexación del flujo de transporte. Antes de comentzar la recolección, el receptor debe conocer los \pid\ de todos los flujos elementales requeridos para reproducir enteramente el servicio. Por ejemplo, en el caso de ``TV Pública HD'', se deben obtener del flujo de transporte todos los paquetes de \pid\ 289 y 290, que corresponden al video HD y al primero de los audios, respectivamente, como se indica en la \cref{fig:esquema_servicios_c23}.
+El proceso de recolección de flujos consiste en la reconstrucción del flujo elemental original que se deconstruye en la multiplexación del flujo de transporte. Antes de comenzar la recolección, el receptor debe conocer los \pid\ de todos los flujos elementales requeridos para reproducir enteramente el servicio. Por ejemplo, en el caso de ``TV Pública HD'', se deben obtener del flujo de transporte todos los paquetes de \pid\ 289 y 290, que corresponden al video HD y al primero de los audios, respectivamente, como se indica en la \cref{fig:esquema_servicios_c23}.
 
-El proceso de reproducción de flujos elementales, por el contrario, comienza una vez se dispone de los flujos elementales reconstruidos, luego que se ha realizado un \emph{buffering} de suficientes paquetes. Consiste en decodificarlos y obtener las imagenes y el audio que componen al servicio. En Wari, este proceso es realizado por algún reproductor existente. Sin embargo, el reproductor debe tener forma de acceder a estos flujos elementales.
-
-%Usa un callback que se llama onStarted. Pero nosotros los simplificamos.
-
-
-
-La \cref{fig:classdiagramservices} muestra un diagrama de clases de la infraestructura relacionada con la recolección de flujos elementales. 
+El proceso de reproducción de flujos elementales comienza una vez se dispone de los flujos elementales reconstruidos, luego que se ha realizado \emph{buffering} de suficientes paquetes. Consiste en decodificarlos y obtener las imagenes y el audio que componen al servicio. En Wari, este proceso es realizado por alguna librería de reproducción existente, como VLC\cite{vlc}. Wari sólo se limita a facilitar el acceso a los flujos elementales a la librería de reproducción elegida\footnote{Este es uno de los tantos aspectos parametrizables en la configuración de compilación de Wari.}. La \cref{fig:classdiagramservices} muestra un diagrama de clases de la infraestructura relacionada con la recolección de flujos elementales. 
 
 \begin{figure}[]
 	\begin{center}
@@ -542,7 +520,7 @@ Las clases representadas en la \cref{fig:classdiagramservices} son:
 \end{itemize}
 
 
-La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. El proceso de decodificación escapa al objetivo de este informe. \cref{App:AppendixA} [TODO: ¿Apéndice?]
+La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recolección y reproducción de flujos elementales a partir de la solicitud de sintonización de un servicio. Este protocolo deriva del formato MPEG-TS.
 
 \begin{figure}[]
 \begin{center}
@@ -554,13 +532,14 @@ La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recol
 \end{center}
 \end{figure}
 
-En Wari, cuando el usuario solicita el cambio de canal, el control llega e la clase \texttt{Tuner}. A partir de entonces, el primer paso es buscar la instancia de la clase \texttt{Service} que corresponde al servicio solicitado por el usuario.
+En Wari, cuando el usuario solicita el cambio de canal, el control llega a la clase \texttt{Tuner}. A partir de entonces, el primer paso es buscar la instancia de la clase \texttt{Service} que corresponde al servicio solicitado por el usuario. Una vez que se dispone de esta, se le debe indicar al \texttt{PlayerExtension} que se busca reproducir el servicio. Éste obtiene de la instancia de \texttt{Service} la información asociada a los flujos elementales que se deben reproducir, como los \pid\ de los mismos. Toda esta información es enviada al \texttt{AvPlayer}.
 
-Una vez se dispone, se le debe indicar al \texttt{PlayerExtension} que se desea reproducir el servicio. Éste obtiene de la instancia de \texttt{Service} la información asociada a los flujos elementales que se deben reproducir, como los \pid\ de los mismos. Toda esta información es enviada al \texttt{AvPlayer}.
+Los \pid\ permiten ubicar filtros sobre los flujos de transporte. El filtro, a su vez, facilita la recepción de todos los paquetes con un \pid\ determinado. Es el \texttt{AvPlayer} quien crea los filtros para los flujos elementales del servicio a reproducir. Sin embargo, aún es necesario indicarle al reproductor la forma de reproducirlos. Esto se entrega en un \emph{Uniform resource locator} o URL. 
 
-Los \pid\ permiten ubicar filtros sobre los flujos de transporte. El filtro, a su vez, permite recibir todos los paquetes con un \pid\ dado. Es el \texttt{AvPlayer} quien crea los filtros para los flujos elementales del servicio a reproducir. Sin embargo, aún es necesario indicarle al reproductor la forma de reproducirlos. Esto se entrega en una URL. 
+El URL de reproducción se construye en el método \texttt{makeURL} de \texttt{PlayerExtension}. Este URL se almacena en el \texttt{AvPlayer} para que posteriormente, cuando el proceso de cambio de canal haya terminado, el \emph{main thread} se lo solicite y se lo envie al reproductor de audio y video. En el caso de selección de servicios tradicional, este URL refiere al dispositivo de sintonización y parámetros que sirven, en conjunto, para que la librería de reproducción multimedia pueda obtener los paquetes PES directamente. La observación pertinente a realizar es que la flexibilidad de los URL disponen de un dominio casi universal, permitiendo que se localicen no sólo dispositivos de hardware, sino también recursos en una red IP, o potencialmente recursos web. Este parámetro es un excelente punto de introducción para nuevos medios de transmsión, permitiendo la fácil reproducción de IPTV en el esquema global de transmisión.
 
-La URL de reproducción se construye en el método \texttt{makeURL} de \texttt{PlayerExtension}. Esta URL se guarda en el \texttt{AvPlayer}, para que posteriormente, cuando el proceso de cambio de canal haya terminado, el \emph{main thread} se la solicite y se la envie al reproductor de audio y video.
+
+% TODO: Acá tenemos que enganchar el capítulo de IPTV!
 
 % \{Obtención de servicios}
 
@@ -626,17 +605,30 @@ La URL de reproducción se construye en el método \texttt{makeURL} de \texttt{Pla
 
 \section{IPTV, \emph{Internet protocol television}}
 
-Adaptando la definición anterior a las necesidades de este trabajo, IPTV es la transmisión de televisión digital sobre una red manejada que utiliza la \emph{suite} de protocolos IP. Las redes manejadas permiten aprovechar la infraestructura para garantizar estándares de calidad. Además, en el caso de televisión donde el número de receptores suele ser grande y el contenido se distribuye sin modificación, el esquema de transmisión multicast es el ideal.
+La \cref{def:iptv} de la \emph{International Telecommunication Union}, presentada en la \cref{sec:concep_prelim}, explica el término forma abstracta, en consideración de las posibles variantes del uso del término. Pone énfasis en la garantía de calidad y confiabilidad. Siendo que estos aspectos de la transmisión de televisión a través de internet no son centrales para este trabajo, se buscará acotar la definición para que se adapte al uso que se le dará en los caplitulos siguientes. Previo a introducir la misma, es necesario explorar aspectos específicos del medio para diferenciarlo del medio terrestre. 
+
+\begin{itemize}
+	\item \textbf{Bitrate varaible}: A diferencia de la señal radioeléctrica, el uso de ancho de banda se adapta a los contenidos transmitidos.
+	\item \textbf{Conmutación de paquetes}: La delimitación de paquetes en las redes IP es una garantía de la infraestructura, no es necesario que el formato contenedor respete tamaños de información específicos, ni que el receptor se sincronice.
+	\item \textbf{\emph{Multicasting}}: Las redes IP permiten la emisión multicast, ideal para los contenidos televisivos. La señal ISDB-Tb llega a todos los receptores(con alcance físico) por igual y estos optan por consumirla o ignorarla. En las redes IP, los \emph{hosts} deben solicitar la emisión para que esta les sea provista. Además, contar con la dirección IP y el puerto del grupo son suficientes para identificarlo y obtener los contenidos que emite.
+	% TODO: Quizá algún ITEM más que se me esté pasando por alto.
+\end{itemize}
+
+El objetivo de este trabajo es incrementar el tamaño de la lista de servicios sin incurrir en una mayor exigencia de ancho de banda en el flujo de transporte. A partir del objetivo se puede elaborar una nueva definición de IPTV que se adecúa más al ámbito de desarrollo de estos objetivos.
+
+\begin{definition}
+	IPTV define la entrega de servicios audiovisuales en emisión \emph{multicast} a través de una red IP, donde cada servicio se limita a la multiplexación de un flujo de audio y uno de video junto con la información indispensable para la reproducción simultánea y sincronizada.
+\end{definition}
 
 \subsection{Multicasting IP}
 
-El multicasting IP\cite{multicastip} es un método de envío de datagramas IP a través de una única transmisión, a un grupo de receptores interesados. Es una técnica \emph{uno a muchos} muy utilizada en la entrega de contenidos multimedia en tiempo real, como es el caso de IPTV.
+El multicasting IP\cite{multicastip} es un método de envío de datagramas a través de una única transmisión, a un grupo de receptores interesados. Es una técnica \emph{uno a muchos} utilizada en la entrega de contenidos multimedia en tiempo real, como es el caso de IPTV.
 
 El protocolo más común de capa de transporte utilizado para multicast IP es UDP\cite{udp}. UDP no posee protección ante pérdida de paquetes o errores de transmisión, de modo que es necesario contemplar estos problemas en alguna de las capas superiores. 
 
-Para soportar multicasting, los \emph{routers} de una red IP debe dar soporte y permitir su uso a los \emph{host} de la misma. El multicasting IP consiste en un conjunto de \emph{grupos multicast} identificados unívocamente por una dirección IP. En el caso de IP versión 4, las direcciones que identifican grupos multicast van desde \emph{224.0.0.0} hasta \emph{239.255.255.255}.
+Para soportar multicasting, los \emph{routers} de una red IP debe dar soporte y permitir su uso a los \emph{host} de la misma. El multicasting IP consiste en un conjunto de \emph{grupos multicast} identificados unívocamente por una dirección IP. En el caso de IP versión 4, las direcciones que identifican grupos multicast van desde \emph{224.0.0.0} hasta \emph{239.255.255.255}. Cuando un \emph{host} desea comenzar a recibir los paquetes correspondientes a una emisión multicast, debe unirse al grupo multicast por el cual se realiza la emisión. Cabe notar que los paquetes UDP poseen un puerto destino, de modo que también es necesario conocer el puerto al que se envian estos paquetes. 
 
-Cuando un \emph{host} desea comenzar a recibir los paquetes correspondientes a una emisión multicast, debe unirse al grupo multicast por el cual se realiza la emisión. Además, cabe notar que los paquetes UDP poseen un puerto destino, de modo que también es necesario conocer el puerto al que se envian estos paquetes. 
+Con \emph{multicasting} IP acaba la lista de conceptos necesarios para la comprensión de la combinación de medios explorada en el capítulo que continúa. Lo que resta estudiar es la forma de encastrar las piezas existentes y cubrir las brechas que aparezcan, evitando construir agentes de software complejos que rompan las compatibilidades existentes y los objetivos de este trabajo. 
 
 \ifx\all\undefined
 \end{document}

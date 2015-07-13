@@ -4,7 +4,7 @@
 %  Clases
 %-----------------------------------------------------------
 
-\begin{class}[text width=6.5cm]{Provider}{0,0}
+\begin{class}[text width=6.5cm]{Provider}{0,-0.1}
 \attribute{\_demuxers : vector<Demuxer>}
 % virtual operation
 \operation{startFilter(Demuxer*):void}
@@ -25,11 +25,11 @@
 
 \end{class}
 
-\begin{class}[text width=5cm]{ServiceManager}{0, 8}
+\begin{class}[text width=5cm]{ServiceManager}{0, 8.13}
 \operation{findService(ServiceId):Service*}
 \end{class}
 
-\begin{class}[text width=6cm]{ServiceProvider}{0,5}
+\begin{class}[text width=6cm]{ServiceProvider}{0,4.7}
 \inherit{ServiceManager}
 \operation{updateServices(Table) : void}
 \operation{start():void}

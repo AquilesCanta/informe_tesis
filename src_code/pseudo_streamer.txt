@@ -2,8 +2,8 @@ iterador := 0
 MIENTRAS( VERDADERO )
 	SI (iterador = paquetes_en_flujo)
 		iterador := 0
-	SI (iterador < f(instante_actual()))
-		d := nuevo_datagrama()
+	SI (iterador < f(instanteActual()))
+		d := obtenerNuevoDatagrama()
 		MIENTRAS(d.entranMasPaquetes() y iterador < paquetes_en_flujo)
 			SI (flujo[iterador].noEsPaqueteNulo())
 				d.agregarPaquete[flujo[iterador]]
