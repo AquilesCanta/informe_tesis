@@ -18,22 +18,46 @@ La \cref{fig:infra_extended} representa la infraestructura involucrada en la emi
 	\end{center}
 \end{figure}
 
-En adición a los elementos comunes de televisión digital en la norma ISDB-Tb tradicional, el nuevo esquema necesita de dos entidades al final del \emph{pipeline} de producción de contenidos  para soportar el \emph{streaming} a través de una red IP.
+En adición a los elementos comunes de televisión digital en la norma ISDB-Tb tradicional, el nuevo esquema necesita de dos entidades al final del \emph{pipeline} de producción de contenidos  para soportar el \emph{streaming} a través de una red IP: el \textbf{servidor de streaming} y un \textbf{coordinador}.
 
-El primero de los nuevos elementos es el servidor de \emph{streaming} que consiste en un \emph{host} con conexión a la red IP. Su responsabilidad es emitir el contenido audiovisual del servicio al que corresponde. Los paquetes deben ser dirigidos al grupo y puerto multicast indicados en la información provista a través del \emph{service elementaries relocation descriptor} de la norma ISDB-Tb extendida. 
+\subsubsection{Servidor de streaming}
 
-Para asegurar esta correspondencia, se introduce una segunda entidad. El \emph{coordinador} decide qué servicios se emiten en la señal ISDB-Tb de forma tradicional y cuáles por la red IP. Define, además, qué grupo multicast y puerto se usan para la emisión. Con esta información se completa el \emph{services elementaries relocation descriptor} y se configura el servidor de \emph{streaming} multicast.
+El servidor de \emph{streaming} consiste en un \emph{host} con conexión a la red IP. Su responsabilidad es emitir el contenido audiovisual del servicio reubicado que le corresponde. Los paquetes deben ser dirigidos al grupo y puerto multicast indicados en la información provista a través del \emph{elementary streams relocation descriptor} de la norma ISDB-Tb extendida. 
 
+\subsubsection{Coordinador}
 
-\subsection{Cabeceras de transmisión}
+Para garantizar que la información provista por el nuevo descriptor y la información de \emph{multicasting} sean congruentes, se requiere esta nueva entidad. El \emph{coordinador} decide qué servicios se emiten en la señal ISDB-Tb de forma tradicional y cuáles por la red IP. Luego, define qué grupo multicast y puerto se usan para la emisión. Con esta información se completa el \emph{elementary streams relocation descriptor} y se configura el servidor de \emph{streaming} multicast.
 
-Una emisora ISDB-Tb modula una señal que puede ser directamente intepretada por un decodificador. Esto es, el flujo de transporte provee todas las capas de abstracción necesarias para la comunicación. De este modo, soluciona problemas como sincronización, multiplexación y corrección de errores.
+\subsection{Infraestructura de prueba}
 
-En cambio, las redes IP se basan en el intercambio de paquetes entre nodos y respetan un modelo de capas. El término IP refiere a una de estas capas. Esto significa que el mecanismo con que estos paquetes se transmiten recae sobre los protocolos de capa inferior a la capa IP y los enlaces que unen a estos nodos. De forma inherente al modelo de capas, cada una agrega \emph{overhead} necesario para cumplir sus funciones.
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=14cm]{imgs/infraestructura_prueba.png}
+	\caption{Esquema de las pruebas\label{fig:test_scheme}} 
+	\end{center}
+\end{figure}
 
-Si un flujo de transporte es enviado a través de una red IP, como es el caso de los servicios reubicados, las diferentes capas incurren en un \emph{overhead} de comunicación, a veces redundante. Por ejemplo, los mecanismos de sincronización que provee el flujo de transporte son innecesarios en las redes IP. También, tanto el \emph{transport stream} MPEG como el protocolo UDP proveen \emph{checksum}\footnote{Si bien podría argumentarse que esto mejora la calidad de control de errores, la realidad es que viola la razón fundamental detrás del modelo de capas.}.
+Para las pruebas realizadas cuyos resultados se exponen en este capítulo se utilizó un banco de trabajo representado en la \cref{fig:test_scheme}. Las entidades que pueden observarse son:
 
-En términos de la \cref{fig:infra_extended}, el enlace entre el servidor de \emph{streaming} y la red IP resulta un eslabón clave en el esquema. Especialmente si se trata de un servidor que debe transmitir varios servicios por la red. La sobrecarga de esta vía implicaría que se vean afectados todos los servicios que emite en caso de alcanzar su límite de acho de banda. Por el contrario, es más más extraño encontrar sobrecargas sobre los enlaces de \emph{última milla}\footnote{Término utilizado en telecomunicaciones para referir al último extremo de la red que entrega conexión a los clientes.}. Se puede asumir que estos enlaces van a transportar un pequeño número de servicios simultáneamente, probablemente uno.
+\begin{itemize}
+	\item \textbf{Host Multiplexador:} Controla la moduladora y provee el \emph{transport stream} extendido que se emite a través de la señal modulada. En este punto se introducen los elementos necesarios para señalizar los servicios que se obtienen a través de la red IP, identificada por la dirección IP asignada por el coordinador. Por supuesto, en un escenario ficticio como este, la coordinación se trata de configurar correctamente descriptores y \emph{streaming} únicamente.
+	\item \textbf{Moduladora}: Convierte el \emph{transport stream} en una señal radioeléctrica modulada.
+	\item \textbf{Combinador de señales:} Es un dispositivo simple que mezcla la señal modulada que transporta el \emph{transport stream} generado y una señal regular de Televisión Digital Abierta. El objetivo de esta combinación es estudiar la convivencia del flujo de tranporte generado con otros tradicionales.
+	\item \textbf{Sintonizador:} El sintonizador es la contrapartida de la moduladora, convierte una señal modulada en un \emph{bitstream} intepretable por \emph{Mara}.
+	\item \textbf{Mara:} Computadora que corre el reproductor de televisión y entrega los servicios al usuario, consumiendo de una u otra fuente de manera transparente.
+	\item \textbf{Red IP:} Red con soporte de la \emph{suite} de protocolos IP, incluyendo emisión multicast.
+	\item \textbf{Host de \emph{streaming}:} Emite el flujo de transporte que incluye el servicio reubicado a través del grupo indicado por el coordinador.
+\end{itemize}
+
+\subsection{Análisis del flujo de transporte como formato contenedor en redes IP}
+
+Una emisora ISDB-Tb modula una señal que puede ser directamente intepretada por un decodificador. Desde el punto de vista del reproductor de TV, la información que arriba por el dispositivo de sintonización es una secuencia de bytes, no existen para él los aspectos específicos de modulación involucrados. Esta secuencia de bytes recibida se interpreta directamente como un flujo de transporte. Notablemente, este formato provee todas las capas de abstracción necesarias para la comunicación, solucionando problemas como sincronización, multiplexación y corrección de errores. 
+
+El caso de las redes IP es radicalmente distinto. Las mismas se basan en el intercambio de paquetes a través de medios indeterminados. Para abstraer los detalles propios de implementación de la comunicación, las redes IP respetan un modelo de capas. El término IP refiere solo a una de estas capas. Pero la información útil que arriba a un \emph{host} no abarca el total recibido, sino que se obtiene luego de un desempaquetamiento que elimina las cabeceras necesarias por las capas inferiores. Entonces, si se asume al flujo de transporte como el punto de vista de carga útil, ISDB-Tb no sufre \emph{overhead}. Las redes IP, en cambio, sí lo hacen. El objetivo de esta sección es analizar cómo influye el \emph{overhead} de los servicios reubicados a las redes IP.
+
+Existe un aspecto negativo de utilizar el flujo de transporte a través de una red IP, como ocurre en los servicios reubicados. Por la duplicidad de capas de abstracción de comunicación mencionada, el \emph{overhead} es en algunos casos redundante. Por ejemplo, los mecanismos de sincronización que provee el flujo de transporte no son necesarios en las redes IP si se alinean los paquetes. También, tanto el \emph{transport stream} MPEG como el protocolo UDP proveen \emph{checksum}\footnote{Si bien podría argumentarse que esto mejora la calidad de control de errores, la realidad es que viola la razón fundamental detrás del modelo de capas.}.  
+
+En términos de la \cref{fig:infra_extended}, el enlace entre el servidor de \emph{streaming} y la red IP resulta un eslabón clave en el esquema. Especialmente si se trata de un servidor que debe transmitir varios servicios por la red. La sobrecarga de esta vía implicaría que se vean afectados todos los servicios que emite en caso de alcanzar su límite de acho de banda. Por el contrario, es más extraño encontrar sobrecargas sobre los enlaces de \emph{última milla}\footnote{Término utilizado en telecomunicaciones para referir al último extremo de la red que entrega conexión a los clientes.}. Se puede asumir que estos enlaces van a transportar un pequeño número de servicios simultáneamente, probablemente uno.
 
 \begin{figure}[h]
 	\begin{center}
@@ -66,27 +90,6 @@ Los valores presentados se basan en mediciones realizadas sobre conexiones ether
 
 %El ancho de banda de un enlace de fibra óptica oscila entre valores [podemos medir qué ancho de banda ocupa un servicio hd en una red común y de acuerdo a eso ver qué onda, asumiendo el overhead de los encabezados ip y eso...] (Eth/IP/UDP agrega un 5.5\% de overhead!, cuando en emisión ISDB-Tb es 0. Es decir, las mediciones toman el formato contenedor.)
 
-\subsection{Infraestructura de prueba}
-
-
-\begin{figure}[h]
-	\begin{center}
-	\includegraphics[width=14cm]{imgs/infraestructura_prueba.png}
-	\caption{Esquema de las pruebas\label{fig:test_scheme}} 
-	\end{center}
-\end{figure}
-
-Para las pruebas realizadas cuyos resultados se exponen en este capítulo se utilizó un banco de trabajo representado en la \cref{fig:test_scheme}. Las entidades que pueden observarse son:
-
-\begin{itemize}
-	\item \textbf{Host Multiplexador:} Controla la moduladora y provee el \emph{transport stream} extendido que se emite a través de la señal modulada. En este punto se introducen los elementos necesarios para señalizar los servicios que se obtienen a través de la red IP, identificada por la dirección IP asignada por el coordinador. Por supuesto, en un escenario ficticio como este, la coordinación se trata de configurar correctamente descriptores y \emph{streaming} únicamente.
-	\item \textbf{Moduladora}: Convierte el \emph{transport stream} en una señal radioeléctrica modulada.
-	\item \textbf{Combinador de señales:} Es un dispositivo simple que mezcla la señal modulada que transporta el \emph{transport stream} generado y una señal regular de Televisión Digital Abierta. El objetivo de esta combinación es estudiar la convivencia del flujo de tranporte generado con otros tradicionales.
-	\item \textbf{Sintonizador:} El sintonizador es la contrapartida de la moduladora, convierte una señal modulada en un \emph{bitstream} intepretable por \emph{Mara}.
-	\item \textbf{Mara:} Computadora que corre el reproductor de televisión y entrega los servicios al usuario, consumiendo de una u otra fuente de manera transparente.
-	\item \textbf{Red IP:} Red con soporte de la \emph{suite} de protocolos IP, incluyendo emisión multicast.
-	\item \textbf{Host de \emph{streaming}:} Emite el flujo de transporte que incluye el servicio realocado a través del grupo indicado por el coordinador.
-\end{itemize}
 
 \section{Análisis del trabajo}
 
@@ -175,7 +178,7 @@ Closed Caption                   & \cmark                                       
 % Velocidad de sintonización & ~$1.8$ seg & Dependiente de la red & Resumen & \cref{sec:TODO} \\
 % \hline
 % \end{tabu}
-% \caption{Comparación entre los servicios de una señal ISDB-Tb y los servicios realocados. \textbf{(*)} Limitación impuesta por el cliente, Mara. Implementaciones más sofisticadas podrían dar soporte.\label{tab:evalcomparison}} 
+% \caption{Comparación entre los servicios de una señal ISDB-Tb y los servicios reubicados. \textbf{(*)} Limitación impuesta por el cliente, Mara. Implementaciones más sofisticadas podrían dar soporte.\label{tab:evalcomparison}} 
 
 % % Reemplazar esto por un footnote que explique que esos dos (... como puede verse en la subsección tal ...) son limitaciones de implementacion del cliente, no del estándar. Así no hay que usar el plusmark del orto, que de otra manera, habría uqe explicar.
 % \end{center}
@@ -184,7 +187,7 @@ Closed Caption                   & \cmark                                       
 
 \section{Número de servicios}\label{sec:maxservicenumber}
 
-El objetivo final del nuevo diseño es extender la lista de servicios provistos por una señal ISDB-Tb convencional, a través del aprovechamiento de redes IP disponibles para el decodificador. En consecuencia se debe analizar la limitación del tamaño de la lista de servicios, considerando la nueva posibilidad de usar el \emph{Service Elementaries Relocation Descriptor}.
+El objetivo final del nuevo diseño es extender la lista de servicios provistos por una señal ISDB-Tb convencional, a través del aprovechamiento de redes IP disponibles para el decodificador. En consecuencia se debe analizar la limitación del tamaño de la lista de servicios, considerando la nueva posibilidad de usar el \emph{Elementary Streams Relocation Descriptor}.
 
 Son varios los aspectos que se deben considerar para determinar la verdadera limitación del número de servicios en un flujo de transporte, de acuerdo al formato MPEG. En esta sección se mencionan estos aspectos y se incluye el resultado del análisis, pero para una discusión completa de este punto, ver el \cref{app:appendix_service_number}.
 
@@ -249,13 +252,13 @@ Existen varios estándares ampliamente difundidos para la transmisión de \emph{Cl
 
 Mara no posee la funcionalidad de reproducir ninguno de los dos tipos. Sin embargo, cambios en el cliente son suficientes para proveerlos, dado que no son limitacione del formato MPEG sino la incapacidad del reproductor de entregarlos al cliente.
 
-La imposibilidad de reproducir subtítulos señalizados viene dada por el diseño de la señalización. Por otro lado, la imposibilidad de reproducir los subtítulos embebidos se debe a la forma que Wari reproduce los flujos elementales. Reproducir el \emph{Closed Caption} de la primer categoría requeriría de Mara leer la PMT del servicio realocado para demultiplexar los paquetes que transportan los datos de subtitulado. Para esto, \emph{mpegparser} debería filtrar los paquetes involucrados y realizar el \emph{parsing}.
+La imposibilidad de reproducir subtítulos señalizados viene dada por el diseño de la señalización. Por otro lado, la imposibilidad de reproducir los subtítulos embebidos se debe a la forma que Wari reproduce los flujos elementales. Reproducir el \emph{Closed Caption} de la primer categoría requeriría de Mara leer la PMT del servicio reubicado para demultiplexar los paquetes que transportan los datos de subtitulado. Para esto, \emph{mpegparser} debería filtrar los paquetes involucrados y realizar el \emph{parsing}.
 
 De forma mucho más simple, los subtítulos de la segunda categoría pueden ser manejados directamente por el reproductor, dado que forman parte del video. El cambio necesario implica enviar un mensaje al reproductor para active la pista de subtítulos correspondiente. La complejidad de la modificación depende el estándar de \emph{Closed Caption}, pero no implica la lectura del flujo de transporte en \emph{mpegparser}, facilitando drásticamente la implementación.
 
 \section{Gestión de audiencias}\label{sec:traceability}
 
-La emisión en las señales ISDB-Tb es \emph{broadcast}. En este esquema los consumidores son anónimos, lo cual implica que es imposible determinar si un receptor está consumiendo un servicio dado. En el caso de los servicios realocados, las redes IP identifican a los \emph{hosts} unívocamente a través de una dirección IP. Para saber si un receptor consume un servicio tranportado por IP, éste puede ser asociado a una dirección y determinar a qué grupo multicast se ha unido.
+La emisión en las señales ISDB-Tb es \emph{broadcast}. En este esquema los consumidores son anónimos, lo cual implica que es imposible determinar si un receptor está consumiendo un servicio dado. En el caso de los servicios reubicados, las redes IP identifican a los \emph{hosts} unívocamente a través de una dirección IP. Para saber si un receptor consume un servicio tranportado por IP, éste puede ser asociado a una dirección y determinar a qué grupo multicast se ha unido.
 
 Utilizando este tipo de técnicas, sería posible para una entidad con autoridad sobre la red IP que emite los servicios determinar el número de usuarios que consumen determinado servicios, así como ubicación geográfica y otros datos más específicos. Este tipo de mediciones no se puede realizar sobre ISDB-Tb tradicional y, en general, tampoco sobre cualquier esquema \emph{broadcast}. 
 
@@ -263,7 +266,7 @@ Utilizando este tipo de técnicas, sería posible para una entidad con autoridad s
 
 \textbf{\emph{Digital storage media command and control}}(DSM-CC) es el mecanismo que utiliza la televisión digital para la distribución de aplicaciones interactivas, definido en MPEG-2, parte 6. DSM-CC provee un conjunto de herramientas para el desarrollo de canales de control en un modelo cliente/servidor. Empero, es imposible implementar directamente este modelo en la norma ISDB-Tb por la naturaleza subyacente, donde no existe un canal de retorno para el cliente.
 
-Las emisiones \emph{broadcast} de televisión digital, entonces, hacen uso de un carrusel de datos para solucionar este problema. El mismo consiste en la emisión periódica de los datos disponibles. Para que el cliente pueda acceder al cuerpo de datos que intenta obtener, simplemente debe esperar su emisión. Existen dos motivos por los que el nuevo diseño no puede realocar contenido DSM-CC a una red IP.
+Las emisiones \emph{broadcast} de televisión digital, entonces, hacen uso de un carrusel de datos para solucionar este problema. El mismo consiste en la emisión periódica de los datos disponibles. Para que el cliente pueda acceder al cuerpo de datos que intenta obtener, simplemente debe esperar su emisión. Existen dos motivos por los que el nuevo diseño no puede reubicar contenido DSM-CC a una red IP.
 
 \begin{itemize}
 \item \textbf{Implementación}: Actualmente, los contenidos recibidos a través de la red IP son alimentados directamente al reproductor audiovisual. Esto elimina la posibilidad de proveer el \emph{middleware} necesario para la ejecución de las aplicaciones. \emph{Mara} no posee la funcionalidad necesaria para redireccionar el contenido DSM-CC fuera del reproductor de video y audio hacia el intérprete de comandos.
@@ -272,12 +275,12 @@ Las emisiones \emph{broadcast} de televisión digital, entonces, hacen uso de un 
 
 Si se solucionara la ausencia de implementación de \emph{Mara}, la utilización de contenido DSM-CC en el formato establecido en la norma ISDB-Tb incurriría en un desaprovechamiento considerable del ancho de banda. Especialmente si se tiene en cuenta que la versión original del conjunto de herramientas DSM-CC se adecúa perfectamente al modelo de comunicación unicast con retorno que ofrecen las redes IP.
 
-En conclusión, mientras los servicios audiovisuales de una señal ISDB-Tb se realocan de forma natural como flujos a las redes IP, las aplicaciones interactivas deben ser tratadas de forma diferente. Preferiblemente utilizando el soporte completo que ofrece DSM-CC, para eliminar la necesidad del uso de un carrusel de datos.
+En conclusión, mientras los servicios audiovisuales de una señal ISDB-Tb se reubican de forma natural como flujos a las redes IP, las aplicaciones interactivas deben ser tratadas de forma diferente. Preferiblemente utilizando el soporte completo que ofrece DSM-CC, para eliminar la necesidad del uso de un carrusel de datos.
 % Explicar qué onda con el DSM-CC. Decir cómo funciona, y por qué no tiene sentido que se utilice a través de IP. Lo que sí es interesante, es pensar en una extensión de DSM-CC para referir recursos de internet, si es que no existe aún, porque esto facilita rotundamente el problema del carrusel de datos, etc. Puede estar buena esta sección. Lo importante es decir que el enfoque que la da la tvd a DSM-CC con carrusel de datos no tiene sentido.
 
 % \subsection{Independencia de calidad del servicio}
 
-% En la norma ISDB-Tb tradicional, un flujo de transporte ve limitado el tamaño de su lista de servicios por el ancho de banda constante que ofrece. En el caso de la realocación de servicios a través del \emph{service elementaries relocation descriptor}, el \emph{bitrate} de los flujos elementales no 
+% En la norma ISDB-Tb tradicional, un flujo de transporte ve limitado el tamaño de su lista de servicios por el ancho de banda constante que ofrece. En el caso de la reubicación de servicios a través del \emph{elementary streams relocation descriptor}, el \emph{bitrate} de los flujos elementales no 
 
 %\subsection{Averiguar qué onda con el scrambling y el acceso condicional} 
 
@@ -309,21 +312,19 @@ Utilizando la infraestructura de prueba presentada en la \cref{fig:test_scheme} 
 \begin{itemize}
 	\item El servicio destino se transmite por el mismo canal de radiofrecuencia, de forma tradicional. En la \cref{fig:tune_time} corresponde al destino \emph{regulares}, misma frecuencia.
 	\item El servicio destino se transmite de forma tradicional, pero por una frecuencia distinta a la sintonizada actualmente. En el gráfico corresponde a los servicios regulares, distinta frecuencia.
-	\item El servicio destino se transmite por una red IP, y es señalizado por el flujo de transporte sintonizado actualmente. En el gráfico, servicios realocados, misma frecuencia.
-	\item El servicio destino se transmite por la red IP, y es señalizado por un flujo de transporte ajeno al actual. En el gráfico, servicios realocados, distinta frecuencia.
+	\item El servicio destino se transmite por una red IP, y es señalizado por el flujo de transporte sintonizado actualmente. En el gráfico, servicios reubicados, misma frecuencia.
+	\item El servicio destino se transmite por la red IP, y es señalizado por un flujo de transporte ajeno al actual. En el gráfico, servicios reubicados, distinta frecuencia.
 \end{itemize}
 
 La medición de mayor magnitud corresponde a la selección de un servicio tradicional que se transmite por un flujo de transporte distinto al actual, obligando al reproductor a realizar una sintonización de banda. La demora para tal selección es de $1.8$ segundos. Por el contrario, si el servicio sí se encuentra en el mismo flujo de transporte, el tiempo de selección no supera las tres décimas de segundo.
 
 Por las mediciones, es claro que el cuello de botella en el procedimiento radica en la sintonización de banda de frecuencia. Para los servicios cuyos flujos elementales vienen por una red IP, este proceso es innecesario, de modo que es esperable que este tiempo se reduzca drásticamente. Sin embargo, la \cref{fig:tune_time} muestra lo contrario. Para explicar esto, es necesario retomar el proceso de sintonización detallado en el capítulo de introducción técnica.
 
-El diagrama de flujos de la \cref{fig:seqplaymara} expone el proceso normal de selección de un servicio para su reproducción. El bloque de condición que verifica que el servicio que se busca sintonizar pertenezca a la banda de frecuencia que está sintonizada en ese momento contiene la mayoría del tiempo de demora del procedimiento completo. 
+El diagrama de secuencia de la \cref{fig:seqplaymara}, incluida en el capítulo Diseño y Desarrollo, expone el proceso normal de selección de un servicio reubicado para su reproducción, incluyendo la construcción de la URL de reproducción. Un bloque de condición del diagrama encapsula la verificación de correspondencia de flujo de transporte sintonizado y flujo de transporte que contiene al servicio seleccionado. Este bloque comprende la mayoría del tiempo de demora del procedimiento completo. A simple vista, la sintonización física es innecesaria, dado que inmediatamente después, el reproductor pasa a consumir los contenidos desde la interfaz de red, en lugar del dispositivo sintonizador. En realidad, la omisión de este bloque incurriría en la imposibilidad de cambio de información de origen.
 
-A pesar de ser innecesario, a simple vista, para un servicio que se obtiene por una interfaz distinta del dispositivo de sintonización, es necesario que este paso se conserve para todos los servicios, independientemente del origen de sus flujos elementales. Omitir este paso, sería elminar la posibilidad de cambiar cualquier información de origen. 
+Por ejemplo, en el caso de los servicios reubicados, sería imposible cambiar grupo multicast al que el servidor que realiza el \emph{streaming}. De lo contrario, los usuarios que encendieran el reproductor antes del cambio, seguirían intentando unirse al grupo multicast antiguo. El único lugar donde se reflejaría el cambio sería en la PAT que viaja en el flujo de transporte correspondiente a la señalización de servicio. Esto sería análogo a memorizar los PID de los flujos elementales provistos por una PMT y usarlos posteriormente. Un eventual cambio de PID para el flujo imposibiliaría la sintonización del servicio.
 
-Por ejemplo, en el caso de los servicios realocados, sería imposible cambiar grupo multicast al que el servidor que realiza el \emph{streaming}. De lo contrario, los usuarios que encendieran el reproductor antes del cambio, seguirían intentando unirse al grupo multicast antiguo. El único lugar donde se reflejaría el cambio sería en la PAT que viaja en el flujo de transporte correspondiente a la señalización de servicio. Esto sería análogo a memorizar los PID de los flujos elementales provistos por una PMT y usarlos posteriormente. Un eventual cambio de PID para el flujo imposibiliaría la sintonización del servicio.
-
-En resumen, si bien para obtener los flujos elementales de un servicio realocado no es necesario un cambio de sintonía, el proceso es necesario para garantizar la consistencia del proceso de sintonización. De esta manera, se evita la referencia de grupos multicast obsoletos y se permite la ubicación de nuevos servicios en la red IP.
+En resumen, si bien para obtener los flujos elementales de un servicio reubicado no es necesario un cambio de sintonía, el proceso es necesario para garantizar la consistencia del proceso de sintonización. De esta manera, se evita la referencia de grupos multicast obsoletos y se permite la ubicación de nuevos servicios en la red IP.
 
 \ifx\all\undefined
 \end{document}

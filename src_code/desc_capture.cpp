@@ -6,8 +6,8 @@ bool Service::process( const desc::Descriptors &descriptors ) {
 	// Se excluye la captura de otros descriptores
 
 	{
-		desc::ElementariesRelocationDescriptor d;
-		if(DESC_PARSE( descriptors, elementaries_relocation, d)){
+		desc::ElementaryStreamsRelocationDescriptor d;
+		if(DESC_PARSE( descriptors, elementary_streams_relocation, d)){
 			isRelocated = true;
 			multicastPort = d.port;
 			multicastGroup = d.ipMulticast;
