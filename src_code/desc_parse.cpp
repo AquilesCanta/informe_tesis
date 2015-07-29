@@ -1,5 +1,6 @@
-bool fnc_elementary_streams_relocation(ElementaryStreamsRelocationDescriptor &desc,
-	                                   BYTE *descPayload){
+bool fnc_elementary_streams_relocation(
+	     ElementaryStreamsRelocationDescriptor &desc,
+	     BYTE *descPayload){
 	DTV_ASSERT(DESC_TAG(descPayload)
 		       == ident::elementary_streams_relocation );
 	std::string ip;

@@ -7,13 +7,13 @@
 
 \chapter{Introducción al \emph{MPEG-2 Transport Stream}} \label{App:AppendixA}
 
-En este apéndice se revisan conceptos introductorios útiles del flujo de transporte MPEG. Inicialmente se realiza un recorrido sobre el ciclo de vida de los contenidos. Luego se estudia más en detalle la estructura de la información en el formato. Si bien este apéndice tiene caracter informativo, la referencia ulterior es el estándar oficial. En lo que a formato de datos respecta, particulamente el documento ARIB STD-B10.
+En este apéndice se revisan conceptos introductorios útiles del flujo de transporte MPEG. Inicialmente se realiza un recorrido sobre el ciclo de vida de los contenidos. Luego se estudia más en detalle la estructura de la información en el formato. Si bien este apéndice tiene caracter informativo, la referencia ulterior es el estándar oficial. En lo que a formato de datos respecta, particulamente el documento ARIB-STD B10\cite{dibeg}.
 
 \section{Codificación y empaquetado de los datos}
 
 \begin{figure}[h!]
 \begin{centering}
-	\includegraphics[width=12cm]{imgs/appendix_data_gen.png}
+	\includegraphics[width=\linewidth]{imgs/appendix_data_gen.png}
 	\caption{Diagrama funcional de una estación de televisión digital terrestre\label{fig:appendix_data_gen}} 
 \end{centering}
 \end{figure}
@@ -25,7 +25,7 @@ La \cref{fig:appendix_data_gen} es una imagen simplificada de una estación que p
 	\item \textbf{Codificación}: La señal recibida es codificada y empaquetada en bloques que contienen una cantidad relativamente reducida de bits, conformando un flujo de paquetes de longitud variable.
 	\item \textbf{Paquetización y Multiplexación:} Los paquetes producidos en la etapa anterior son nuevamente fragmentados para producir paquetes de tamaño aún menor, esta vez de longitud fija, utilizados en el flujo de transporte MPEG \emph{transport stream}. Es necesario en esta etapa incluir datos adicionales relativos al programa, como nombre, metainformación de transmisión y de demultiplexación.
 	\item \textbf{Multiplexación de programas:} Es poco común la transmisión de un flujo de transporte con un único servicio. En esta etapa se combinan varios para construir un \textbf{MPTS}, \emph{Multiple Program Transport Stream}.
-	\item \textbf{Remultiplexación:} Esta etapa recibe el flujo de transporte con múltiples servicios y le agrega información útil de transmisión, que incluye \emph{timestamps} entre otras cosas. Al resultado de esta etapa se lo denomina \emph{Broadcast transport stream}.
+	\item \textbf{Remultiplexación:} Esta etapa recibe el flujo de transporte con múltiples servicios y le agrega información útil de transmisión, que incluye \emph{timestamps} entre otras cosas. Al resultado de esta etapa se lo denomina \emph{Broadcast Transport Stream}.
 	\item \textbf{Modulador y transmisor:} En esta última etapa, la información es convertida en una señal de radiofrecuencia que luego es emitida por la antena.
 \end{itemize}
 
@@ -63,7 +63,7 @@ La \cref{fig:appendix_ts_packet_detail} presenta en detalle la estructura del en
 	\item \textbf{Indicador de error de transporte: } Señaliza la existencia de error dentro del paquete. Cuando ese bit es puesto en 1, el decodificador procede a descartar el paquete.
 	\item \textbf{Indicador de comienzo de unidad de carga: } Cuando este bit está en 1, el paquete transporta el comienzo de una tabla o de un paquete de flujo elemental.
 	\item \textbf{Prioridad de transporte: } Indica que el paquete que contiene el bit en uno contiene mayor prioridad que aquellos con el mismo PID.
-	\item \textbf{PID: } Identifica el contenido del paquete. [TODO: Poner una referencia a la tabla con PIDs, pero no se si ponerla.]
+	\item \textbf{PID: } Identifica el contenido del paquete. Es el eje de la demultiplexación de contenidos.
 	\item \textbf{Control de codificación de transporte: } El término original en inglés es \emph{scrambling}. A diferencia de la encriptación, que opera en el campo digital, el \emph{scrambling} suele denominar operaciones en el campo analógico y tiene el objetivo de modificar la señal para que sólo sea interpretable por aquellos que posean el aparato necesario, sea físico o una llave digital. En conclusión, este campo provee información acerca de la codificación de la señal.
 		\begin{table}[h]
 		\centering
@@ -73,8 +73,8 @@ La \cref{fig:appendix_ts_packet_detail} presenta en detalle la estructura del en
 		\textbf{Valor} & \textbf{Significado}                 \\ \hline
 		00    &  Sin  {\it scrambling}        \\ \hline
 		01    & Reservado                   \\ \hline
-		10    & Codificador con llave par   \\ \hline
-		11    & Codificador con llave impar \\ \hline
+		10    & Codificado con llave par   \\ \hline
+		11    & Codificado con llave impar \\ \hline
 		\end{tabular}
 		\caption{Significado de los posibles valores de \emph{scrambling}.}
 		\end{table}
@@ -118,7 +118,7 @@ Algunas reglas generales:
 
 \begin{figure}[h!]
 	\begin{center}
-	\includegraphics[width=12cm]{imgs/appendix_pes_in_ts.png}
+	\includegraphics[width=\linewidth]{imgs/appendix_pes_in_ts.png}
 	\caption{Ejemplo de distribución de paquetes PES en un flujo de transporte.\label{fig:appendix_pes_in_ts}} 
 	\end{center}
 \end{figure}
@@ -162,7 +162,7 @@ En un flujo de transporte de una señal ISDB-Tb tradicional, la única limitación 
 
 El número máximo de servicios con el uso del nuevo descriptor está determinado por dos restricciones fijadas por el formato MPEG. La primera es el tamaño de sección, que afecta la transmisión de tablas, limitando la cantidad de información que pueden transportar. Siendo que el tamaño requerido varía, se analiza cada tabla por separado. La segunda restricción es la frecuencia mínima de emisión de tablas.
 
-La \cref{fig:max_serv_num} muestra cómo afectan las dos restricciones al número máximo de servicios señalizados por cada tabla. La barra roja indica cuántos servicios puede señalizar una tabla si ésta ocupa una sección completa y, por el otro, la barra azul indica cuántos servicios se pueden señalizar con un único paquete de flujo de transporte. Las secciones siguientes detallan cómo limita cada aspecto del formato MPEG al número máximo de servicios que se pueden señalizar.
+La \cref{fig:max_serv_num} muestra cómo afectan las dos restricciones al número máximo de servicios señalizados por cada tabla. La barra roja indica cuántos servicios puede señalizar una tabla si ésta ocupa una sección completa y la barra azul indica cuántos servicios se pueden señalizar con un único paquete de flujo de transporte. Las secciones siguientes detallan cómo limita cada aspecto del formato MPEG al número máximo de servicios que se pueden señalizar.
 
 % TODO: La SDT puede dividirse en múltiples secciones. Así que hay que modificar esto y el dibujito para contemplarlo.
 
@@ -175,7 +175,7 @@ La \cref{fig:max_serv_num} muestra cómo afectan las dos restricciones al número 
 
 % TODO: Quizás un reordenamiento es lo ideal acá. Porque no se entiende bien que el cuello de botella se presente al medio.
 
-\subsection{Tamaño de sección}
+\section{Tamaño de sección}
 
 % Averiguar qué concha es el tamaño de sección. Porque si distintos pedazos de la tabla se pueden enviar en distintas secciones, estamos hasta la chota.
 % A partir de ahí la SDT tiene que compartir ancho de banda con la PMT. Podría intentar construir un ts con una SDT de muchas secciones.
@@ -195,7 +195,7 @@ El motivo para utilizar una PAT de un único paquete radica en la drástica simpli
 
 La SDT transporta contenido textual descriptivo de los servicios y ésto le confiere dependencia respecto de los servicios provistos por el flujo de transporte. Para realizar la medición del número máximo de servicios que permite esta tabla, se utilizaron nombres de una longitud promedio de 9 caracteres. Como puede apreciarse en la \cref{fig:max_serv_num}, una sección establece una cota superior de 50 servicios, mientras que una SDT de un único paquete puede describir hasta 8 servicios. Esto convierte a las SDT en una limitación real para el número se servicios señalizables por la extensión del estándar ISDB-Tb.
 
-\subsection{Disponibilidad de paquetes nulos}
+\section{Disponibilidad de paquetes nulos}
 
 % Decir que son dos imposiciones diferentes la que hace que la PMT limite el numero de servicios y la que hace que la SDT lo haga.
 
@@ -216,7 +216,7 @@ Esta estimación indica que el número máximo de servicios, si de la PMT depende, 
 
 La \cref{fig:null_available} presenta los resultados de una medición sobre un fragmento real de flujo de transporte de Canal 23. Muestra el conteo de paquetes nulos disponibles en los siguientes $200 ms$ de reproducción para cada instante de un fragmento de flujo de transporte de dos minutos y medio de duración. Se puede apreciar que el mínimo alcanzado es de 271 paquetes para un instante que ronda el segundo 86. Esto quiere decir que el número máximo de PMT's que se puede incluir dada esta sección del flujo de transporte supera las 200 instancias. 
 
-Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, sino el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb. En conclusión, una estimación conservadora del número máximo de servicios que se pueden incluir en un flujo de transporte con características similares al de Canal 23 es de \textbf{200 servicios}.
+Como la figura \cref{fig:max_serv_num} muestra, es indistinto el hecho de que la tabla ocupe un único paquete o una sección completa, dado que no es el tamaño la limitación de la tabla, sino el número de repeticiones posibles en el intervalo de tiempo establecido por el estándar ISDB-Tb. En conclusión, una estimación conservadora del número máximo de servicios que se pueden incluir en un flujo de transporte con características similares al de Canal 23, es de \textbf{200 servicios}.
 
 \begin{center}
 \noindent\rule{4cm}{0.4pt}
@@ -239,12 +239,12 @@ Es muy importante mencionar que Wari no existe como una entidad autónoma sino qu
 	\end{center}
 \end{figure}
 
-Kuntur está escrito mayoritariamente en C++ y clasifica sus componentes en dos grupos. Las \emph{Libs}\footnote{Proveniente del término en inglés \emph{libraries}} proveen los mecanismos de \emph{backend} mencionados y las \emph{Tools}\footnote{En inglés, herramientas. Pero el termino resulta muy confuso porque Zamba y Wari no encajan perfectamente en la definición de herramientas, por eso se usará el término tools para referirse a ellos.} son productos finales que se apoyan sobre estas. Ambos grupos se exponen en la \cref{fig:kuntur_simple_diagram}. 
+Kuntur está escrito mayoritariamente en C++ y clasifica sus componentes en dos grupos. Las \emph{Libs}\footnote{Proveniente del término en inglés \emph{libraries}.} proveen los mecanismos de \emph{backend} mencionados y las \emph{Tools}\footnote{En inglés, herramientas. Pero el termino resulta muy confuso porque Zamba y Wari no encajan perfectamente en la definición de herramientas, por eso se usará el término tools para referirse a ellos.} son productos finales que se apoyan sobre estas. Ambos grupos se exponen en la \cref{fig:kuntur_simple_diagram}. 
 
 La punta de la pirámide de esta figura representa la última categoría, las tools, y es la componente que comienza el hijo de ejecución principal y luego lo delega a las libs. Las mismas se comportan como un \emph{framework}, adueñandose luego del control. Cada bloque representa un módulo de Kuntur, que depende de los que se encuentran subyacentes en el gráfico. Cada uno de estos cumple una tarea específica del dominio que se describen en la \cref{tab:kuntur_desc}.
 
 \newpage
-\begin{table}[H]
+\begin{table}[h!]
 \centering
 \begin{tabular}{|rm{10cm}|}
 \rowcolor[HTML]{656565}
@@ -252,8 +252,8 @@ La punta de la pirámide de esta figura representa la última categoría, las tools
  Luaz 			& Es la última capa de abstracción que se les provee a las \emph{tools}. Idealmente, las mismas interactúan exclusivamente con esta librería de métodos y \emph{callbacks}. El nombre deriva de la idea de que Luaz es un envoltorio de Zapper con \emph{bindings}\tablefootnote{Mecanismo para posibilitar la invocación de métodos o clases desde un lenguage a otro.} a Lua\tablefootnote{Lenguaje de \emph{scripting} con semánticas extensibles, desarrollado en 1993 por la Universidad Pontificia Católica de Río de Janeiro.}. Esto quiere decir que las Tools pueden limitarse a un conjunto de \emph{scripts} Lua para implementar la interfaz que, por ser un lenguaje interpretado, colabora en el desarrollo rápido de interfaz de usuario.\\
  \rowcolor{gray}Zapper 		& El término \emph{Zapper} refiere a cualquier dispositivo que sirva para hacer \emph{zapping} o cambiar canales, como un control remoto. En Kuntur, el Zapper es la única abstracción a la que acceden las tools (así sea directamente o a través de Luaz), y esta les permite realizar todas las tareas propias de un reproductor de TV.\\
  Canvas 		& Responsable de la entrada/salida hacia el usuario. El principal problema que resuelve es la independización de las aplicaciones respecto del software de abstracción de hardware. De esta manera, se pueden desarrollar tools que corran sobre muy diversas plataformas, usando SDL, Cairo, etc.\\
- \rowcolor{gray}MPEG-Parser 	& Permite que Zapper provea abstracciones basadas en los conceptos descritos en \cref{App:AppendixA}. El contenido recibido a través de un sintonizador es completamente dinámico y requiere la demultiplexación compleja de secciones, tablas, servicios, etc. Como buena parte de los contenidos cambian con el tiempo, MPEG-Parser hace un uso fuerte de \emph{callbacks}. Así, si un cliente como Zapper hace uso de la librería, provee métodos para ser invocados ante eventos y así es como los cambios en el flujo de transporte llegan hasta el cliente. Por ejemplo, si la programación sufre un cambio, es posible adaptar la guía electrónica de programación dinámicamente.\\
- Util 			& Es una librería que incluye un conjunto de entidades necesarias en el dominio de televisión digital, como \emph{buffers} binarios o un modelo para representación de instantes\tablefootnote{Representación de instantes en el tiempo a través del conteo de días desde un instante representativo prefijado.} (\emph{Julian Date}, \emph{POSIX time} y variantes), utilizados en el flujo de transporte. Cabe notar, también, que por ser los reproductores de televisión digital sistemas de tiempo real, las librerías requieren de \emph{multithreading} y util provee los mecanismos de comunicación utilizados por el resto de las librerías.\\ \hline
+ \rowcolor{gray}MPEG-Parser 	& Permite que Zapper provea abstracciones basadas en los conceptos descriptos en \cref{App:AppendixA}. El contenido recibido a través de un sintonizador es completamente dinámico y requiere la demultiplexación compleja de secciones, tablas, servicios, etc. Como gran parte de los contenidos cambian con el tiempo, MPEG-Parser hace un uso fuerte de \emph{callbacks}. Así, si un cliente como Zapper hace uso de la librería, provee métodos para ser invocados ante eventos y así es como los cambios en el flujo de transporte llegan hasta el cliente. Por ejemplo, si la programación sufre un cambio, es posible adaptar la guía electrónica de programación dinámicamente.\\
+ Util 			& Es una librería que incluye un conjunto de entidades necesarias en el dominio de televisión digital, como \emph{buffers} binarios o un modelo para representación de instantes\tablefootnote{Representación de instantes en el tiempo a través del conteo de días desde un instante representativo prefijado.} (\emph{Julian Date}, \emph{POSIX time} y variantes), utilizados en el flujo de transporte. Cabe notar, también, que por ser los reproductores de televisión digital sistemas de tiempo real, las librerías requieren de \emph{multithreading} y \texttt{util} provee los mecanismos de comunicación utilizados por el resto de las librerías.\\ \hline
 \end{tabular}
 \caption{Descripción de las diferentes libs de Kuntur. \label{tab:kuntur_desc}}
 \end{table}
@@ -305,7 +305,7 @@ Kuntur provee herramientas para la construcción de cualquier lib o tool que se d
 
 \subsection{Troubleshooting}
 
-Hay un motivo muy común por el que la ejecución de las tools incurre en un \emph{segmentation fault} y es la presencia de un \emph{pluging} para VLC relacionado con Lua. El problema se soluciona fácilmente eliminando tal plugin.
+Hay un motivo muy común por el que la ejecución de las tools incurre en un \emph{segmentation fault} y es la presencia de un \emph{plugin} para VLC relacionado con Lua. El problema se soluciona fácilmente eliminando tal plugin.
 \begin{lstlisting}
 	rm /usr/lib/vlc/plugins/lua/liblua_plugin.so
 \end{lstlisting}

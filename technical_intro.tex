@@ -4,9 +4,7 @@
 \fi
 \chapter{Introducción técnica}
 
-La Televisión Digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50.
-
-El término \textbf{Televisión Digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
+La Televisión Digital(TVD) es un servicio innovador que significa la mayor revolución tecnológica en el rubro televisivo desde la televisión a color en la década del '50. El término \textbf{Televisión Digital} define la transmisión de audio y video a través de una señal procesada y multiplexada digitalmente, en contrapartida con la señal analógica utilizada por la \emph{televisión analógica}, antecesora de la primera. Muchos países continúan hoy en día reemplazando la televisión analógica por televisión digital, haciendo un mejor y más variado uso del espectro de radiofrecuencia.
 
 Las ventajas de la televisión digital por sobre la analógica son numerosas:
 \begin{enumerate}
@@ -360,9 +358,7 @@ Las tareas de construcción de lista de servicios y sintonización de servicios qu
 
 \subsubsection{Tablas en la construcción de lista de servicios}
 
-El proceso de construcción de la lista de servicios se resume a recorrer todas las frecuencias por las que vienen flujos de transporte, capturando la información que viaja por la \sdt\ y \nit. El receptor, con la información contenida en ambas(en todos los flujos) y en sus respectivos descriptores ya puede ofrecer la lista completa. 
-
-En este paso también se genera una asociación entre servicio y flujo de transporte. Es decir, el proceso de \emph{scan} le indica al receptor que ``TV Pública HD'' es transmitido por Canal 23.
+El proceso de construcción de la lista de servicios se resume a recorrer todas las frecuencias por las que viajan flujos de transporte, capturando la información contenida por la \sdt\ y \nit. El receptor, con la información incluida en ambas tablas(de cada flujo) y en sus respectivos descriptores, ya puede ofrecer la lista completa. En este paso se genera la asociación entre servicio y flujo de transporte, similar a la \cref{tab:servicestablec23}. Es decir, el proceso de \emph{scan} le indica al receptor que ``TV Pública HD'' es transmitido por Canal 23, al igual que ``Tecnópolis'' y ``TV Pública''. ``DeportTV'' por Canal 24, y así sucesivamente.
 
 \subsubsection{Tablas en la sintonización de servicios}
 
@@ -393,13 +389,13 @@ Las herramientas involucradas en la señalización y multiplexación de programas d
 
 \subsection{OpenCaster}
 
-OpenCaster es un proyecto de código abierto (bajo licencia GPL\cite{gpl}) que incluye muchas de las herramientas necesarias para la construcción de flujos de transporte de acuerdo al formato \textbf{MPEG-TS}. Éstas van desde la creación de paquetes, secciones y tablas hasta la multiplexación del \emph{ts}.
+OpenCaster es un proyecto de código abierto (bajo licencia GPL\cite{gpl}) que incluye muchas de las herramientas necesarias para la construcción de flujos de transporte de acuerdo al formato \textbf{MPEG-TS}. Estas van desde la creación de paquetes, secciones y tablas hasta la multiplexación del \emph{ts}.
 
-OpenCaster provee una API para \emph{Python} desde la cual se pueden ensamblar tablas aprovechando \emph{hotspots} dispuestos en las clases que modelan tablas y descriptores. Una vez construido una instancia de una tabla, el mismo se serializa a un arreglo de \emph{bytes} con el formato \textbf{MPEG-TS}. Esta API provee una librería de elementos que incluye tablas y descriptores, junto con los campos asociados a cada una.
+OpenCaster provee una API para \emph{Python} desde la cual se pueden ensamblar tablas aprovechando \emph{hotspots} dispuestos en las clases que modelan entidades de las normas de TVD más populares. Una vez construida una instancia de una tabla, la misma se serializa a un arreglo de \emph{bytes} con el formato \textbf{MPEG-TS}. Esta API provee una librería de elementos que incluye tablas y descriptores, junto con los campos asociados a cada uno.
 
 \subsubsection{Generación de Tablas}
 
-La utilización de la API requiere crear un \emph{script} que genere las estructuras buscadas. Desde el mismo se importan las clases provistas, se instancian y luego, el comportamiento heredado permite serializarlas y empaquetarlas. El producto de la ejecución del \emph{script} son secciones ya divididas en paquetes listas para ser multiplexadas al flujo de transporte.
+La utilización de la API requiere crear un \emph{script} que genere las estructuras buscadas. Desde el mismo se importan las clases provistas, se instancian y luego, el comportamiento heredado permite serializarlas y empaquetarlas. El producto de la ejecución del \emph{script} son secciones ya divididas en paquetes listos para ser añadidos al flujo de transporte.
 
 \lstinputlisting[language=Python,caption={Ejemplo de creación de tablas en OpenCaster}]{src_code/pmt_example.py}\label{lst:exampleopencaster}
 
@@ -415,7 +411,7 @@ El estándar\cite{aribb21} establece especificaciones deseadas de recepción, deco
 
 \begin{itemize}
 	\item La mayoría de los eventos de recepción y reproducción son asincrónicos. La lectura de tablas, en concreto, implica esperar la llegada al receptor de todos los paquetes necesarios para construir la sección por la que viaja. Salvo por las limitaciones de tiempo que impone la norma sobre la emisión de las diferentes tablas, no hay forma de predecir el momento en que esto ocurre. En concreto, el estándar establece que la PMT debe ser transmitida en un período no mayor a 200 milisegundos. A partir de ahí, el decodificador no posee más garantías para la espera.
-	\item Es un sistema que debe responder correctamente a las exigencias de un sistema \emph{soft real time}\cite{realtime}.
+	\item Es una aplicación que debe responder correctamente a las exigencias de un sistema \emph{soft real time}\cite{realtime}.
 	\begin{itemize}
 		\item Por un lado, el flujo de transporte es una fuente constante de paquetes que se acumulan en un \emph{buffer}. Si el sistema no llega a consumir suficientes paquetes en un intervalo de tiempo determinado, esto puede incurrir en un \emph{overflow}, lo cual significa que existe pérdida, y esto a su vez se traduce en una degradación del servicio.
 		\item Por el otro lado, la presentación de los cuadros del video debe responder a las exigencias de un sistema multimedia. La omisión de cuadros, si ocurre con suficiente periodicidad, también implica una degradación de la calidad.
@@ -532,9 +528,9 @@ La \cref{fig:playsecwari} presenta un diagrama de secuencia del proceso de recol
 
 En Wari, cuando el usuario solicita el cambio de servicio, el control llega a la clase \texttt{Tuner}. A partir de entonces, el primer paso es buscar la instancia de la clase \texttt{Service} que corresponde al servicio solicitado por el usuario. Una vez que se dispone de esta, se le debe indicar al \texttt{PlayerExtension} que se busca reproducir el servicio. Éste obtiene de la instancia de \texttt{Service} la información asociada a los flujos elementales que se deben reproducir, como los \pid\ de los mismos. Toda esta información es enviada al \texttt{AvPlayer}.
 
-Los \pid\ permiten ubicar filtros sobre los flujos de transporte. El filtro, a su vez, facilita la recepción de todos los paquetes con un \pid\ determinado. Es el \texttt{AvPlayer} quien crea los filtros para los flujos elementales del servicio a reproducir. Sin embargo, aún es necesario indicarle al reproductor la forma de reproducirlos. Esto se entrega en un \emph{Uniform resource locator} o URL. 
+Los \pid\ permiten ubicar filtros sobre los flujos de transporte. El filtro, a su vez, facilita la recepción de todos los paquetes con un \pid\ determinado. Es el \texttt{AvPlayer} quien crea los filtros para los flujos elementales del servicio a reproducir. Sin embargo, aún es necesario indicarle al reproductor la forma de reproducirlos. Esto se entrega en un \emph{Uniform Resource Locator} o URL. 
 
-El URL de reproducción se construye en el método \texttt{makeURL} de \texttt{PlayerExtension}. Este URL se almacena en el \texttt{AvPlayer} para que posteriormente, cuando el proceso de cambio de canal haya terminado, el \emph{main thread} se lo solicite y se lo envie al reproductor de audio y video. En el caso de selección de servicios tradicional, este URL refiere al dispositivo de sintonización y parámetros que sirven, en conjunto, para que la librería de reproducción multimedia pueda obtener los paquetes PES directamente. La observación pertinente a realizar es que la flexibilidad de los URL disponen de un dominio casi universal, permitiendo que se localicen no sólo dispositivos de hardware, sino también recursos en una red IP, o potencialmente recursos web. Este parámetro es un excelente punto de introducción para nuevos medios de transmisión, permitiendo la fácil reproducción de IPTV en el esquema global de transmisión.
+El URL de reproducción se construye en el método \texttt{makeURL} de \texttt{PlayerExtension}. Este URL se almacena en el \texttt{AvPlayer} para que posteriormente, cuando el proceso de cambio de canal haya terminado, el \emph{main thread} se lo solicite y se lo envie al reproductor de audio y video. En el caso de selección de servicios tradicional, este URL refiere al dispositivo de sintonización y parámetros que sirven, en conjunto, para que la librería de reproducción multimedia pueda obtener los paquetes PES directamente. La observación pertinente a realizar es que los URL disponen de un dominio casi universal. Esta flexibilidad permite que se localicen no sólo dispositivos de hardware, sino también recursos en una red IP, o potencialmente recursos web. Este parámetro es un excelente punto de introducción para nuevos medios de transmisión, permitiendo la fácil reproducción de IPTV en el esquema global de transmisión.
 
 
 % TODO: Acá tenemos que enganchar el capítulo de IPTV!
@@ -607,7 +603,7 @@ La \cref{def:iptv} de la \emph{International Telecommunication Union}, presentad
 
 \begin{itemize}
 	\item \textbf{Bitrate varaible}: A diferencia de la señal radioeléctrica, el uso de ancho de banda se adapta a los contenidos transmitidos.
-	\item \textbf{Conmutación de paquetes}: La delimitación de paquetes en las redes IP es una garantía de la infraestructura, no es necesario que el formato contenedor respete tamaños de información específicos, ni que el receptor se sincronice.
+	\item \textbf{Conmutación de paquetes}: La delimitación de paquetes en las redes IP es una garantía de la infraestructura, no es necesario que el formato contenedor respete tamaños de información específicos, ni que el receptor se sincronice\footnote{Siempre y cuando se alineen los comienzos de paquetes TS y paquetes IP.}.
 	\item \textbf{\emph{Multicasting}}: Las redes IP permiten la emisión multicast, ideal para los contenidos televisivos. La señal ISDB-Tb llega a todos los receptores(con alcance físico) por igual y estos optan por consumirla o ignorarla. En las redes IP, los \emph{hosts} deben solicitar la emisión para que esta les sea provista. Además, contar con la dirección IP y el puerto del grupo son suficientes para identificarlo y obtener los contenidos que emite.
 	% TODO: Quizá algún ITEM más que se me esté pasando por alto.
 \end{itemize}

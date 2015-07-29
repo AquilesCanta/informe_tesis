@@ -13,31 +13,28 @@ La norma ISDB-Tb define los lineamientos para la transmisión de televisión digit
 
 Para lograr el crecimiento de la lista de servicios de una señal, se creó un nuevo descriptor que respeta las consideraciones definidas en el formato MPEG, pudiendo clasificarse como privado. El mismo incluye la información necesaria para señalizar la emisión del servicio a través del protocolo IP. El \emph{Elementary Streams Relocation Descriptor} se incluye en las PMT de los servicios que se emiten por red IP. La estructura sintáctica del descriptor permite la inclusión de un grupo multicast y un número de puerto.
 
-En el capítulo Introducción Técnica se demostraron dos procedimientos necesarios en la reproducción de televisión digital, siendo el primero de ellos el \emph{scan} y el segundo la sintonización de servicios. El primero, que construye la lista de servicios se mantiene intacta. Inicialmente, se recorren todas las frecuencias disponibles, recolectando las SDT de cada flujo de transporte. Las instancias de esta tabla proveen los nombres que componen la lista.
+En el capítulo Introducción Técnica se demostraron dos procedimientos necesarios en la reproducción de televisión digital, siendo el primero de ellos el \emph{scan} y el segundo la sintonización de servicios. El primero, que construye la lista de servicios se mantiene intacto. Inicialmente, se recorren todas las frecuencias disponibles, recolectando las SDT de cada flujo de transporte. Las instancias de esta tabla proveen los nombres que componen la lista.
 
-El proceso que cambia es la sintonización, pero sólo en el caso de los servicios que incluyen una instancia del \emph{Elementary Streams Relocation Descriptor}. Si la PMT carga tal descriptor, entonces no posee flujos elementales asociados en el \emph{transport stream}. En su lugar, es posible obtener de su \emph{payload} el grupo multicast y puerto de emisión por el que se emiten los flujos. Una vez el receptor dispone de los mismos, puede redirigirlos hacia su reproducción sin la necesidad de interpretar sus contenidos. 
+El proceso que cambia es la sintonización de servicios, pero sólo en el caso de aquellos que incluyen una instancia del \emph{Elementary Streams Relocation Descriptor}. Si la PMT carga tal descriptor, entonces no posee flujos elementales asociados en el \emph{transport stream}. En su lugar, es posible obtener de su \emph{payload} el grupo multicast y puerto de emisión por el que se emiten los flujos. Una vez el receptor dispone de los mismos, puede redirigirlos hacia su reproducción sin la necesidad de interpretar sus contenidos. 
 
 \subsection{Características importantes de la combinación ISDB-Tb con IP}
 
 \begin{itemize}
 	\item \textbf{Retrocompatibilidad}: Cualquier software de decodificación de señal ISDB-Tb tradicional sigue funcionando normalmente cuando consume una señal extendida. No es capaz, sin embargo, de reproducir los servicios identificados con el \emph{Elementary Streams Relocation Descriptor}. Éstos figurarán en la lista de servicios, pero el usuario no podrá consumirlos.
-	\item \textbf{Mayor tamaño de lista de servicios}: Impuesta por el tamaño de sección de la SDT, la cota superior para el número de servicios señalizables por un flujo de transporte es de 50 (valor independiente de la calidad de los servicios), en promedio, considerando una longitud de nombre de 9 caracteres. Muy superior al máximo de 5 servicios SD de ISDB-Tb tradicional.
-	\item \textbf{Escalable:} El nuevo diseño puede escalar en dos direcciones. En primera instancia, a cualquier flujo de transporte al que le quepan se le pueden adicionar nuevos servicios emitidos por una red IP. En segunda instancia, se pueden agregar servicios a otra frecuencias. La señalización de cada flujo es independiente y pueden ubicarse en distintas frecuencias sin problemas.
+	\item \textbf{Mayor tamaño de lista de servicios}: Impuesta por el tamaño de sección de la SDT, la cota superior para el número de servicios señalizables por un flujo de transporte es de 50 (valor independiente de la calidad de los servicios), en promedio, considerando una longitud de nombre de 9 caracteres. Muy superior al máximo de 5 servicios SD y 1 LD de ISDB-Tb tradicional.
+	\item \textbf{Escalable:} El nuevo diseño puede escalar en dos direcciones. En primera instancia, a cualquier flujo de transporte se le pueden adicionar nuevos servicios reubicados, siempre y cuando la SDT lo permita(de acuerdo al análisis del capítulo de Evaluación, \cref{sec:maxservicenumber}). En segunda instancia, se pueden agregar servicios reubicados a otras frecuencias. La señalización de cada flujo es independiente y pueden añadirse a distintas bandas sin problemas.
 	\item \textbf{Dinámico:} A cualquier flujo de transporte se le pueden agregar los servicios en tiempo real, sin la necesidad de demultiplexar el flujo original.
 	\item \textbf{Independiente del multiplexador:} Las estructuras utilizadas respetan por completo el estándar MPEG-2 TS. Por ende, no es necesaria ninguna maquinaria especial en la multiplexación del flujo de transporte.
 	\item \textbf{Preserva \emph{bitrate}:} Dado que las operaciones necesarias consisten únicamente en el reemplazo de paquetes, el bitrate del flujo de transporte se conserva igual.
+	\item \textbf{Preserva dependencias:} Por la elección de tecnologías utilizadas, la transmisión híbrida no agrega dependencias al receptor.
 \end{itemize}
 
 \section{Mara}
 
-A modo de implementación de referencia, el trabajo de tesina incluyó el desarrollo de Mara, un reproductor de televisión digital basado en Wari. A través de Mara, es posible sintonizar la lista completa de servicios de un flujo de transporte que incluye el \emph{Elementary Streams Relocation Descriptor} uniéndose al grupo multicast correspondiente y renderizando los contenidos. 
-
-Para la construcción de Mara, se utilizó Wari, que es un proyecto de código abierto dedicado a la reproducción de televisión digital. 
-
-\subsection{Características importantes de Mara}
+A modo de implementación de referencia, el trabajo de tesina incluyó el desarrollo de Mara, un reproductor de televisión digital basado en Wari. A través de Mara, es posible sintonizar la lista completa de servicios de un flujo de transporte que incluye el \emph{Elementary Streams Relocation Descriptor} uniéndose al grupo multicast correspondiente y renderizando los contenidos. Las tres características más importantes del reproductor son:
 
 \begin{itemize}
-	\item \textbf{Transparencia:} Es imposible para el usuario de Mara determinar si un servicio está siendo consumido desde la señal de radiofrecuencia o de la red IP, asumiendo que el decodificador tiene acceso a ambos medios.
+	\item \textbf{Transparente:} Es imposible para el usuario de Mara determinar si un servicio está siendo consumido desde la señal de radiofrecuencia o de la red IP, asumiendo que el decodificador tiene acceso a ambos medios.
 	\item \textbf{Portable:} Puede ser utilizado en las plataformas más conocidas. Por ejemplo: Linux, Windows, OS X, Android.
 	\item \textbf{Independiente del Hardware:} Funciona con cualquier sintonizador que soporte señales ISDB-Tb.
 \end{itemize}
@@ -46,9 +43,9 @@ Para la construcción de Mara, se utilizó Wari, que es un proyecto de código abie
 
 En esta sección se analizan posibles pasos en la mejora del trabajo realizado en esta tesina.
 
-\subsection{Relocación de objetos en \emph{Object Based Broadcasting}\label{sec:futureobjectbased}}
+\subsection{Reubicación de objetos en \emph{Object Based Broadcasting}\label{sec:futureobjectbased}}
 
-La principal limitación del disño yace en la rigidez de los servicios que se obtienen por IP. A diferencia de los servicios regulares, es imposible incluir varios flujos elementales de un mismo tipo. Por ejemplo, varios audios de distintos idiomas. \emph{Object Based Broadcasting}\cite{objectbased} es una técnica a través de la cual múltiples recursos se emiten simultáneamente y el reproductor le permite al usuario seleccionar cómo componerlos para entregar el servicio completo.
+La principal limitación del diseño yace en la rigidez de los servicios que se obtienen por IP. A diferencia de los servicios regulares, es imposible incluir varios flujos elementales de un mismo tipo. Por ejemplo, varios audios de distintos idiomas. \emph{Object Based Broadcasting}\cite{objectbased} es una técnica a través de la cual múltiples recursos se emiten simultáneamente y el reproductor le permite al usuario seleccionar cómo componerlos para entregar el servicio completo.
 
 % \begin{figure}[h]
 % 	\begin{center}
@@ -61,7 +58,7 @@ Esta técnica presenta un escenario de mejora para la integración de ISDB-Tb e IP
 
 Para llevar adelante esta idea, es posible aplicar el \emph{Elementary Streams Relocation Descriptor} a flujos elementales, en lugar de un servicio completo. Así, cada uno se emite por un grupo distinto. Y el receptor se une sólo a aquellos grupos que contienen un flujo que le interesa al usuario. Luego, el software de recepción debe ensamblar estos contenidos para entregar el servicio completo.
 
-\subsection{Relocación por eventos}
+\subsection{Reubicación por eventos}
 
 La motivación para integrar IPTV e ISDB-Tb se basa en la forma en que se complementan ambos sistemas de entrega. Mientras el primero permite una lista de servicios potencialmente muy grande (en comparación), la integridad del segundo no padece el número de consumidores del servicio. 
 
@@ -69,9 +66,9 @@ En el caso de televisión digital, una de las variables más importantes que deter
 
 Una posibilidad para solucionar este problema como trabajo futuro, es la señalización a través de eventos. Entonces, en lugar de asociar la información de emisión a un servicio, se puede vincular a un evento. El receptor sería el encargado de realizar el \emph{buffering} para que la transición sea transparente. En este formato, un servicio pasaría de ser emitido por un medio al otro sin los inconvenientes causados por un \emph{scan}. 
 
-\subsection{IPV6}
+\subsection{Soporte de IPV6}
 
-En este caso se necesitaría modificar la estructura del descriptor para que pueda determinar qué versión de IP es. Cuando es la moderna, entonces debe alocar suficiente espacio para las direcciones más extensas (de 128 bytes).
+La versión más moderna del protocolo IP utiliza direcciones de 128 bits, en lugar de los 32 utilizados por IPV4. En este caso, sería necesaria una modificación de la estructura del descriptor para contener la nueva variante, o incluso permitir funcionar en cualquiera de las dos versiones. En este último caso, el descriptor requeriría utilizar longitud variable.
 
 \subsection{Omisión de PMT pequeñas}
 
@@ -89,15 +86,15 @@ Esta solución presenta algunos inconvenientes y desafíos técnicos. En primer lug
 \newpage
 \section{Conclusión}
 
-Esta tesina presenta un primer acercamiento al inconveniente del número de servicios transmitidos por la televisión digital terrestre, y logra que sea comparable a la señal analógica en este aspecto. Es una solución que puede convivir perfectamente en el esquema actual de transmisión y respeta los estándares involucrados. Tiene aún muchos puntos para mejorar, pero el diseño simple y ordenado de la solución y de MPEG desplazan todo el trabajo al esfuerzo de implementación de un cliente tan poderoso como se requiera. \emph{Mara} es una adaptación muy sencilla que sirve como referencia de lo realizado. Es deseable, en un futuro, crear una versión de \emph{Mara} nueva, con un enfoque más modular y flexible que el que impulsó a \emph{Wari}, cuyos objetivos fueron claros desde un inicio como reproductor de TV tradicional.
+Esta tesina presenta un primer acercamiento al inconveniente del número de servicios transmitidos por la televisión digital terrestre, y logra que sea comparable a la señal analógica en este aspecto. Es una solución que puede convivir perfectamente en el esquema actual de transmisión y respeta los estándares involucrados. Tiene aún muchos puntos para mejorar, pero el diseño simple y ordenado de la solución y de MPEG desplaza todo el trabajo al esfuerzo de implementación de un cliente tan poderoso como se requiera. \emph{Mara} es una adaptación muy sencilla que sirve como referencia de lo realizado. Es deseable, en un futuro, crear una versión de \emph{Mara} nueva, con un enfoque más modular y flexible que el que impulsó a \emph{Wari}, cuyos objetivos fueron claros desde un inicio como reproductor de TV tradicional.
 
-Es cierto que la digitalización puso a la señal de aire sobre la mesa, pero aún no es ni remotamente suficiente considerando la hegemonía del cable como medio. Se procuró con este trabajo acortar las distancias que se encuentran al analizar soluciones que combinen diferentes entornos. Esta iniciativa, lejos de ser novedosa, posee algunos referentes como \emph{HbbTV} que tiene 6 años de vida al momento de escritura de este informe. Aún así dista de poseer la popularidad necesaria para ser reconocido como el mecanismo \emph{de facto} para consumir televisión, pero da evidencia de que la inciativa es un buen camino a seguir.
+Es cierto que la digitalización puso a la señal de aire sobre la mesa, pero aún no es ni remotamente suficiente considerando la hegemonía del cable como medio. Se procuró con este trabajo acortar las distancias que se encuentran al analizar soluciones que combinen diferentes entornos. Esta iniciativa, lejos de ser novedosa, posee algunos referentes como \emph{HbbTV} que tiene 6 años de vida al momento de escribir de este informe. Aún así dista de poseer la popularidad necesaria para ser reconocido como el mecanismo \emph{de facto} para consumir televisión, pero da evidencia de que la inciativa es un buen camino a seguir.
 
 La distribución de contenidos televisivos es un tema de investigación atractivo por dos motivos. En primer lugar, disciplinas muy diversas intervienen en la construcción del servicio: Ingenieros electrónicos, expertos en telecomunicaciones, diseñadores de experiencia de usuario y hasta sociólogos y artistas, que producen contenidos. El aparato que rodea la entrega de servicios audiovisuales involucra mecanismos extremadamente complejos a niveles muy diversos de abstracción. La informática colabora apenas en una porción del desafío completo.
 
 En segundo lugar, es un tema de desarrollo en la agenda de las empresas más importantes del mundo y el debate técnico está vigente actualmente. Los usos que se le dan actualmente apenas comienzan a experimentar interactividad y múltiples pantallas; dando así nacimiento a nuevos protocolos y formatos, como MPEG-DASH, para señales adaptativas. La vertiginosa búsqueda tecnológica sustenta el crecimiento y cambio de la matriz de contenidos y audiencia.
 
-Años atrás, el término televisión definía a la señal de imágenes en movimiento consumida a través de un televisor. En la actualidad, definir televisión no es una tarea sencilla. Al digitilizar la señal, el televisor perdió su rol protagónico. Con la aparición de los videos \emph{on demand} se eliminaron las restricciones propias del \emph{broadcasting}. Hoy, la telefonía móvil permite el intercambio de contenidos audiovisuales entre pares de forma inmediata, de modo que la producción y distribución dejó de ser centralizada o estar limitada a grandes estudios de grabación. No existe una forma de predecir el próximo cambio que sufrirá la distribución de contenidos audiovisuales. Sucede que, al igual que con internet, la televisión es simplemente el medio. 
+Años atrás, el término televisión definía a la señal de imágenes en movimiento consumida a través de un televisor. En la actualidad, definir televisión no es una tarea sencilla. Al digitilizar la señal, el televisor perdió su rol protagónico. Con la aparición de los videos \emph{on demand}, se eliminaron las restricciones propias del \emph{broadcasting}. Hoy, la telefonía móvil permite el intercambio de contenidos audiovisuales entre pares de forma inmediata, de modo que la producción y distribución dejó de ser centralizada o estar limitada a grandes estudios de grabación. No existe una forma de predecir el próximo cambio que sufrirá la distribución de contenidos audiovisuales. Sucede que, al igual que con internet, la televisión es simplemente el medio. 
 
 \ifx\all\undefined
 \end{document}

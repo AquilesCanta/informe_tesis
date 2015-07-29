@@ -1,5 +1,5 @@
 
-bool Service::process( const desc::Descriptors &descriptors ) {
+bool Service::process(const desc::Descriptors &descriptors) {
 	bool changed = false;
 	
 	// ...
@@ -7,10 +7,10 @@ bool Service::process( const desc::Descriptors &descriptors ) {
 
 	{
 		desc::ElementaryStreamsRelocationDescriptor d;
-		if(DESC_PARSE( descriptors, elementary_streams_relocation, d)){
-			isRelocated = true;
-			multicastPort = d.port;
-			multicastGroup = d.ipMulticast;
+		if(DESC_PARSE(descriptors, elementary_streams_relocation, d)){
+			_isRelocated = true;
+			_multicastPort = d.port;
+			_multicastGroup = d.ipMulticast;
 		}
 	}
 	//	Save descriptors
