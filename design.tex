@@ -192,9 +192,9 @@ Como son dos los servicios a agregar al flujo de transporte, es necesario crear 
 
 Ya se definieron los \pid\ y \emph{service\_id} de los servicios nuevos. El único elemento restante es el \emph{Elementary Streams Relocation Descriptor} (siendo que el \emph{loop} de flujos elementales se mantiene vacío). Éste, a su vez, debe incluir grupo multicast y puerto por los que se emiten los flujos elementales. El uso del nuevo descriptor se puede observar en las líneas 5 y 17 del \cref{lst:pmtopencaster}. Se asigna el grupo 239.1.1.1 a ``TV Universidad'' y 239.1.1.2 a ``TV La Plata''. Ambos por puerto 1000.
 
-\begin{minipage}{\linewidth}
+% \begin{minipage}{\linewidth}
 	\lstinputlisting[language=Python,caption={Creación de PMT's en OpenCaster},label={lst:pmtopencaster}]{src_code/pmt_gen.py}
-\end{minipage}
+% \end{minipage}
 
 \subsubsection{Multiplexación}
 
