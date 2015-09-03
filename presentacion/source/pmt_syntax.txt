@@ -1,0 +1,26 @@
+TS_program_map_section() {
+	table_id
+
+	...
+
+	PCR_PID
+	reserved
+	program_info_length
+
+	...
+
+	for (i = 0; i < N; i++) {
+		descriptor()
+	}
+	for (i = 0; i < N1; i++) {
+		stream_type
+		reserved
+		elementary_PID
+		reserved
+		ES_info_length
+		for (i = 0; i<N2; i++) {
+		   descriptor()
+		} 
+ 	}
+ 	CRC_32 
+}

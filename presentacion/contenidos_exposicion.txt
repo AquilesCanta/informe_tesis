@@ -1,0 +1,674 @@
+
+--------------------------------------------------------------------------------
+-- Introducción
+--------------------------------------------------------------------------------
+
+	INTRO:
+	======
+
+	Las empresas más importantes del mundo están invirtiendo dinero y esfuerzo
+	en la distribución de contenidos audiovisuales. La industria televisiva 
+	mueve miles de millones de dólares diariamente a nivel mundial.
+	En Latinamérica hay 60 millones de hogares que consumen alguna señal 
+	televisiva. En más de la mitad de los casos, esta señal es paga.
+	Hace varios años ya, Brasil encabeza un movimiento regional para aunar a los
+	gobiernos latinoamericanos bajo un mismo estándar de televisión digital 
+	terrestre. La unificación presenta un incentivo al intercambio técnico,
+	científico y de contenido.
+
+	Motivación:
+	===========
+
+	La TV digital implica una mejora radical por sobre la TV analógica. Sin
+	embargo, la TV terrestra presenta un problema aún ineludible: El número de 
+	servicios que ofrece es insuficiente. La CABA es actualmente la ciudad con
+	mayor cantidad de servicios en su plataforma: 28. Una red analógica de TV 
+	por cable asciende su número de canales a 70. No pueden competir en este 
+	aspecto.
+
+	La ventaja que tiene la TV analógica es el número de bandas de 
+	radiofrecuencia disponibles en el cable. Las bandas asignadas a la TV 
+	terrestre no van a cambiar pronto, la tendencia es asignarlas a telefonía
+	móvil. Por eso, es necesario buscar alternativas.
+
+	En latinoamérica, los gobiernos llevan adelante medidas para la creación
+	de redes de acceso a internet de alta velocidad. UNASUR aprobó el tendido de
+	un anillo masivo de fibra óptica para la interconexión de redes existentes.
+	En argentina se lleva adelante el programa argentina conectada, que consiste
+	en el tendido de fibra óptica hasta última milla.
+
+	En este marco, es posible pensar en un sistema de distribución televisiva
+	por IP. Hay características que alejan a las redes IP de ser ideales para
+	la tarea.
+
+	* Es suceptible a sobrecargas de consumo.
+
+	Pero presenta cualidades positivas:
+
+	* Más flexibles, poseen canal de retorno.
+	* El tamaño de la lista de servicios puede ser arbitráriamente grande.
+
+	Durante la semifinal del mundial Brasil 2014, casi 10 millones de persones
+	sintonizaban la definición por penales Argentina Vs Holanda. En ocasiones
+	como esta, el fallo del servicio no es una opción. La TV terrestre no es
+	suceptible a fallas de sobreexigencia, por ser un esquema broadcast.
+
+	Una red IP sí es suceptible. Los medios se complementan.
+
+	Hipótesis:
+	==========
+
+	Se espera atacar el problema la limitación del tamaño de la lista de 
+	servicios de las señales ISDB-Tb a través de la combinación con la emisión
+	por red IP. El resultado será un sistema híbrido que complementa la robustez
+	de las emisiones broadcast por RF terrestre con la flexibilidad que ofrece
+	la conmutación de paquetes. En consecuencia, la lista de servicios percibida
+	del primer medio aumentaría sin la necesidad de utilizar una porción mayor
+	del espectro radioeléctrico empleando, en su lugar, un canal IP.
+
+	Objetivos:
+	==========
+
+	* Retrocompatibilidad
+	* Minimización de cambios
+	* Aprovechamiento eficiente de la infraestructura
+	* Transparencia para el usuario
+
+--------------------------------------------------------------------------------
+-- Intro Técnica
+--------------------------------------------------------------------------------
+
+	La Televisión digital es un servicio innovador que significa la mayor 
+	revolución tecnológica en el rubro televisivo desde la televisión a color en
+	el 50.
+
+	Televisión digital define a la transmisión de audio y video a través de una 
+	señal procesada y multiplexada digitalmente. La TV analógica, en cambio,
+	usa una señal analógica.
+
+	Ventajas de la TV digital:
+
+	* Mejor calidad
+	* Permite alta definición
+	* Posibilita multiprogramación.
+	* Permite múltiples flujos elementales del mismo tipo.
+	* Permite servicios complementarios como EPG e interactividad.
+	* Ahorra ancho de banda.
+	* Permite la entrega a mayor cantidad de dispositivos.
+
+	Qué es la tv terrestre?
+
+	Emisión de señal a través del espectro de radiofrecuencia de la atmósfera.
+	(Bandas UHF 300Mhz hasta 3GHz)
+	Otros tipos:
+
+	* Satelital: Satélite rebota una señal emitida desde la tierra en SHF(3-30Ghz)
+	* Cable: Señal propagada en Coaxial o Fibra óptica
+	* Over the top(OTT): Tranmisión de televisión por internet. No usa red 
+	manejada y no presenta garantías de calidad. Ej: Netflix
+	* IPTV: Define la entrega de servicios (televisión/video/audio/texto/imágenes
+	/datos) sobre redes basadas en IP manejadas para proveer el nivel requerido
+	de calidad de servicio y experiencia, seguridad, interactividad y confiabi-
+	lidad.
+
+	En terrestre hay varias normas:
+	ATSC, DVB, DTMB, ISDB-Tb.
+
+	ISDB-Tb:
+		 Originalmente desarrollado por la asociación de empresas e industrias
+		 de radio ARIB de Japón. Posteriormente incluyó modificaciones 
+		 propuestas por la Asociación Brasileña de Normas Técnicas. Es la norma
+		 adoptada en Argentina.
+
+		 La TV terrestre envía información a través del espectro de 
+		 radiofrecuencia. Al ser este un fenómeno físico intrínsecamente 
+		 analógico, la información digital que se desea transmitir se codifica 
+		 por medio de variaciones en amplitud y fase. Estas variacione se
+		 denominan modulación. La modulación es parametrizable.
+
+		 Por encima de la modulación de bits, hay una capa que organiza los 
+		 bytes. Ésta organización compone lo que se denomina como formato
+		 contenedor. En ISDB-Tb, el formato contenedor es el Flujo de Transporte
+		 MPEG. Es este formato que el posibilita la multiplexación de servicios 
+		 y flujos multimedia.
+
+		 * Modulación y bitrate disponible:
+		 ==================================
+
+		 En ISDB-Tb el espectro se divide en canales físicos de 6MHz denominados
+		 bandas UHF. Cada una de las bandas dispone de bitrate constante.
+		 Con una capacidad máxima alcanzable de 23Mbps que se tiene que 
+		 distribuir entre los contenidos a transmitir. Esto define una cota
+		 para el número de servicios transmitibles, dependiendo de su calidad.
+
+		 INCLUIR TABLA DE EJEMPLO de bitrate.
+
+		 La importancia de la modulación es vital. Sin embargo, si no se 
+		 impusiera un orden en la modulación de bytes, el decodificador 
+		 percibiría un flujo constante de bytes dispuestos fuera de contexto.
+		 A fin de intepretarlos, los mismos se agrupan de acuerdo al formato
+		 MPEG-TS, como se dijo.
+
+		 * MPEG Transport stream:
+		 ========================
+
+		 Características:
+
+		 * Diseñado para ambientes no confiables.
+		 * Permite la multiplexación de servicios con bitrates variables e
+		 independientes.
+		 * Especifica mecanismos para la sincronización de flujos de audio y
+		 video.
+		 * Es un formato extensible.
+
+		 Se construye de paquetes de 188 bytes, la longitud fija y relativamente
+		 pequeña facilita la inclusión de campos para detección y corrección de
+		 errores. También permite transportar varios servicios simultáneamente
+		 sn contar con una referencia de reloj común a todos ellos.
+
+		 	Estructura de paquetes:
+		 		* Byte de sincronización (5 bytes intercalados, sincro)
+		 		* PID (sistema de referencias internas)
+
+		 	Recepción de señal ISDB-TB, Tareas:
+
+		 		Construcción de lista de servicios:
+		 			Mostrar tabla con lista de canales.
+		 			Primero debe recorrer frecuencias para ver qué servicios 
+		 			trae cada una.
+
+		 		Selección de servicios:
+		 			Del paso anterior se construye una tabla de asociaciones.
+		 			De lo cual, si el usuario elige el servicio A, primero se
+		 			debe sintonizar la banda UHF que corresponde a ese servicio,
+		 			si fuera necesario. Luego de recolectar todos los flujos
+		 			multimedia, los mismos se deben pasar a los periféricos para
+		 			su reproducción.
+
+		 	Tablas:
+		 	En TV analógica, un canal se sintoniza y reproduce directamente, no
+		 	hace falta mayor metainformación.
+		 	En TV Digital, la multiprogramación, para empezar, requiere de un
+		 	mínimo grado de información, como los nombres de los servicios, para
+		 	presentar la lista al usuario.
+		 	Para la metainformación se usan las tablas.
+
+		 		PSI: PAT, CAT, NIT, PMT
+		 		Específico de ISDB-Tb: SDT
+
+		 	La PAT es la primera tabla que debe buscar el decodificador para
+		 	sintonizar un servicio. Viaja con PID 0. Hay una PAT por flujo de
+		 	transporte y asocia cada servicio con un PID. Cada servicio es
+		 	identificado con un service_id (PONER TABLA DEL CANAL 23)
+
+		 	La PMT define los contenidos multimedia que le corresponden a un
+		 	servicio. Hay una instancia de PMT por servicio y el PID con el que 
+		 	viaja cada instancia es definido por la PAT. Cada flujo multimedia
+		 	se compone de una secuencia de paquetes de igual PID que se define
+		 	como flujo elemental. La PMT permite al receptor hallar los flujos
+		 	elementales. (MOSTRAR TABLA CANAL 23)
+
+		 	La SDT describe con más detalle los programans transportados por un
+		 	flujo de transporte, viaja con PID 17. Es una talba descriptiva como
+		 	lo dice su nombre, que incluye info textual del servicio, como el
+		 	nombre. También establece de qué tipo se trata (TV, Radio, etc).
+		 	(TABLA CANAL 23)
+
+		 	La NIT es obligatoria en sistemas de TV terrestre. Se envía con PID
+		 	16 y contiene info obligatoria sobre la organización física de la 
+		 	red de transmisión que la emite, pero también puede enviar 
+		 	información de otras redes. 
+
+		 	DESCRIPTORES:
+		 	=============
+		 	Dentro de las tablas, parte de la info viaja en un formato de 
+		 	longitud variable denominado "descriptores". Se identifican 
+		 	numéricamente de forma unívoca por un descriptor tag que ocupa un 
+		 	byte. El segundo campo de un descriptor es necesariamente el  
+		 	denominado descriptor_length que denota la longitud de la estructura
+		 	en bytes.
+		 	Viajan en Loops y no existe una limitación para la cantidad que
+		 	puede viajar en un mismo loop. Tampoco hay restricciones sobre el
+		 	orden que deben respetar en el loop.
+		 	EG service descriptor, de descriptor_tag=72 y transporta la 
+		 	descripción de un servicio, incluyendo el nombre. En el caso de 
+		 	canal 23, hay un service descriptor por servicio en el TS. De donde
+		 	se obtienen los nombres TV Pública, TV Pública HD y Tecnópolis.
+
+		 	Flujos elementales:
+		 	===================
+
+		 	El formato con que viajan los audios y videos se denomina Packetized
+		 	Elementary Streams. Cada paquete PES de este formato es de longitud 
+		 	variable y, generalmente, más grande que un paquete TS.
+
+		 	Todos los paquetes que pertenecen a un mismo flujo elemental viajan
+		 	con igual PID. Los flujos elementales además de audio y video pueden
+		 	pertenecer a Closed Caption o contenido interactivo.
+
+		 	Decodificación de tablas:
+		 	=========================
+
+		 	Esta sección estudia cómo influyen las tablas en scan y selección
+		 	de servicios.
+
+		 	* SCAN: Recorre todos los flujos de transporte capturando la info
+		 	de SDT y NIT. De aquí ya se obtiene lo necesario para la lista de
+		 	servicio: Nombre y tipo de los servicios, junto al service_id
+
+		 	* Selección de servicios: El usuario selecciona un servicio, e.g:
+		 	TV Pública HD, con service id 59201. Si es necesario, se sintoniza
+		 	la frecuencia correspondiente, como canal 23 (527MHz). Se busca
+		 	la PAT, de PID 0. Se busca la entrada correspondiente al service id
+		 	59201. Se obtiene que la PMT viaja con PID 258. Con el PID de la 
+		 	PMT se puede armar la tabla, que a su vez provee los PID de los 
+		 	flujos elementales. (en el ej: 2 audio 290 y 291, 1 video HD 289).
+		 	Con eso ya se reconstruyen los paquetes PES, que se envian a repro-
+		 	ducción.
+
+		* Generación de señal ISDB-Tb:
+		==============================
+
+		3 partes:
+			* Generación de contenidos
+				En una estación hay dispositivos que tienen este fin:
+				Cámaras, consolas, switchers, etc. que generan flujos 
+				elementales de alta velocidad para su posterior codificacion.
+				Cada flujo se entrega a codificación por separado.
+			* Codificación y empaquetado
+				Se comprimen los contenidos para adaptarlos a las capacidades
+				de transmisión de los canales físicos. Se dividen los contenidos
+				primero en paquetes PES y luego en TS.
+			* Señalización y multiplexación de programas
+				Se combinan distintas fuentes de programas a un mismo TS. Y se
+				agrega la señalización necesario.
+
+		Las herramientas involucradas en la señalización y multiplexación de 
+		servicios deben seguir estrictos lineamientos impuestos por ISDB-Tb.
+		EJ: Cada PMT debe encontrarse en el TS con una periodicidad de 200 ms.
+		Por esto, existen algunos proyectos que resuelven estas exigencias.
+
+		OpenCaster:
+		===========
+
+		Proyecto de código abierto que inclye muchas herramientas necesarias
+		en la construcción de flujos de transporte, de acuerdo al formato MPEG
+		ts. Desde creación de paquetes, secciones y tablas hasta la 
+		multiplexación del ts. Ofrece una API en Python para ensamblar tablas,
+		aprovechando hotspots dispuestos en las clases que modelan entidades de
+		las normas.
+
+		Generación de tablas: Incluir pedazo de script.
+
+		Multiplexación del flujo de transporte.
+		Una vez se tienen todas las componentes del flujo, las mismas deben
+		ser multiplexadas en el flujo de transporte, de modo de respetar las
+		periodicidades exigidas por la norma.
+		Una distribución errónea de la carga final puede incurrir en overflow
+		o underflow en el decodificador.
+
+		Recepción y decodificación:
+		===========================
+		
+		Complicaciones:
+			*Eventos asincrónicos.
+			*Soft real time
+			*Multithreading
+
+		* Wari
+		------
+			* Reproductor TV ISDB-Tb
+			* Código abierto, desarrollado por lifia.
+			* Licencia LGPL
+			* C++ y Lua
+			* Apéndice C del informe contiene info útil
+
+			* Construcción de lista de servicios en Wari:
+				Captura de SDT, PAT, y PMT (mencionar flujos mal formados)
+
+				Desarrollar (diagrama de clases involucrado)
+
+				*Tuner: coordina el Scan y responde a los requerimientos de un
+				zapper
+				*ServiceProvider: (y ServiceManager) gestionan los servicios,
+				modelados a través de la clase Service. Posee la lista de
+				servicios
+				*Provider: Encapsula y abstrae las operaciones de un dispositivo
+				de sintonización
+				*Service: Modela un servicio y contiene información como nombre
+				y service ID.
+
+				
+
+			* Demultiplexación y reproducción de servicios en Wari:
+				(diagramas involucrados)
+				Player Extension: Máxima abstracción en términos de reproducción
+				Player: Superclase de la jerarquía de destinos de reproducción.
+					Cualquier subclase representa medios de reproducción.
+				AvPlayer: Representa el reproductor de Audio/Video de servicios
+				capturados a través de un sintonizador.
+				ServiceManager y ServiceProvider: Gestiona el ciclo de vida
+				de la lista de servicios.
+				Tuner: Dispara la reproducción(o sintonización) de un servicio
+				Service: Modela los servicios y facilita contenidos necesarios
+				como nombre, service id, etc.
+
+				Describir este proceso con el Diagrama de secuencia.
+
+		IPTV:
+		=====
+
+			La definición de la ITU (Poner def) escapa al uso que se le da 
+			al término en este trabajo. En este trabajo, la transmisión de TV 
+			a través de internet no es central. Características de IPTV intere-
+			santes.
+
+			* Bitrate variable
+			* Conmutación de paquetes(si se alinean paquetes, no hace falta
+			sincronización)
+			* Multicasting: Es posible utilizar este mecanismo ideal, 
+			sólo requiere grupo multicast y puerto.
+
+			El objetivo de este trabajo es incrementar el tamaño de la lista de
+			servicios sin incurrir en una mayor exigencia de ancho de banda
+			en el flujo de transporte de RF terrestre. La siguiente definición
+			se adecúa mejor al uso que se le dará luego.
+
+			IPTV define a la entrega de servicios audiovisuales en emisión 
+			multicast a través de una red IP, donde cada servicio se limita
+			a la multiplexación de un flujo de audio y uno de video junto a la
+			información indispensable para la reproducción simultánea y 
+			sincronizada.
+
+			Multicasting:
+			=============
+
+			Es un método de envío de datagramas a través de una única 
+			transmisión a un grupo de receptores interesados. Es una técnica
+			uno a muchos utilizada comunmente en entrega de contenidos en tiempo
+			real.
+			Como capa de transporte, se suele utilizar UDP, que no posee 
+			protección ante pérdida de paquetes.
+			Características:
+
+			* Los routers de la red deben dar soporte de multicast.
+			* Se usa UDP, hay que resolver el problema de pérdida de paquetes
+			y desordenamiento.
+			* Las direcciones van desde 224.0.0.0 a 239.255.255.255.
+			* Es necesario indicar un puerto destino (propio de UDP).
+
+
+
+
+--------------------------------------------------------------------------------
+-- Diseño y desarrollo
+--------------------------------------------------------------------------------
+
+A fin de estructurar el desarrollo, el nuevo sistema híbrido se compone de
+cuatro pilares de trabajo:
+
+* El primer objetivo es posibilitar la señalización de servicios desde TV
+terrestre hacia IPTV.
+
+* El segundo objetivo es construir un flujo de transporte que implemente esta
+señalización.
+
+* Luego, es necesario implementar un sistema de emisión de TV a través de 
+internet que al menos posibilite la construcción de un prototipo.
+
+* Finalmente, hay que construir un reproductor que entregue el servicio híbrido.
+
+	* Primer objetivo: Señalización de los servicios
+	--------------------------------------------------
+
+		* Hipótesis de trabajo: El trabajo de señalización se realiza a partir
+		de un conjunto de hipótesis:
+
+			* Centralizada: La información para construir la lista de servicios 
+			--------------- y sintonizarlos se proveerá por un único medio. Esto
+			                evita problemas de inconsistencia y redundancia.
+	        
+	        * Transparente: El usuario puede abstraerse del origen del servicio
+	        --------------- seleccionado.
+	
+	        * Disponible para todos los dispositivos, independientemente de su
+	        ---------------------------------------- acceso a internes.
+	
+	        * Hará uso del sistema de señalización ya provisto por ISDB-Tb a 
+	          través del formato MPEG-TS.
+
+        * Diseño de la señalización:
+        	Hay dos tipos de servicios: tradicionales y reubicados (explicar).
+        	La segunda categoría no posee soporte en el formato actual de la
+        	norma y es lo que se busca implementar, esencialmente.
+
+        	No se quiere romper con la forma en que los reproductores consumen
+        	los servicios tradicionales. Es decir, no se quiere realizar una 
+        	modficación diametral del proceso de entrega de servicios ISDB-Tb.
+        	El proceso actual consiste en:
+        		1. Escanear(requiere SDT y NIT, en el caso de Wari, PAT y PMT)
+        		2. Buscar PAT(A través del program Number de la SDT)
+        		3. Buscar PMT(A través de la asociación realizada en la PAT)
+        		4. Leer PIDs de flujos elementales de la PMT y sus tipos.
+        	Por las características de los servicios reubicados, se puede dejar
+        	así el primer paso, el scan, incluyendo las tablas involucradas.
+        	Esto es, incluyendo una entrada en la SDT, una en la PAT y una 
+        	instancia de la PMT al flujo de transporte. Con esto, el servicio es
+        	detectado satisfactoriamente por cualquier reproductor que respete
+        	la norma.
+
+        	El cuarto paso es un problema, porque no si se quisiera llenar para
+        	los servicios reubicados, la lista estaría vacía o sería inválida.
+        	Hay que indicarle al reproductor de alguna manera, la existencia de
+        	flujos elementales fuera del medio provisto por el flujo de trans-
+        	porte.
+
+        	Los mecanismos de entrega de contenidos del formato MPEG-TS son
+        	básicamente 3:
+        	* Campo
+        	* Tabla
+        	* Descriptor
+
+        	La alternativa real es la última. Si ponemos un nuevo campo, los
+        	parsers existentes se rompen. Eso implica que: o no se reconocen
+        	los contenidos tradicionales, o bien, se interpretan erróneamente
+        	(lo cual es peor). Si se quiere agregar una tabla hay dos opciones:
+
+        	*Aparición de varias instancias (volviendo al problema incial)
+        	*Hardcodeo de un PID para una nueva tabla, pero de nuevo resulta
+        	un cambio demasiado importante al formato MPEG/norma ISDB-Tb.
+
+        	La única alternativa real, entonces, es la creación de un nuevo
+        	descriptor que incluya dos piezas de información:
+        	* Dirección IP y puerto al que van dirigidos los datagramas.
+        	Va en la PMT de manera opcional. El loop de flujos elementales vacío
+
+        	* Formato del Elementary Streams Relocation Descriptor:
+        		* Sintaxis
+        		* Descripción
+        		* Ejemplo
+        		* Dump
+
+    * Segundo Objetivo: Construcción del flujo de transporte de referencia
+    ----------------------------------------------------------------------
+
+    Podemos hacer un desgloce del trabajo a realizar, asumiendo que se posee
+    un flujo de transporte existente:
+    	* Agregar entrada a la SDT
+    	* Agregar entrada a la PAT
+    	* Construir la nueva PMT con el nuevo descirpotr ESRD
+    	* Insertar la nueva instancia de la PMT al flujo de transporte.
+
+    Para lo que es manipulación de entidades MPEG se usa OpenCaster. Así se 
+    crean estructuras a través de niveles altos de abstracción, para luego
+    volcarse a contenido binario. Opencaster llega hasta la creación de paquetes
+    TS. Pero la inserción y reemplazo de estos paquetes en un TS existente se
+    usa TS_UTIL. 
+
+    Primero se construye la SDT extendida y se pone en uno o más paquetes.
+    De manera análoga, se construye la PAT, con las entradas extendidas.
+    Finalmente, se construye la PMT. Pero a diferencia de las otras PMT,
+    el loop de los Elementary Streams, está vacío. Pero en su lugar,
+    incluye en su loop de descriptores un ESRD.
+
+    * Tercer objetivo: Emisión de flujos elementales a través de internet.:
+    -----------------------------------------------------------------------
+
+    Emisión de IPTV. Hay que decir un par de cosas:
+
+    	* Se usa MPEG-Transport Stream. Por qué?
+    		* Primero y más importante, la infraestructura existente en los
+    		reproductores apunta al Transport Stream.
+    		* Segundo: está diseñado para ambientes no confiables, como internet
+    		* Tercero: Es un formato extremadamente flexible, permite escalar
+    		hacia trabajos futuros.
+    		* Cuarto: La división en paquetes de 188 bytes resulta adecuada
+    		para datagramas IP.
+
+    	* Desventajas:
+    		* Los paquetes nulos incurren en desperdicio(solucionable)
+    		* No es necesaria la sincronización (si se alinean paquetes)
+    		* No se debe enviar a la máxima capacidad de la red, porque se
+    		podría producir overflow.
+
+    	Cómo se deben enviar los paquetes!
+
+    	f(t) = t[seg] * bitrate[bits/seg] / 1504 [bits/paquete]
+    	        + ventana[bytes] div 188[bytes/paquete]
+
+    	Y finalmente incluir el pseudocódigo.
+
+    * Cuarto objetivo: Sistema de recepción: Mara
+    ---------------------------------------------
+
+    A Wari hay que modificarlo en 3 aspectos
+
+    * Modificar el modelo de los servicios para soportar reubicados.
+    * Parsear el descriptor, cuando llegue una PMT.
+    * Reproducir un servicio Reubicado cuando el usuario lo solicite.
+
+    	* Modificación del modelo: Agregar un booleano que por defecto sea
+    	falso para indicar si es reubicado. También un string para el URL de 
+    	reproducción.
+
+    	* Parseo del descriptor. La infraestructura está bastante resuelta.
+    	Se debe escribir un parser.  Que modifique, ante su éxito, el modelo
+    	expuesto antes.
+
+    	* Reproducción: Luego del parsing se posee el URL. A éste hay que
+    	agregarle el esquema. Y se entrega a la librería de reproducción de Wari
+
+--------------------------------------------------------------------------------
+-- Evaluación
+--------------------------------------------------------------------------------
+
+	Infraestructura
+		* Real (incluir imagen)
+			Aparecen dos entidades que antes no se requerían. La primera es el
+			coordinador y la segunda el servidor de streaming.
+
+			Coordinador: garantiza congruenica entre la información provista en
+			el ESRD y la dirección de los datagramas que contienen los servicios
+			reubicados. También elige los servicios que se reubican.
+			(con posible gestión de audiencias)
+
+			Servidor de streaming: Host con conexión a la red IP, que corre el
+			software de emisión descripto en el capítulo de desarrollo.
+
+		* De prueba(incluir imagen):
+			* Host multiplexador: Maneja la moduladora, gestiona el flujo de 
+			transporte que se transmite.
+			* Moduladora: Convierte el flujo de transporte en una señal RF
+			modulada
+			* Combinador de señales: Dispositivo simple que combina señales de
+			radiofrecuencia que se emiten a distintas frecuencias.
+			* Sintonizador: Contrapartida de la moduladora, convierte una señal
+			modulada en una secuencia de bits interpretable como un TS.
+			* Mara: Modificación de Wari desarrollada en este trabajo.
+			* Red IP: Red con soporte a la suite de protocolos IP, inclyendo
+			multicasting.
+			* Host de streaming: Host conectado con la red para comunicación con
+			el host de prueba.
+
+	Análisis de la solución
+
+		* Número de servicios:
+			La limitación se acota por tres puntos: PAT, PMT y SDT.
+				*La PAT, por la cantidad de entradas, pero al ser contenido 
+				binario, es bastante compacta.
+				*La PMT no posee limitación interna sino a nivel ts.
+				Dado que hay que ver si hay suficientes paquetes nulos por 
+				intervalo de periodicidad.
+				*La limitación real es la SDT.
+		* Flujos Elementales Múltiples
+			Es imposible pero debería repensarse el modelo utilizado en 
+			ISDB-Tb porque ignorar flujos incurre en un desperdicio innecesario
+		* Guía electrónica de programación
+			Hasta 8 con descripción. La capacidad con la que cuenta el flujo
+			de transporte no basta.
+		* Closed Caption
+			No hay soporte de parte del cliente. A nivel diseño, no hay
+			limitantes. Ocurre algo similar a lo de los flujos elementales 
+			múltiples, si se ignora, pero el ancho de banda necesario es pequeño
+			Si se implementara en el cliente, andaría bien.
+		* Gestión de Audiencias
+			Es posible en IPTV, pero no en ISDB-Tb
+		* Aplicaciones Interactivas
+			Sin soporte del cliente, pero no se puede utilizar el carrusel de
+			datos utilizado en ISDB-Tb. Hay que usar un modelo más similar al
+			formato original pensado en DSM-CC.
+		* Tiempos de sintonización
+			Similares. Es necesario sintonizar un flujo de transporte INCLUSO
+			en los servicios reubicados.
+
+
+--------------------------------------------------------------------------------
+-- Conclusión
+--------------------------------------------------------------------------------
+
+	* Características del resultado:
+	--------------------------------
+		* Retrocompatibilidad:
+		* Mayor tamaño de la lista de servicios
+		* Escalable:
+		* Dinámico
+		* Independiente del multiplexador:
+		* Preserva bitrate
+		* Preserva dependientes:
+	* Mara:
+	-------
+		Basado en Wari, open source.
+		* Transparente
+		* Portable
+		* Independiente del Hardware
+
+	* Trabajo Futuro:
+	-----------------
+			* Reubicación en Object Based Broadcasting
+				Implica implementar un sistema de transmision de componentes de
+				servicio a través de múltiples grupos multicast independientes.
+				De esa manera, el cliente ensambla flujos elementales 
+				solicitados por el usuario. Esto sería un superconjunto del
+				feature de multiples flujos elementales
+			* Reubicación por eventos
+				En lugar de dividir la matriz de servicios en flujos, esto
+				propone dividirlo en eventos, temporalmente. Pudiendo mudar de
+				manera dinámica los servicios entre medios. Entonces, del 
+				programa de Mirtha Legrad por internet, pasamos a RF, cuando
+				pasan un partido de Boca River.
+			* Soporte de IPV6
+			* Omisión de PMT pequeñas
+				* Evitar el uso de tantas PMT, posiblemente a través del 
+				agregado de entradas a la PAT.
+	* Conclusión
+	------------
+
+	Contribución y resultados obtenidos:
+	====================================
+
+	* Esquema de extensión del formato MPEG-TS
+	* Prototipo de transmisión de la norma ISDB-Tb extendida y construcción de
+	flujo de transporte de referencia.
+	* Prototipo de recepción del formato híbrido de transmisión ISDB-Tb + IP.
+	* Análisis de impacto y beneficio del nuevo formato de transmisión.
+
