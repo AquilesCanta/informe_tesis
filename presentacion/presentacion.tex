@@ -115,7 +115,14 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 }
 \date{7 de Septiembre de 2015}
 
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
 \begin{document}
+
 
 \begin{frame}
 \titlepage % Print the title page as the first slide
@@ -386,19 +393,45 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 			\end{center}
 		\end{frame}
 
-		\begin{frame}
-			\frametitle{ISDB-Tb}
-			\begin{center}
-				\includegraphics[width=11cm]{bandas_uhf.png}
-			\end{center}
-		\end{frame}
+			\begin{frame}
+				\frametitle{Recepción de señal ISDB-Tb}
+				\begin{tabular}[t]{ | c | c | c | c | }
+			\hline
+			Canal 	& Servicio 		& Logotipo		&		Formato de video \\
+			\hline\hline
+			\multirow{5}{*}{22 (521MHz)}	& Encuentro 	& \includegraphics[width=1cm]{logoencuentro.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Paka Paka 	& \includegraphics[width=1cm]{logopakapaka.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& TaTeTi 		& \includegraphics[width=1cm]{logotateti.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& INCAA TV 		& \includegraphics[width=1cm]{logoincaa.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& Encuentro LD 	& \includegraphics[width=1cm]{logoencuentro.png}	& LD (240p, 30Hz) \\\hline\hline
+			\multirow{3}{*}{23 (527MHz)}	& TV Pública HD & \includegraphics[width=1cm]{logotvpublicahd.png}	& HD (1080i, 50Hz)\\\cline{2-4}
+								& Tecnópolis	& \includegraphics[width=1cm]{logotecnopolis.png}	& SD (576i, 50Hz) \\\cline{2-4}
+								& TV Pública 	& \includegraphics[width=1cm]{logotvpublica.png}	& LD (240p, 30Hz) \\\hline
+			\end{tabular}
+			\end{frame}
+
+		% \begin{frame}
+		% 	\frametitle{ISDB-Tb}
+		% 	\begin{center}
+		% 		\includegraphics[width=11cm]{bandas_uhf.png}
+		% 	\end{center}
+		% \end{frame}
 
 		\subsubsection{Modualción y bitrate disponible}
 		\begin{frame}
 			\frametitle{Modulación y Bitrate disponible}
-			\begin{center}
-				\includegraphics[width=7.5cm]{canal_fisico.png}
-			\end{center}			
+				\begin{columns}[c] % ,t
+				\column{.3\textwidth}
+					\begin{itemize}
+						\item Bitrate constante
+						\item Se compone de paquetes de tamaño fijo
+						\item El bitrate sobrante se completa con paquetes nulos
+					\end{itemize}
+				\column{.7\textwidth}
+					\begin{center}
+						\includegraphics[width=7.5cm]{autopista.png}
+					\end{center}	
+				\end{columns}		
 		\end{frame}
 
 		\begin{frame}
@@ -452,22 +485,7 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 				\end{center}
 			\end{frame}
 
-			\begin{frame}
-				\frametitle{Recepción de señal ISDB-Tb}
-				\begin{tabular}[t]{ | c | c | c | c | }
-			\hline
-			Canal 	& Servicio 		& Logotipo		&		Formato de video \\
-			\hline\hline
-			\multirow{5}{*}{22 (521MHz)}	& Encuentro 	& \includegraphics[width=1cm]{logoencuentro.png}	& SD (576i, 50Hz) \\\cline{2-4}
-								& Paka Paka 	& \includegraphics[width=1cm]{logopakapaka.png}	& SD (576i, 50Hz) \\\cline{2-4}
-								& TaTeTi 		& \includegraphics[width=1cm]{logotateti.png}	& SD (576i, 50Hz) \\\cline{2-4}
-								& INCAA TV 		& \includegraphics[width=1cm]{logoincaa.png}	& SD (576i, 50Hz) \\\cline{2-4}
-								& Encuentro LD 	& \includegraphics[width=1cm]{logoencuentro.png}	& LD (240p, 30Hz) \\\hline\hline
-			\multirow{3}{*}{23 (527MHz)}	& TV Pública HD & \includegraphics[width=1cm]{logotvpublicahd.png}	& HD (1080i, 50Hz)\\\cline{2-4}
-								& Tecnópolis	& \includegraphics[width=1cm]{logotecnopolis.png}	& SD (576i, 50Hz) \\\cline{2-4}
-								& TV Pública 	& \includegraphics[width=1cm]{logotvpublica.png}	& LD (240p, 30Hz) \\\hline
-			\end{tabular}
-			\end{frame}
+
 
 			\begin{frame}
 				\frametitle{Recepción de señal ISDB-Tb: Scan}
@@ -489,7 +507,7 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 
 			\begin{frame}
 				\frametitle{Tablas en MPEG-TS}
-				\begin{columns}[c] % ,t
+				\begin{columns}[t] % ,t
 				\column{.45\textwidth}
 					\textbf{PSI:}\\
 					\begin{itemize}
@@ -516,9 +534,10 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 
 			\begin{frame}
 				\frametitle{Descriptores}
-				\resizebox{\textwidth}{!}{
-					\lstinputlisting[]{source/dvbsnoop.txt}
-				}
+				Estructuras sintácticas para la provisión de datos de longitud variable que pueden ser definidos por el usuario
+				\begin{center}
+				\includegraphics[width=6cm]{canal_23_tables_descriptores.png}
+				\end{center}
 			\end{frame}
 
 			\begin{frame}
@@ -526,26 +545,27 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 				\begin{center}
 					\includegraphics[width=8cm]{cable_flujo_mpeg.png}
 				\end{center}
+					Transportan contenidos audiovisuales y ocupan la mayoría del ancho de banda
 			\end{frame}
 			
-			\begin{frame}
-				\frametitle{Decodificación de Tablas}
-					\begin{center}
-						\includegraphics[width=6cm]{canal_23_tables.png}
-					\end{center}
-			\end{frame}
+			% \begin{frame}
+			% 	\frametitle{Decodificación de Tablas}
+			% 		\begin{center}
+			% 			\includegraphics[width=6cm]{canal_23_tables.png}
+			% 		\end{center}
+			% \end{frame}
 
 			\begin{frame}
 				\frametitle{Tablas en el Scan}
 					\begin{center}
-						\includegraphics[width=6cm]{scan_seq_diag.png}
+						\includegraphics[width=6cm]{proceso_scan_tablas.png}
 					\end{center}
 			\end{frame}
 
 			\begin{frame}
 				\frametitle{Tablas en la sintonización}
 					\begin{center}
-						\includegraphics[height=6cm]{play_seq_diagram.png}
+						\includegraphics[height=6cm]{proceso_seleccion_tablas.png}
 					\end{center}
 			\end{frame}
 			
@@ -581,12 +601,12 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 			\end{columns}
 		\end{frame}
 
-		\begin{frame}
-			\frametitle{Construcción de tablas en OpenCaster}
-			\resizebox{7cm}{!}{
-					\lstinputlisting[language=Python]{source/pmt_example.py}
-			}
-		\end{frame}
+		% \begin{frame}
+		% 	\frametitle{Construcción de tablas en OpenCaster}
+		% 	\resizebox{7cm}{!}{
+		% 			\lstinputlisting[language=Python]{source/pmt_example.py}
+		% 	}
+		% \end{frame}
 
 	\subsection{Recepción y decodificación}
 		\begin{frame}
@@ -613,24 +633,31 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 			\end{frame}
 
 			\begin{frame}
-				\frametitle{Scan en Wari}
-				\begin{center}
-					\includegraphics[width=7cm]{scan_wari.png}
-				\end{center}
+				\frametitle{Wari}
+					\begin{center}
+						\includegraphics[width=6cm]{screenshot_wari.png}
+					\end{center}
 			\end{frame}
 
-			\begin{frame}
-				\frametitle{Sintonización en Wari}
-				\begin{center}
-					\includegraphics[width=8.5cm]{play_wari.png}
-				\end{center}
-			\end{frame}
+			% \begin{frame}
+			% 	\frametitle{Scan en Wari}
+			% 	\begin{center}
+			% 		\includegraphics[width=7cm]{scan_wari.png}
+			% 	\end{center}
+			% \end{frame}
+
+			% \begin{frame}
+			% 	\frametitle{Sintonización en Wari}
+			% 	\begin{center}
+			% 		\includegraphics[width=8.5cm]{play_wari.png}
+			% 	\end{center}
+			% \end{frame}
 
 	\subsection{IPTV}
 		\begin{frame}
 			\frametitle{IPTV}
 			\begin{definition}
-				Define la entrega de servicios (televisión, video, audio, texto, imágenes, datos) sobre redes basadas en IP manejadas para proveer el nivel requerido de calidad de servicio y experiencia, seguridad, interactividad y confiabilidad.
+				Define la entrega de servicios (televisión, video, audio, texto, imágenes, datos) sobre redes \textbf{basadas en IP} manejadas para proveer el \textbf{nivel requerido de calidad de servicio} y experiencia, seguridad, interactividad y confiabilidad.
 			\end{definition}
 			\begin{itemize}
 				\item Bitrate Variable
@@ -639,12 +666,6 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 			\end{itemize}			
 		\end{frame}
 
-		\begin{frame}
-			\frametitle{Definición de IPTV}
-			\begin{definition}
-			IPTV define la entrega de servicios audiovisuales en emisión \emph{multicast} a través de una red IP, donde cada servicio se limita a la multiplexación de un flujo de audio y uno de video junto con la información indispensable para la reproducción simultánea y sincronizada.
-			\end{definition}			
-		\end{frame}
 		
 		\subsubsection{Multicasting}
 		\begin{frame}
@@ -690,25 +711,35 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 	\end{frame}
 
 		\subsubsection{Diseño de la señalización}
+		% \begin{frame}
+		% 	\frametitle{Diseño de la señalización I}
+		% 		\begin{center}
+		% 			\includegraphics[width=6cm]{canal_23_tables.png}
+		% 		\end{center}
+		% \end{frame}
+
+		% \begin{frame}
+		% 	\frametitle{Diseño de la señalización II}
+		% 		\resizebox{0.4\textwidth}{!}{
+		% 			\lstinputlisting[]{source/pmt_syntax.txt}
+		% 		}
+		% \end{frame}
+
 		\begin{frame}
-			\frametitle{Diseño de la señalización I}
+			\frametitle{Diseño de la señalización}
+			\begin{columns}
+			\column{.35\textwidth}
+				\textbf{Alternativas de diseño}
+				\begin{itemize}
+					\item Campo de tabla
+					\item Tabla
+					\item Descriptor
+				\end{itemize}
+			\column{.6\textwidth}
 				\begin{center}
-					\includegraphics[width=6cm]{canal_23_tables.png}
+					\includegraphics[width=6cm]{pmt_con_descriptor.png}
 				\end{center}
-		\end{frame}
-
-		\begin{frame}
-			\frametitle{Diseño de la señalización II}
-				\resizebox{0.4\textwidth}{!}{
-					\lstinputlisting[]{source/pmt_syntax.txt}
-				}
-		\end{frame}
-
-		\begin{frame}
-			\frametitle{Diseño de la señalización III}
-			\begin{center}
-				\includegraphics[width=6cm]{pmt_con_descriptor.png}
-			\end{center}			
+			\end{columns}
 		\end{frame}
 
 		\begin{frame}
@@ -731,10 +762,11 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 	\subsection{Construcción del Transport Stream de referencia}
 		\begin{frame}
 			\frametitle{Construcción del flujo de transporte de referencia}
+			\textbf{Se desean agregar dos servicios. Es necesario:}\\
 			\begin{enumerate}
-				\item Construir tablas necesarias
-				\item Reemplazar tablas existentes
-				\item Insertar nueva PMT al flujo
+				\item Construir tablas necesarias -> \textbf{OpenCaster}
+				\item Reemplazar tablas existentes -> \textbf{TsUtil}
+				\item Insertar nueva PMT al flujo -> \textbf{TsUtil}
 			\end{enumerate}
 		\end{frame}
 
@@ -752,12 +784,12 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 			}
 		\end{frame}
 
-		\begin{frame}
-			\frametitle{TS de referencia: Multiplexación}
-			\resizebox{\textwidth}{!}{
-				\lstinputlisting[]{source/mux.sh}
-			}
-		\end{frame}
+		% \begin{frame}
+		% 	\frametitle{TS de referencia: Multiplexación}
+		% 	\resizebox{\textwidth}{!}{
+		% 		\lstinputlisting[]{source/mux.sh}
+		% 	}
+		% \end{frame}
 
 	\subsection{Emisión de los flujos elementales en Multicast}
 		\begin{frame}
@@ -781,18 +813,13 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 		\subsubsection{Procedimiento de emisión}
 			\begin{frame}
 			\frametitle{Procedimiento de emisión}
-			\begin{center}
-			\includegraphics[width=\textwidth]{packet_amount.png}
-			$$f(t) = \frac{t[seg] * b[bits/seg]}{1504[bits/pkt]} + v[bytes] \bdiv 188[bytes/pkt] $$
-			\end{center}
-		\end{frame}
-
-		\subsubsection{Procedimiento de emisión}
-			\begin{frame}
-			\frametitle{Procedimiento de emisión}
-			\resizebox{\textwidth}{!}{
-				\lstinputlisting[]{source/pseudo_streamer.txt}
-			}
+			\includegraphics[width=7cm]{packet_amount.png}
+			\begin{itemize}
+				\item No enviar paquetes nulos
+				\item Evitar overflow
+				\item Evitar underflow
+				\item Respetar el bitrate original
+			\end{itemize}
 		\end{frame}
 
 	\subsection{Prototipo de Recepción Mara}
@@ -825,9 +852,9 @@ Universidad Nacional de La Plata \\ % Your institution for the title page
 		\subsubsection{Reproducción de Servicios Reubicados}
 		\begin{frame}
 			\frametitle{Reproducción de Servicios Reubicados}
-			\resizebox{\textwidth}{!}{
-				\lstinputlisting[]{source/mara_play.cpp}
-			}
+			\begin{center}
+				\includegraphics[width=9cm]{proceso_seleccion_esrd.png}
+			\end{center}
 		\end{frame}
 		\begin{frame}
 			\frametitle{Resultado}
@@ -908,85 +935,310 @@ Closed Caption & \cmark & \xmark \\
 \end{frame}
 
 
+\subsection{Análisis de la solución}
+	\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\rowcolor{ashgrey}
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
 
-		\subsubsection{Número de servicios}
-		\begin{frame}
-			\frametitle{Número de servicios}
-			\begin{columns}
-			\column{.45\textwidth}
-				\begin{itemize}
-					\item \textbf{SDT:} 50 servicios
-					\item \textbf{PAT:} 250 servicios
-					\item \textbf{PMT:} ~200 servicios
-				\end{itemize}
-			\column{.45\textwidth}
-				\begin{center}
-					\includegraphics[width=5cm]{nulos_disponibles.png}
-				\end{center}
-			\end{columns}
-		\end{frame}
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
 
-		\subsubsection{Flujos elementales Múltiples}
-		\begin{frame}
-			\frametitle{Flujos elementales Múltiples}
-			\begin{center}
-					\includegraphics[width=9cm]{cable_flujo_mpeg_multiple_es.png}
-				\end{center}
-		\end{frame}
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
 
-		\subsubsection{Guía Electrónica de Programación}
-		\begin{frame}
-			\frametitle{Guía Electrónica de Programación}
-			\begin{textblock*}{5cm}(.5cm,1.5cm) % {block width} (coords)
-				\includegraphics[width=5cm]{epg_wari.jpg}
-			\end{textblock*}
-			\begin{center}
-			\begin{textblock*}{5cm}(6cm,5cm) % {block width} (coords)
-				\includegraphics[width=6.5cm]{eit_size.png}
-			\end{textblock*}
-			\end{center}
-		\end{frame}
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\rowcolor{ashgrey}
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
 
-		\subsubsection{Closed Caption}
-		\begin{frame}
-			\frametitle{Closed Caption}
-			\begin{columns}
-			\column{.45\textwidth}
-				\begin{itemize}
-					\item Embebidos
-					\item Señalizados
-				\end{itemize}
-			\column{.45\textwidth}
-				\begin{center}
-					\includegraphics[width=5cm]{closed_caption.jpg}
-				\end{center}
-			\end{columns}
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\rowcolor{ashgrey}
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
+
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
+
+\rowcolor{ashgrey}
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
+
+Closed Caption & \cmark & \xmark \\
+\hline
+\rowcolor{ashgrey}
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
+
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+\rowcolor{ashgrey}
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+
+\begin{frame}
+		\frametitle{Análisis de la solución}
+		\begin{center}
+		\resizebox{0.6\textwidth}{!}{
+		\begin{tabular}{|r|c|c|}
+\hline
+\rowcolor[HTML]{656565} 
+{\color[HTML]{EFEFEF}Aspecto} & {\color[HTML]{EFEFEF}\begin{tabular}[c]{@{}l@{}}ISDB-Tb\\ Tradicional\end{tabular}} & {\color[HTML]{EFEFEF}ISDB-Tb + IP} \\
+\hline \hline
+\specialcell{Número de\\servicios} & \begin{tabular}[c]{@{}l@{}}Hasta 5 SD y\\ 1 LD\end{tabular} & Hasta 50 HD\\
+\hline
+\specialcell{Múltiples Flujos\\ elementales} & \cmark & \xmark \\
+\hline
+\specialcell{Guía electrónica \\de programación} & \cmark & \xmark \\
+\hline
+
+Closed Caption & \cmark & \xmark \\
+\hline
+\specialcell{Gestión de\\audiencias} & \xmark & \cmark \\
+\hline
+
+\specialcell{Aplicaciones\\interactivas} & \cmark & \xmark \\
+\hline
+\rowcolor{ashgrey}
+\specialcell{Velocidad de\\ sintonización} & 1,8s & \begin{tabular}[c]{@{}l@{}}Sintonización\\ + buffering (1,7s)\end{tabular} \\
+\hline
+\end{tabular}
+}
+\end{center}
+\end{frame}
+
+
+
+		% \subsubsection{Número de servicios}
+		% \begin{frame}
+		% 	\frametitle{Número de servicios}
+		% 	\begin{columns}
+		% 	\column{.45\textwidth}
+		% 		\begin{itemize}
+		% 			\item \textbf{SDT:} 50 servicios
+		% 			\item \textbf{PAT:} 250 servicios
+		% 			\item \textbf{PMT:} ~200 servicios
+		% 		\end{itemize}
+		% 	\column{.45\textwidth}
+		% 		\begin{center}
+		% 			\includegraphics[width=5cm]{nulos_disponibles.png}
+		% 		\end{center}
+		% 	\end{columns}
+		% \end{frame}
+
+		% \subsubsection{Flujos elementales Múltiples}
+		% \begin{frame}
+		% 	\frametitle{Flujos elementales Múltiples}
+		% 	\begin{center}
+		% 			\includegraphics[width=9cm]{cable_flujo_mpeg_multiple_es.png}
+		% 		\end{center}
+		% \end{frame}
+
+		% \subsubsection{Guía Electrónica de Programación}
+		% \begin{frame}
+		% 	\frametitle{Guía Electrónica de Programación}
+		% 	\begin{textblock*}{5cm}(.5cm,1.5cm) % {block width} (coords)
+		% 		\includegraphics[width=5cm]{epg_wari.jpg}
+		% 	\end{textblock*}
+		% 	\begin{center}
+		% 	\begin{textblock*}{5cm}(6cm,5cm) % {block width} (coords)
+		% 		\includegraphics[width=6.5cm]{eit_size.png}
+		% 	\end{textblock*}
+		% 	\end{center}
+		% \end{frame}
+
+		% \subsubsection{Closed Caption}
+		% \begin{frame}
+		% 	\frametitle{Closed Caption}
+		% 	\begin{columns}
+		% 	\column{.45\textwidth}
+		% 		\begin{itemize}
+		% 			\item Embebidos
+		% 			\item Señalizados
+		% 		\end{itemize}
+		% 	\column{.45\textwidth}
+		% 		\begin{center}
+		% 			\includegraphics[width=5cm]{closed_caption.jpg}
+		% 		\end{center}
+		% 	\end{columns}
 			
-		\end{frame}
+		% \end{frame}
 
-		\subsubsection{Gestión de Audiencias}
-		\begin{frame}
-			\frametitle{Gestión de Audiencias}
-			\begin{center}
-					\includegraphics[width=8cm]{gestion_audiencias.png}
-				\end{center}
-		\end{frame}
+		% \subsubsection{Gestión de Audiencias}
+		% \begin{frame}
+		% 	\frametitle{Gestión de Audiencias}
+		% 	\begin{center}
+		% 			\includegraphics[width=8cm]{gestion_audiencias.png}
+		% 		\end{center}
+		% \end{frame}
 
-		\subsubsection{Aplicaciones Interactivas}
-		\begin{frame}
-			\frametitle{Aplicaciones Interactivas}
-			\begin{center}
-					\includegraphics[width=8cm]{sokoban.jpg}
-				\end{center}
-		\end{frame}
+		% \subsubsection{Aplicaciones Interactivas}
+		% \begin{frame}
+		% 	\frametitle{Aplicaciones Interactivas}
+		% 	\begin{center}
+		% 			\includegraphics[width=8cm]{sokoban.jpg}
+		% 		\end{center}
+		% \end{frame}
 
-		\subsubsection{Tiempos de sintonización}
-		\begin{frame}
-			\frametitle{Tiempos de Sintonización}
-			\begin{center}
-					\includegraphics[width=8cm]{tune_time.png}
-				\end{center}
-		\end{frame}
+		% \subsubsection{Tiempos de sintonización}
+		% \begin{frame}
+		% 	\frametitle{Tiempos de Sintonización}
+		% 	\begin{center}
+		% 			\includegraphics[width=8cm]{tune_time.png}
+		% 		\end{center}
+		% \end{frame}
 
 \section{Conclusión}	
 
@@ -1024,7 +1276,6 @@ Closed Caption & \cmark & \xmark \\
 		\item Dinámico
 		\item Independiente del multiplexador
 		\item Preserva bitrate
-		\item Preserva dependientes
 		\end{itemize}
 	\end{frame}
 
@@ -1059,51 +1310,51 @@ Closed Caption & \cmark & \xmark \\
 			\end{center}
 		\end{frame}
 
-		\subsubsection{Reubicación por eventos}
-		\begin{frame}
-			\frametitle{Reubicación por eventos}
-			\begin{center}
-				\includegraphics[width=8cm]{reubicacion_eventos.png}
-			\end{center}
-		\end{frame}
+		% \subsubsection{Reubicación por eventos}
+		% \begin{frame}
+		% 	\frametitle{Reubicación por eventos}
+		% 	\begin{center}
+		% 		\includegraphics[width=8cm]{reubicacion_eventos.png}
+		% 	\end{center}
+		% \end{frame}
 		
-		\subsubsection{Soporte de IPV6}
-		\begin{frame}
-			\frametitle{Soporte de IPV6}
-			\resizebox{\textwidth}{!}{
-				\begin{tabular}{ | l | c | c | c | c |} 
-				\hline
-				Elemento & Rango de valores & Cantidad de bits & Bit de comienzo & mnemotécnico\\
-				\hline 
-				\hline
-				\emph{descriptor\_tag}     			& 170                         & 8        		& 0 		&	\textbf{uimsbf}  \\ 
-				\emph{descriptor\_length}  			& 6                           & 8        		& 8			& 	\textbf{uimsbf}  \\
-				\textbf{IP Version} 				& 0 -- 1 & 1 & 16 & uimsbf \\
-				Reserved & -- & 7 & 17 & -- \\
-				\hline
-				\multicolumn{5}{| l |}{if (IP Version == 0)\{}\\
-				\hline
-				\textbf{Grupo Multicast}            & 3758096384 -- 4026531839    & 32       		& 24		&	\textbf{uimsbf}	\\
-				\textbf{Puerto}                     & 1 -- 65535                  & 16      		& 56   		&	\textbf{uimsbf}  \\
-				\hline
-				\multicolumn{5}{| l |}{\} else \{ }\\
-				\hline
-				\textbf{Grupo Multicast}            & -- & 128 & 24		&	\textbf{uimsbf}	\\
-				\textbf{Puerto}                     & 1 -- 65535                  & 16      		& 152   		&	\textbf{uimsbf}  \\
-				\hline
-				\multicolumn{5}{| l |}{\}}\\
-				\hline 
-				\end{tabular}
-			}
-		\end{frame}
+		% \subsubsection{Soporte de IPV6}
+		% \begin{frame}
+		% 	\frametitle{Soporte de IPV6}
+		% 	\resizebox{\textwidth}{!}{
+		% 		\begin{tabular}{ | l | c | c | c | c |} 
+		% 		\hline
+		% 		Elemento & Rango de valores & Cantidad de bits & Bit de comienzo & mnemotécnico\\
+		% 		\hline 
+		% 		\hline
+		% 		\emph{descriptor\_tag}     			& 170                         & 8        		& 0 		&	\textbf{uimsbf}  \\ 
+		% 		\emph{descriptor\_length}  			& 6                           & 8        		& 8			& 	\textbf{uimsbf}  \\
+		% 		\textbf{IP Version} 				& 0 -- 1 & 1 & 16 & uimsbf \\
+		% 		Reserved & -- & 7 & 17 & -- \\
+		% 		\hline
+		% 		\multicolumn{5}{| l |}{if (IP Version == 0)\{}\\
+		% 		\hline
+		% 		\textbf{Grupo Multicast}            & 3758096384 -- 4026531839    & 32       		& 24		&	\textbf{uimsbf}	\\
+		% 		\textbf{Puerto}                     & 1 -- 65535                  & 16      		& 56   		&	\textbf{uimsbf}  \\
+		% 		\hline
+		% 		\multicolumn{5}{| l |}{\} else \{ }\\
+		% 		\hline
+		% 		\textbf{Grupo Multicast}            & -- & 128 & 24		&	\textbf{uimsbf}	\\
+		% 		\textbf{Puerto}                     & 1 -- 65535                  & 16      		& 152   		&	\textbf{uimsbf}  \\
+		% 		\hline
+		% 		\multicolumn{5}{| l |}{\}}\\
+		% 		\hline 
+		% 		\end{tabular}
+		% 	}
+		% \end{frame}
 		
-		\subsubsection{Omisión de PMT Pequeñas}
-		\begin{frame}
-			\frametitle{Omisión de PMT Pequeñas}
-			\begin{center}
-				\includegraphics[width=8cm]{canal_23_no_pmt.png}
-			\end{center}
-		\end{frame}
+		% \subsubsection{Omisión de PMT Pequeñas}
+		% \begin{frame}
+		% 	\frametitle{Omisión de PMT Pequeñas}
+		% 	\begin{center}
+		% 		\includegraphics[width=8cm]{canal_23_no_pmt.png}
+		% 	\end{center}
+		% \end{frame}
 
 
 	\subsection{Contribución y resultados obtenidos}
@@ -1117,5 +1368,12 @@ Closed Caption & \cmark & \xmark \\
 		\end{itemize}
 	\end{frame}
 
+
+	\begin{frame}
+		\frametitle{Contribución y resultados obtenidos}
+		\begin{center}
+			\includegraphics[width=5cm]{closed_caption.jpg}
+		\end{center}
+	\end{frame}
 
 \end{document} 
